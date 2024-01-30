@@ -9,6 +9,10 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { IoEyeOutline } from "react-icons/io5";
 import { FaRegEyeSlash } from "react-icons/fa";
+import { IoMdArrowBack } from "react-icons/io";
+import Flag from "react-country-flag";
+import phoneList from "@/utils/phoneDatabase";
+import PhoneSelection from "@/components/content/phoneSelection";
 
 const Candidate = () => {
   const [icon, setIcon] = useState(true);
@@ -17,6 +21,8 @@ const Candidate = () => {
   const [userName, setUserName] = useState("");
   const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
+  const [phoneCountry, setPhoneCountry] = useState("+1");
+  const [flag, setFlag] = useState("US");
   const [pwd, setPwd] = useState("");
   const [pwd2, setPwd2] = useState("");
   const [icon2, setIcon2] = useState(true);
@@ -27,6 +33,7 @@ const Candidate = () => {
   const [phoneError, setPhoneError] = useState("");
   const [pwdError, setPwdError] = useState("");
   const [pwd2Error, setPwd2Error] = useState("");
+  const [show, setShow] = useState(false);
   const { push } = useRouter();
 
   function isValidEmail(email) {
@@ -35,7 +42,7 @@ const Candidate = () => {
   }
 
   function isValidPhoneNumber(phoneNumber) {
-    const phoneRegex = /^\d{10}$/;
+    const phoneRegex = /^\d{10,11}$/;
     return phoneRegex.test(phoneNumber);
   }
 
@@ -56,6 +63,15 @@ const Candidate = () => {
       setIcon2(true);
       setType2("password");
     }
+  };
+  const handleChangeShow = () => {
+    setShow(true);
+  };
+
+  const handleSetPhoneCountry = (countryCode, countryFlag) => {
+    setShow(false);
+    setPhoneCountry(countryCode);
+    setFlag(countryFlag);
   };
 
   const handleSubmit = async (e) => {
@@ -105,7 +121,6 @@ const Candidate = () => {
   };
 
   const handleUserInput = (e) => setEmail(e.target.value);
-
   const handlePwdInput = (e) => setPwd(e.target.value);
   const handleUserNameInput = (e) => setUserName(e.target.value);
   const handleFullNameInput = (e) => setFullName(e.target.value);
@@ -114,16 +129,20 @@ const Candidate = () => {
 
   return (
     <div className="flex flex-grow">
-      <div className="min-h-screen pointer-events-none bg-blue-700 hidden md:flex md:flex-col px-10 xl:px-20 justify-center text-center gap-5 py-10">
-        <div className="flex justify-center items-center gap-x-3 cursor-pointer">
-          <Image src="/images/logonobg.png" width={80} height={80} alt="logo" />
-          <a
-            className="text-white text-xl font-bold hover:text-sky-600"
-            href="/"
-          >
-            Job Platform
-          </a>
-        </div>
+      <div className="min-h-screen bg-blue-700 hidden md:flex md:flex-col px-10 xl:px-20 justify-center text-center gap-5 py-10">
+        <a href="/" className="block px-16 pt-12 cursor-pointer mb-16">
+          <div className="flex justify-center items-center gap-x-3">
+            <Image
+              src="/images/logonobg.png"
+              width={60}
+              height={80}
+              alt="logo"
+            />
+            <p className="text-white text-xl font-bold hover:text-sky-600">
+              Job Platform
+            </p>
+          </div>
+        </a>
         <Image
           src="/images/registercandidate.png"
           width={300}
@@ -133,11 +152,18 @@ const Candidate = () => {
       </div>
 
       <section className="login flex items-center flex-col flex-grow min-h-screen relative lg:px-0 bg-gray-50">
-        <div className="flex flex-col lg:flex-row items-center justify-between w-full px-10 pt-2 md:justify-end ">
-          <p className="text-gray-600 hidden md:block md:mt-3">
+        <div className="flex flex-col lg:flex-row items-center justify-between w-full md:px-10 md:pt-5 md:justify-between ">
+          <p className="text-gray-500 md:flex items-center gap-2 mb-3 hidden md:mt-3 text-base hover:text-gray-950">
+            <IoMdArrowBack />
+            <a href="/auth/register">Back</a>
+          </p>
+
+          <p className="text-gray-600 hidden md:block md:mt-3 text-lg ">
             Already have an account?
-            <a className="text-blue-500 hover:text-blue-700" href="/auth/login">
-              {" "}
+            <a
+              className="text-blue-500 hover:text-blue-700 px-1"
+              href="/auth/login"
+            >
               Sign in
             </a>
           </p>
@@ -190,14 +216,29 @@ const Candidate = () => {
           </div>
           <div className="mb-4 grid w-full max-w-dm items-center gap-1.5">
             <Label htmlFor="phone">Phone Number:</Label>
-            <Input
-              type="phoneNumber"
-              id="phone"
-              value={phone}
-              onChange={handlePhoneInput}
-              required
-            />
-            {phoneError && <p className="text-red-500">{phoneError}</p>}
+            <div className="relative">
+              <div className="h-input bg-white rounded-lg border border-gray-100 px-4 flex items-center gap-3">
+                <div className="flex items-center gap-3 flex-shrink-0 cursor-pointer h-full">
+                  <Flag countryCode={flag} svg onClick={handleChangeShow} />
+                  <span className="text-gray-300">|</span>
+                  <span className="text-gray-800">{phoneCountry}</span>
+                </div>
+                <Input
+                  type="phoneNumber"
+                  id="phone"
+                  value={phone}
+                  onChange={handlePhoneInput}
+                  placeholder="0000000000"
+                />
+              </div>
+              {phoneError && <p className="text-red-500">{phoneError}</p>}
+              {show && (
+                <PhoneSelection
+                  phoneList={phoneList}
+                  onCountrySelect={handleSetPhoneCountry}
+                />
+              )}
+            </div>
           </div>
 
           <div className="mb-4 grid w-full max-w-dm items-center gap-1.5 relative">
@@ -238,7 +279,7 @@ const Candidate = () => {
             {pwd2Error && <p className="text-red-500">{pwd2Error}</p>}
           </div>
           <Button variant="blue" className="mt-1 mb-5" onClick={handleSubmit}>
-            Login
+            Sign up
           </Button>
         </div>
       </section>

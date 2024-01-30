@@ -139,7 +139,7 @@ const Register = () => {
                 variant="skyblue"
                 size="lg"
                 className="w-full"
-                onClick={() => push("/auth/register/candidate")}
+                onClick={() => push("/auth/register/employer")}
               >
                 Next
               </Button>
