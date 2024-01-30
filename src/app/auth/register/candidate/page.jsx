@@ -3,7 +3,7 @@ import "@/styles/global.css";
 import React, { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import MyButton from "@/components/MyButton";
+import MyButton from "@/components/myButton";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
