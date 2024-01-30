@@ -7,7 +7,7 @@ import { setCredentials } from "@/Context/features/auth/authSlice";
 import { loginA } from "@/Context/features/auth/authApiSlice";
 import TokenService from "@/utils/Token.service";
 import Image from "next/image";
-import MyButton from "@/components/MyButton";
+import MyButton from "@/components/myButton";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
