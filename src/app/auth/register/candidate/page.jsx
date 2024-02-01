@@ -13,8 +13,13 @@ import { IoMdArrowBack } from "react-icons/io";
 import Flag from "react-country-flag";
 import phoneList from "@/utils/phoneDatabase";
 import PhoneSelection from "@/components/content/phoneSelection";
+import { SuccessNotify } from "@/components/content/successNotification";
+import { registerCandidate as registerCandidateApi } from "@/app/api/auth/api";
 
 const Candidate = () => {
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [mess, setMess] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [icon, setIcon] = useState(true);
   const [type, setType] = useState("password");
   const [email, setEmail] = useState("");
@@ -67,6 +72,12 @@ const Candidate = () => {
   const handleChangeShow = () => {
     setShow(true);
   };
+  const handleShowNoti = () => {
+    setShowSuccess(true);
+    setTimeout(() => {
+      setShowSuccess(false);
+    }, 3000);
+  };
 
   const handleSetPhoneCountry = (countryCode, countryFlag) => {
     setShow(false);
@@ -114,13 +125,37 @@ const Candidate = () => {
       setPwd2Error("Re-Password is required");
       isValid = false;
     }
+    if (pwd !== pwd2) {
+      setPwdError("Re-Password is not match with password");
+      setPwd2Error("Re-Password is not match with password");
+      isValid = false;
+    }
     if (isValid) {
-      // Submit the form or perform further actions
-      console.log("Form submitted");
+      setIsLoading(true);
+      try {
+        const userData = {
+          email: email.trim(),
+          fullName: fullName.trim(),
+          phoneNumber: phoneCountry + "-" + phone,
+          password: pwd,
+          
+        };
+        const response = await registerCandidateApi(userData);
+        if (response.data.statusCode === 0) {
+          setEmailError(response.data.message);
+          console.log(response.data.message);
+        }else{
+          handleShowNoti();
+        }        
+      } catch (error) {
+        console.error(error.response.data);
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
-  const handleUserInput = (e) => setEmail(e.target.value);
+  const handleEmailInput = (e) => setEmail(e.target.value);
   const handlePwdInput = (e) => setPwd(e.target.value);
   const handleUserNameInput = (e) => setUserName(e.target.value);
   const handleFullNameInput = (e) => setFullName(e.target.value);
@@ -151,138 +186,151 @@ const Candidate = () => {
         />
       </div>
 
-      <section className="login flex items-center flex-col flex-grow min-h-screen relative lg:px-0 bg-gray-50">
-        <div className="flex flex-col lg:flex-row items-center justify-between w-full md:px-10 md:pt-5 md:justify-between ">
-          <p className="text-gray-500 md:flex items-center gap-2 mb-3 hidden md:mt-3 text-base hover:text-gray-950">
-            <IoMdArrowBack />
-            <a href="/auth/register">Back</a>
-          </p>
-
-          <p className="text-gray-600 hidden md:block md:mt-3 text-lg ">
-            Already have an account?
-            <a
-              className="text-blue-500 hover:text-blue-700 px-1"
-              href="/auth/login"
-            >
-              Sign in
-            </a>
-          </p>
+      {isLoading ? (
+        <div className="flex justify-center items-center flex-grow">
+          <div className="spinner"></div>
         </div>
+      ) : (
+        <section className="login flex items-center flex-col flex-grow min-h-screen relative lg:px-0 bg-gray-50">
+          <div className="flex flex-col lg:flex-row items-center justify-between w-full md:px-10 md:pt-5 md:justify-between ">
+            <p className="text-gray-500 md:flex items-center gap-2 mb-3 hidden md:mt-3 text-base hover:text-gray-950">
+              <IoMdArrowBack />
+              <a href="/auth/register">Back</a>
+            </p>
 
-        <div className="w-full max-w-md justify-center flex flex-col">
-          <h1 className=" text-zinc-950 text-2xl font-bold mb-2 text-center pt-10 pb-2">
-            Sign up to Job Platform
-          </h1>
-          <p className="text-gray-400 text-center">
-            Create your account and find your dream jobs
-          </p>
-          <MyButton name="Sign up" />
-          <div className="flex justify-center items-center relative mb-4">
-            <div className="h-one absolute bg-gradient-to-r from-transparent via-gray-400 to-transparent w-full border"></div>
-            <p className="text-center bg-gray-50 z-20 px-4">Or Sign Up With</p>
+            <p className="text-gray-600 hidden md:block md:mt-3 text-lg ">
+              Already have an account?
+              <a
+                className="text-blue-500 hover:text-blue-700 px-1"
+                href="/auth/login"
+              >
+                Sign in
+              </a>
+            </p>
           </div>
-          <div className="mb-4 grid w-full max-w-dm items-center gap-1.5">
-            <Label htmlFor="username">User Name:</Label>
-            <Input
-              type="text"
-              id="userName"
-              value={userName}
-              onChange={handleUserNameInput}
-              required
-            />
-            {userNameError && <p className="text-red-500">{userNameError}</p>}
-          </div>
-          <div className="mb-4 grid w-full max-w-dm items-center gap-1.5">
-            <Label htmlFor="fullname">Full Name:</Label>
-            <Input
-              type="text"
-              id="fullname"
-              value={fullName}
-              onChange={handleFullNameInput}
-              required
-            />
-            {fullNameError && <p className="text-red-500">{fullNameError}</p>}
-          </div>
-          <div className="mb-4 grid w-full max-w-dm items-center gap-1.5">
-            <Label htmlFor="email">Email:</Label>
-            <Input
-              type="email"
-              id="email"
-              value={email}
-              onChange={handleUserInput}
-              required
-            />
-            {emailError && <p className="text-red-500">{emailError}</p>}
-          </div>
-          <div className="mb-4 grid w-full max-w-dm items-center gap-1.5">
-            <Label htmlFor="phone">Phone Number:</Label>
-            <div className="relative">
-              <div className="h-input bg-white rounded-lg border border-gray-100 px-4 flex items-center gap-3">
-                <div className="flex items-center gap-3 flex-shrink-0 cursor-pointer h-full">
-                  <Flag countryCode={flag} svg onClick={handleChangeShow} />
-                  <span className="text-gray-300">|</span>
-                  <span className="text-gray-800">{phoneCountry}</span>
-                </div>
-                <Input
-                  type="phoneNumber"
-                  id="phone"
-                  value={phone}
-                  onChange={handlePhoneInput}
-                  placeholder="0000000000"
-                />
-              </div>
-              {phoneError && <p className="text-red-500">{phoneError}</p>}
-              {show && (
-                <PhoneSelection
-                  phoneList={phoneList}
-                  onCountrySelect={handleSetPhoneCountry}
-                />
-              )}
+
+          <div className="w-full max-w-md justify-center flex flex-col">
+            <h1 className=" text-zinc-950 text-2xl font-bold mb-2 text-center pt-10 pb-2">
+              Sign up to Job Platform
+            </h1>
+            <p className="text-gray-400 text-center">
+              Create your account and find your dream jobs
+            </p>
+            <MyButton name="Sign up" />
+            <div className="flex justify-center items-center relative mb-4">
+              <div className="h-one absolute bg-gradient-to-r from-transparent via-gray-400 to-transparent w-full border"></div>
+              <p className="text-center bg-gray-50 z-20 px-4">
+                Or Sign Up With
+              </p>
             </div>
-          </div>
+            <div className="mb-4 grid w-full max-w-dm items-center gap-1.5">
+              <Label htmlFor="username">User Name:</Label>
+              <Input
+                type="text"
+                id="userName"
+                value={userName}
+                onChange={handleUserNameInput}
+                required
+              />
+              {userNameError && <p className="text-red-500">{userNameError}</p>}
+            </div>
+            <div className="mb-4 grid w-full max-w-dm items-center gap-1.5">
+              <Label htmlFor="fullname">Full Name:</Label>
+              <Input
+                type="text"
+                id="fullname"
+                value={fullName}
+                onChange={handleFullNameInput}
+                required
+              />
+              {fullNameError && <p className="text-red-500">{fullNameError}</p>}
+            </div>
+            <div className="mb-4 grid w-full max-w-dm items-center gap-1.5">
+              <Label htmlFor="email">Email:</Label>
+              <Input
+                type="email"
+                id="email"
+                value={email}
+                onChange={handleEmailInput}
+                required
+              />
+              {emailError && <p className="text-red-500">{emailError}</p>}
+            </div>
+            <div className="mb-4 grid w-full max-w-dm items-center gap-1.5">
+              <Label htmlFor="phone">Phone Number:</Label>
+              <div className="relative">
+                <div className="h-input bg-white rounded-lg border border-gray-100 px-4 flex items-center gap-3">
+                  <div className="flex items-center gap-3 flex-shrink-0 cursor-pointer h-full">
+                    <Flag countryCode={flag} svg onClick={handleChangeShow} />
+                    <span className="text-gray-300">|</span>
+                    <span className="text-gray-800">{phoneCountry}</span>
+                  </div>
+                  <Input
+                    type="phoneNumber"
+                    id="phone"
+                    value={phone}
+                    onChange={handlePhoneInput}
+                    placeholder="0000000000"
+                  />
+                </div>
+                {phoneError && <p className="text-red-500">{phoneError}</p>}
+                {show && (
+                  <PhoneSelection
+                    phoneList={phoneList}
+                    onCountrySelect={handleSetPhoneCountry}
+                  />
+                )}
+              </div>
+            </div>
 
-          <div className="mb-4 grid w-full max-w-dm items-center gap-1.5 relative">
-            <Label htmlFor="password">Password:</Label>
-            <Input
-              type={type}
-              id="password"
-              onChange={handlePwdInput}
-              value={pwd}
-              required
-            />
-            <Button
-              variant="secondary"
-              onClick={handleChangeIcon}
-              className="absolute top-5 right-0 rounded-lg p-2 flex cursor-pointer border-2 border-blue-100 hover:border-blue-500 bg-white"
-            >
-              {icon ? <IoEyeOutline /> : <FaRegEyeSlash />}
-            </Button>
-            {pwdError && <p className="text-red-500">{pwdError}</p>}
-          </div>
+            <div className="mb-4 grid w-full max-w-dm items-center gap-1.5 relative">
+              <Label htmlFor="password">Password:</Label>
+              <Input
+                type={type}
+                id="password"
+                onChange={handlePwdInput}
+                value={pwd}
+                required
+              />
+              <Button
+                variant="secondary"
+                onClick={handleChangeIcon}
+                className="absolute top-5 right-0 rounded-lg p-2 flex cursor-pointer border-2 border-blue-100 hover:border-blue-500 bg-white"
+              >
+                {icon ? <IoEyeOutline /> : <FaRegEyeSlash />}
+              </Button>
+              {pwdError && <p className="text-red-500">{pwdError}</p>}
+            </div>
 
-          <div className="mb-4 grid w-full max-w-dm items-center gap-1.5 relative">
-            <Label htmlFor="repassword">Re-Password:</Label>
-            <Input
-              type={type2}
-              id="repassword"
-              onChange={handlePwdInput2}
-              value={pwd2}
-              required
-            />
-            <Button
-              variant="secondary"
-              onClick={handleChangeIcon2}
-              className="absolute top-5 right-0 rounded-lg p-2 flex cursor-pointer border-2 border-blue-100 hover:border-blue-500 bg-white"
-            >
-              {icon2 ? <IoEyeOutline /> : <FaRegEyeSlash />}
+            <div className="mb-4 grid w-full max-w-dm items-center gap-1.5 relative">
+              <Label htmlFor="repassword">Re-Password:</Label>
+              <Input
+                type={type2}
+                id="repassword"
+                onChange={handlePwdInput2}
+                value={pwd2}
+                required
+              />
+              <Button
+                variant="secondary"
+                onClick={handleChangeIcon2}
+                className="absolute top-5 right-0 rounded-lg p-2 flex cursor-pointer border-2 border-blue-100 hover:border-blue-500 bg-white"
+              >
+                {icon2 ? <IoEyeOutline /> : <FaRegEyeSlash />}
+              </Button>
+              {pwd2Error && <p className="text-red-500">{pwd2Error}</p>}
+            </div>
+            <Button variant="blue" className="mt-1 mb-5" onClick={handleSubmit}>
+              Sign up
             </Button>
-            {pwd2Error && <p className="text-red-500">{pwd2Error}</p>}
           </div>
-          <Button variant="blue" className="mt-1 mb-5" onClick={handleSubmit}>
-            Sign up
-          </Button>
+        </section>
+      )}
+      {showSuccess && (
+        <div className="animate-slide-up absolute z-10 bottom-0 right-0 p-7">
+          <SuccessNotify message="You registered an account successfully"/>
         </div>
-      </section>
+      )}
     </div>
   );
 };
