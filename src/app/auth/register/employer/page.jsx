@@ -1,19 +1,23 @@
 "use client";
 import "@/styles/global.css";
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { IoEyeOutline, IoInformation } from "react-icons/io5";
+import { IoEyeOutline } from "react-icons/io5";
 import { FaRegEyeSlash } from "react-icons/fa";
 import { IoMdArrowBack } from "react-icons/io";
 import { SuccessNotify } from "@/components/content/successNotification";
 import Flag from "react-country-flag";
 import phoneList from "@/utils/phoneDatabase";
+import DropdownInput from "@/components/content/dropdownInput";
+import DMInput from "@/components/content/dropdownManyInput";
 import PhoneSelection from "@/components/content/phoneSelection";
 import { registerEmployer as registerEmployerApi } from "@/app/api/auth/api";
+import { getBusinessSize, getCareer } from "@/app/api/provider/api";
+import { createBusiness } from "@/app/api/business/api";
 
 const Candidate = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -37,7 +41,7 @@ const Candidate = () => {
   const [pwdError, setPwdError] = useState("");
   const [pwd2Error, setPwd2Error] = useState("");
   const [show, setShow] = useState(false);
-  const [section, setSection] = useState(2);
+  const [section, setSection] = useState(1);
   //   company Information
   const [companyName, setCompanyName] = useState("");
   const [companyNameError, setCompanyNameError] = useState("");
@@ -59,12 +63,27 @@ const Candidate = () => {
   const [licenseBackError, setLicenseBackError] = useState("");
   const [address, setAddress] = useState("");
   const [addressError, setAddressError] = useState("");
-  const [userId, setUserId] = useState("");
-  const [areaDTOs, setAreaDTOs] = useState([]);
-  const [areaDTOsError, setAreaDTOsError] = useState("");
+  const [areas, setAreas] = useState([]);
+  const [areaError, setAreaError] = useState("");
   const lfRef = useRef(null);
   const lbRef = useRef(null);
   const { push } = useRouter();
+  const [businessSizeData, setBusinessSizeData] = useState([]);
+  const [careerData, setCareerData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await getBusinessSize();
+        setBusinessSizeData(data.data);
+        const careerData = await getCareer();
+        setCareerData(careerData.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
+  }, []);
 
   const handleShowNoti = () => {
     setShowSuccess(true);
@@ -150,6 +169,12 @@ const Candidate = () => {
       setPwd2Error("Re-Password is required");
       isValid = false;
     }
+
+    if (pwd !== pwd2) {
+      setPwd2Error("Re-Password is not match with password");
+      isValid = false;
+    }
+
     if (isValid) {
       console.log("Form submitted");
     }
@@ -247,22 +272,53 @@ const Candidate = () => {
     const userData = {
       email: email.trim(),
       fullName: fullName.trim(),
-      phoneNumber: phoneCountry + "-" + phone,
+      phoneNumber: `${phoneCountry}-${phone}`,
       password: pwd,
     };
-    const response = await registerEmployerApi(userData);
+    try {
+      const response = await registerEmployerApi(userData);
 
-    const businessData = {
+      if (response.data.statusCode === 0) {
+        setSection(1);
+        setEmailError(response.data.message);
+      } else {
+        const userId = response.data.message;
+        const businessData = {
+          FullName: companyName,
+          FoundedYear: foundedYear,
+          BusinessSize: businessSize,
+          TaxCode: taxCode,
+          Email: companyEmail,
+          PhoneNumber: `${phoneCountry}-${phoneNumber}`,
+          LicenseFont: licenseFontData,
+          LicenseBack: licenseBackData,
+          Address: address,
+          UserId: userId,
+          AreaDTOs: areas,
+        };
 
+        const businessResponse = await createBusiness(businessData);
+        console.log(businessResponse.data[0]);
+        if (businessResponse.data[0].success == true) {
+          handleShowNoti();
+        }
+      }
+    } catch {
+      console.log(error);
     }
-  }
+  };
+  useEffect(() => {
+    if (licenseBackData !== "") {
+      register();
+    }
+  }, [licenseBackData]);
 
   const handleSubmit = async () => {
     setIsLoading(true);
     try {
       await sendImage();
-      handleShowNoti();
     } catch (error) {
+      console.log(error);
       console.error(error);
     } finally {
       setIsLoading(false);
@@ -271,29 +327,36 @@ const Candidate = () => {
     }
   };
 
-
   const sendImage = async () => {
-    const lfFile = lfRef.current.files[0];
-    const lbFile = lbRef.current.files[0];
+    try {
+      const lfFile = lfRef.current.files[0];
+      const lbFile = lbRef.current.files[0];
 
-    const response = await fetch(`/api/images/upload?filename=${lfFile.name}`, {
-      method: "POST",
-      body: lfFile,
-    });
-    const responseb = await fetch(
-      `/api/images/upload?filename=${lbFile.name}`,
-      {
-        method: "POST",
-        body: lbFile,
-      }
-    );
+      const response = await fetch(
+        `/api/images/upload?filename=${lfFile.name}`,
+        {
+          method: "POST",
+          body: lfFile,
+        }
+      );
+      const responseb = await fetch(
+        `/api/images/upload?filename=${lbFile.name}`,
+        {
+          method: "POST",
+          body: lbFile,
+        }
+      );
 
-    const licenseFont = await response.json();
-    const licenseBack = await responseb.json();
-    const lcf = licenseFont.url.split("/").pop();
-    const lcb = licenseBack.url.split("/").pop();
-    setLicenseFontData(lcf);
-    setLicenseBackData(lcb);
+      const licenseFont = await response.json();
+      const licenseBack = await responseb.json();
+      const lcf = licenseFont.url.split("/").pop();
+      const lcb = licenseBack.url.split("/").pop();
+      setLicenseFontData(lcf);
+      setLicenseBackData(lcb);
+      console.log(licenseBackData);
+    } catch {
+      console.log(error);
+    }
   };
 
   const handleUserInput = (e) => setEmail(e.target.value);
@@ -311,8 +374,8 @@ const Candidate = () => {
     setFoundedYear(event.target.value);
   };
 
-  const handleBusinessSizeInput = (event) => {
-    setBusinessSize(event.target.value);
+  const handleBusinessSizeInput = (name) => {
+    setBusinessSize(name);
   };
 
   const handleTaxCodeInput = (event) => {
@@ -337,6 +400,12 @@ const Candidate = () => {
 
   const handleAddressInput = (event) => {
     setAddress(event.target.value);
+  };
+  const handleSelectArea = (dataList) => {
+    dataList.forEach((element) => {
+      const area = { careerId: element.id, businessName: 0 };
+      setAreas((prevAreas) => [...prevAreas, area]);
+    });
   };
 
   const personalDetail = () => {
@@ -494,22 +563,19 @@ const Candidate = () => {
             <p className="text-red-500">{foundedYearError}</p>
           )}
         </div>
-        <div className="mb-4 grid w-full max-w-dm items-center gap-1.5">
-          <Label htmlFor="businesssize" className="text-gray-600">
-            Business Size:
-          </Label>
-          <Input
-            type="text"
-            id="businesssize"
-            value={businessSize}
-            onChange={handleBusinessSizeInput}
-            required
-            maxLength={60}
-          />
-          {businessSizeError && (
-            <p className="text-red-500">{businessSizeError}</p>
-          )}
-        </div>
+        <DropdownInput
+          MyLabel="Business Size"
+          DataList={businessSizeData}
+          onDataSelect={handleBusinessSizeInput}
+        />
+        {businessSizeError && (
+          <p className="text-red-500">{businessSizeError}</p>
+        )}
+        <DMInput
+          MyLabel="Areas"
+          DataList={careerData}
+          onDataSelect={handleSelectArea}
+        />
         <div className="mb-4 grid w-full max-w-dm items-center gap-1.5">
           <Label htmlFor="taxcode" className="text-gray-600">
             Tax Code:
@@ -710,7 +776,7 @@ const Candidate = () => {
         </section>
       )}
       {showSuccess && (
-        <div className="animate-slide-up absolute z-10 bottom-0 right-0 p-7">
+        <div className="animate-slide-up absolute z-10 top-0 right-0 p-7">
           <SuccessNotify message="You registered an account successfully" />
         </div>
       )}

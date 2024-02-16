@@ -126,7 +126,6 @@ const Candidate = () => {
       isValid = false;
     }
     if (pwd !== pwd2) {
-      setPwdError("Re-Password is not match with password");
       setPwd2Error("Re-Password is not match with password");
       isValid = false;
     }

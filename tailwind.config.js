@@ -14,12 +14,15 @@ module.exports = {
       padding: "2rem",
       screens: {
         "2xl": "1400px",
+        "60px": "60px",
       },
     },
     extend: {
       colors: {
         'green':'#22c55e',
         'skyblue':'#1B95FA',
+        'header':'#F6F9FE',
+        'blue-btn': '#3C65F5',
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

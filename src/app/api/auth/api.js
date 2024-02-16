@@ -1,6 +1,6 @@
 import axios from "axios";
 const axiosClient = axios.create({
-    baseURL: "https://localhost:5007/", // Replace with your actual API base URL
+    baseURL: "https://localhost:5007/", 
   });
 
   const registerCandidate = (userData) => {
