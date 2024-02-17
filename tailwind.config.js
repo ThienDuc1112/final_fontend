@@ -23,6 +23,7 @@ module.exports = {
         'skyblue':'#1B95FA',
         'header':'#F6F9FE',
         'blue-btn': '#3C65F5',
+        'font-gray': '#66789c',
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
