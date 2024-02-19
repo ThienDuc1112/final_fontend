@@ -48,7 +48,7 @@ const Guide = () => {
         </div>
         <div className="mt-12 text-center">
           <Button variant="blue" size="lg">
-            Start now
+            Get Started
           </Button>
         </div>
       </div>

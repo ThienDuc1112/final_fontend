@@ -36,7 +36,7 @@ const PageBanner = () => {
             <div className="box-radius-8 bg-9 hover-up">
               <div className="image">
                 <Image
-                  src="/images/job-tools.png"
+                  src="/images/planning-job.png"
                   width={151}
                   height={129}
                   alt="logo"
