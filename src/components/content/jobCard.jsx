@@ -3,8 +3,10 @@ import { MdLocationOn } from "react-icons/md";
 import { FaCalendarDays } from "react-icons/fa6";
 import { FaBriefcase } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
+import Link from 'next/link';
 
 const JobCard = ({
+  id,
   companyName,
   location,
   title,
@@ -14,6 +16,7 @@ const JobCard = ({
   expirationDate,
   minSalary,
   maxSalary,
+  className,
 }) => {
   const date = new Date(expirationDate);
   const day = date.getDate();
@@ -21,7 +24,7 @@ const JobCard = ({
   const year = date.getFullYear();
   return (
     <>
-      <div className=" mt-1 xl:w-1/4 lg:w-1/3 md:w-1/2 sm:w-full w-full">
+      <div className={`mt-1 ${className} lg:w-1/3 md:w-1/2 sm:w-full w-full`}>
         <div className="card-grid-2 hover-up">
           <div className="card-grid-2-image-left">
             <span className="flash"></span>
@@ -35,7 +38,7 @@ const JobCard = ({
               />
             </div>
             <div className="right-info">
-              <a href="/job" className="company-title">
+              <a href="/jobs" className="company-title">
                 {companyName}
               </a>
               <div className="mt-1 flex card-location items-center items-baseline gap-1">
@@ -50,9 +53,9 @@ const JobCard = ({
           </div>
           <div className="card-block-info">
             <h4>
-              <a className="title" href="/jobs">
+              <Link className="title" href={`/jobs/${id}`}>
                 {title}
-              </a>
+              </Link>
             </h4>
             <div className="flex justify-start items-center gap-3">
               <div className="mt-1 flex card-time items-center gap-1">

@@ -182,6 +182,7 @@ const JobBanner = () => {
             <div className="flex flex-wrap">
               {jobs.map((job, index) => (
                 <JobCard
+                className= "xl:w-1/4"
                   key={index}
                   companyName={job.companyName}
                   location={job.location}

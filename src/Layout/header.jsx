@@ -38,9 +38,9 @@ const Header = () => {
                 </li>
                 <li className="float-left p-2.5 md:p-5">
                   <Link
-                    href="/content"
+                    href="/jobs"
                     className={`font-normal leading-normal block text-lg ${
-                      pathName == "/content" ? "text-blue-600" : "text-gray-800"
+                      pathName == "/jobs" ? "text-blue-600" : "text-gray-800"
                     }`}
                   >
                     Find Job

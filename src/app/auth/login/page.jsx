@@ -41,7 +41,7 @@ const Login = () => {
       const response = await loginA(email, pwd);
       const userData = await response.json();
       console.log(userData);
-      setUser("");
+      setEmail("");
       setPwd("");
       if (userData) {
         dispatch(setCredentials({ ...userData }));

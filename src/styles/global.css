@@ -102,6 +102,7 @@ h5 {
   font-size: 20px;
 }
 
+
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
@@ -639,7 +640,7 @@ img {
   background-image: url(/images/apply.svg);
   background-repeat: no-repeat;
   background-position: left 17px center;
-  padding-left: 45px;
+  padding-left: 48px;
 }
 
 /* /////Job Page ////// */
@@ -852,6 +853,32 @@ input[type="range"]::-webkit-slider-thumb {
 input[type='checkbox']:checked {
   background: #3c65f5;
 }
+/* input[type=checkbox]:before {
+  content: "";
+  display: block;
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  top: 0;
+  left: 0;
+  border: 2px solid #555555;
+  border-radius: 3px;
+  background-color: white;
+}
+input[type=checkbox]:checked:after {
+  content: "";
+  display: block;
+  width: 5px;
+  height: 10px;
+  border: solid black;
+  border-width: 0 2px 2px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  position: absolute;
+  top: 2px;
+  left: 6px;
+} */
 .cb-container input {
   cursor: pointer;
 }
@@ -866,6 +893,54 @@ input[type='checkbox']:checked {
   color: #4f5e64;
 }
 
+.box-filters-job {
+  border-bottom: 1px solid #e0e6f7;
+  margin-bottom: 10px;
+  padding: 0 0 10px;
+}
+
+
+/* /// detail-job ////*/
+.job-overview {
+  border: thin solid #e0e6f7;
+  border-radius: 8px;
+  padding: 20px 30px 30px;
+  margin-bottom: 50px;
+}
+
+.job-title {
+  font-family: Plus Jakarta Sans,sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 26px;
+  color: #05264e;
+  font-size: 20px;
+}
+
+.job-overview .sidebar-icon-item {
+  font-size: 18px;
+  color: #a0abb8;
+  min-width: 20px;
+}
+
+.job-overview .text-description {
+  font-size: 16px;
+  color: #66789c;
+  line-height: 24px;
+  font-weight: 400;
+  min-width: 120px;
+}
+.job-overview .sidebar-text-info {
+  display: flex;
+}
+
+.job-overview .sidebar-text-info .small-heading {
+  width: 100%;
+  display: inline-block;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 500;
+}
 
 
 

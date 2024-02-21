@@ -1,13 +1,13 @@
 "use client";
 import { useState } from "react";
 import MainBanner from "@/components/content/mainBanner";
-import ListJob from "@/components/content/listJob";
+import JobArea from "@/components/content/jobArea";
 
 export default function Job() {
   return (
     <div className="pt-10">
       <MainBanner />
-      <ListJob />
+      <JobArea />
     </div>
   );
 }
