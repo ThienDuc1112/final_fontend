@@ -12,14 +12,18 @@ const DropdownInput = ({ MyLabel, DataList, onDataSelect }) => {
       <div className="relative">
         <div className="relative flex items-center">
           <div
-            className="relative flex items-center justify-start border border-gray-100 w-full h-11
+            className="relative flex items-center justify-start border border-gray-600 w-full h-11
                  rounded-lg outline-none hover:border-blue-500 transition-all duration-300 focus:border-blue-500 bg-white"
             onClick={() => {
               setShow(!show);
             }}
           >
-            <span className={`absolute text-sm left-4 pointer-events-none ${name==='' ? "text-gray-300" : "text-black-300"}`}>
-              {name=== '' ? "select ..." : name}
+            <span
+              className={`absolute text-sm left-4 pointer-events-none ${
+                name === "" ? "text-gray-300" : "text-black-300"
+              }`}
+            >
+              {name === "" ? "select ..." : name}
             </span>
           </div>
           <div className="absolute right-4 h-6 w-6 bg-blue-200 flex items-center justify-center rounded-full">

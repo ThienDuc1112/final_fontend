@@ -942,6 +942,247 @@ input[type=checkbox]:checked:after {
   font-weight: 500;
 }
 
+.card-briefcase, .card-time {
+  font-size: 12px;
+  color: #a0abb8;
+  display: inline-block;
+  padding: 0 15px;
+}
+
+.card-briefcase {
+  background: url(/images/briefcase.svg) no-repeat 0 4px;
+}
+.card-time {
+  background: url(/images/time.svg) no-repeat 0 6px;
+}
+
+.content-single h3, .content-single h4, .content-single h5 {
+  margin-top: 20px;
+  color: #4f5e64;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.content-single li::marker {
+  unicode-bidi: isolate;
+  font-variant-numeric: tabular-nums;
+  text-transform: none;
+  text-indent: 0px !important;
+  text-align: start !important;
+  text-align-last: start !important;
+}
+
+.content-single p {
+  font-size: 16px;
+  color: #4f5e64;
+  line-height: 32px;
+  margin-bottom: 20px;
+}
+
+.content-single ul {
+  padding-left: 30px;
+  line-height: 32px;
+  font-size: 16px;
+  color: #4f5e64;
+  list-style: disc;
+}
+
+.sidebar-border, .sidebar-shadow {
+  border: 1px solid #e0e6f7;
+  padding: 25px;
+  border-radius: 8px;
+  background-color: #fff;
+  margin-bottom: 40px;
+}
+.sidebar-border .sidebar-heading, .sidebar-shadow .sidebar-heading {
+  width: 100%;
+}
+
+.sidebar-border .sidebar-heading .avatar-sidebar .sidebar-info, .sidebar-shadow .sidebar-heading .avatar-sidebar .sidebar-info {
+  display: block;
+  padding-left: 100px;
+  position: relative;
+}
+
+.sidebar-company {  
+  font-size: 18px;
+  font-family: Plus Jakarta Sans,sans-serif;
+  line-height: 18px;
+  font-weight: 700;
+  display: block;
+  padding-top: 5px;
+}
+
+.link-underline {
+  font-size: 12px;
+  line-height: 18px;
+  color: #05264e;
+  font-weight: 400;
+  text-decoration: underline;
+  display: block;
+}
+
+.link-underline:hover {
+  color: #1e73da;
+}
+
+.sidebar-list-job {
+  border-top: 1px solid rgba(6,18,36,.1);
+  display: inline-block;
+  width: 100%;
+  padding: 25px 0 0;
+  margin: 20px 0 0;
+}
+
+.box-map {
+  display: inline-block;
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.sidebar-list-job ul {
+  padding: 0;
+}
+
+.ul-disc {
+  list-style-type: disc;
+  padding-left: 25px!important;
+}
+
+.ul-disc li {
+  list-style-type: disc;
+  display: list-item!important;
+  padding-bottom: 5px!important;
+  color: #4f5e64;
+  font-size: 14px;
+  line-height: 22px;
+}
+
+/* //createCV// */
+.sidebar-left {
+  background-color: #e8edfa;
+  min-height: 100vh;
+  z-index: 9;
+  transition: all .4s ease;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  overflow-y: hidden;
+}
+.sidebar-left.is-fixed {
+  position: fixed;
+  top: 114px;
+  bottom: 1000px;
+  padding-bottom: 200px;
+  width: 560px;
+  z-index: 1;
+  height: 100vh;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  transition: all .4s ease;
+}
+
+.area-title{
+  position: relative;
+  display: block;
+  padding: 25px;
+}
+.list-title{
+  display: flex;
+  flex-direction: column;
+  padding: 0px;
+  margin: 0px 0px 25px;
+  list-style-type: none;
+}
+.list-title li .panel:hover {
+  background-color: rgb(39, 99, 211);
+  color: white;
+}
+.list-title li:hover .text {
+  color: white;
+  font-weight: 700; /* Change the color to your desired color */
+}
+
+.panel {
+  display: flex;
+  -webkit-box-align: center;
+  align-items: center;
+  height: 50px;
+  margin-bottom: 8px;
+  padding: 10px 20px;
+  background-color: rgb(255, 255, 255);
+  border-radius: 4px;
+  box-sizing: border-box;
+  cursor: pointer;
+  transition: all 0.4s ease 0s;
+}
+
+.panel .text {
+  padding-right: 10px;
+  margin: 0px;
+  font-size: 16px;
+  line-height: 1.5;
+  color: rgb(39, 99, 211);
+  cursor: pointer;
+}
+
+.make-cv-content.is-scrolling {
+  margin-left: auto;
+  transition: all .4s ease;
+}
+
+.make-cv-content {
+  background-color: #f0ecec;
+  min-height: 100vh;
+  padding-bottom: 5rem;
+  z-index: 9;
+  margin-top: 90px;
+}
+
+.title-resume {
+  margin-bottom: 30px;
+  font-size: 24px;
+  font-weight: bold;
+  line-height: 1;
+  color: rgb(57, 62, 70);
+}
+
+.section-form {
+  position: relative;
+  display: block;
+  padding: 35px 20px;
+  margin-bottom: 40px;
+  background-color: rgb(255, 255, 255);
+  max-width: 850px;
+}
+
+.section-form .ant-form-item-label {
+  display: inline-block;
+  width: 120px;
+  min-width: 160px;
+  font-size: 16px;
+  line-height: 1.275;
+  white-space: normal;
+  text-align: left;
+  font-weight: bold;
+}
+
+.ant-form-item-required:after {
+  display: inline-block;
+  content: "(*)" !important;
+  padding-left: 5px;
+  color: #d34127;
+}
+
+.dotTextArea {
+  font-size: 16px;
+  line-height: 1.5;
+  padding: 8px;
+  min-width: 500px;
+  border: solid 1px #bebcbb;
+  border-radius: 5px;
+  min-height: 200px;
+}
+
 
 
 
