@@ -1058,9 +1058,12 @@ input[type=checkbox]:checked:after {
 }
 
 /* //createCV// */
+.bg {
+  background-color: #F0ECEC;
+}
 .sidebar-left {
-  background-color: #e8edfa;
-  min-height: 100vh;
+  background-color: #e8edfa; 
+  min-height: 20vh;
   z-index: 9;
   transition: all .4s ease;
   scrollbar-width: none;
@@ -1070,11 +1073,10 @@ input[type=checkbox]:checked:after {
 .sidebar-left.is-fixed {
   position: fixed;
   top: 114px;
-  bottom: 1000px;
   padding-bottom: 200px;
   width: 560px;
   z-index: 1;
-  height: 100vh;
+  max-height: 55vh;
   overflow-y: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -1100,6 +1102,16 @@ input[type=checkbox]:checked:after {
 .list-title li:hover .text {
   color: white;
   font-weight: 700; /* Change the color to your desired color */
+}
+
+.list-title-item.active .panel {
+  background-color: rgb(39, 99, 211);
+  color: white;
+}
+
+.list-title-item.active .text {
+  color: white;
+  font-weight: 700;
 }
 
 .panel {

@@ -7,7 +7,7 @@ const Header = () => {
   const pathName = usePathname();
 
   return (
-    <header className="py-3 w-full bg-header fixed z-10 pb-9">
+    <header className="py-3 w-full bg-header fixed z-20 pb-9">
       <div className="mx-auto px-4 lg:max-w-screen-2xl">
         <div className="flex items-center">
           {/* left */}

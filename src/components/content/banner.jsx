@@ -5,7 +5,7 @@ const Banner = () => {
   return (
     <div className="relative">
       <div
-        className="bg-cover bg-no-repeat bg-bottom min-h-full z-[-10] w-full top-0 right-0"
+        className="bg-cover bg-no-repeat bg-bottom min-h-full z-[-10] w-full top-0 right-0 pt-[100px]"
         style={{ backgroundImage: "url('/images/bannerbg.png')" }}
       >
         <section class="inline-block w-full overflow-visible">

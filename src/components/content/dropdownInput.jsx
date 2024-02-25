@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { IoIosArrowDown } from "react-icons/io";
@@ -6,6 +6,7 @@ import { IoIosArrowDown } from "react-icons/io";
 const DropdownInput = ({ MyLabel, DataList, onDataSelect }) => {
   const [show, setShow] = useState(false);
   const [name, setName] = useState("");
+
   return (
     <div className="mb-4 grid w-full max-w-dm items-center gap-1.5">
       <Label className="text-gray-600">{MyLabel}</Label>
@@ -42,7 +43,7 @@ const DropdownInput = ({ MyLabel, DataList, onDataSelect }) => {
                 key={index}
                 onClick={() => {
                   setShow(!show);
-                  onDataSelect(element.name);
+                  onDataSelect(element.name, element.id);
                   setName(element.name);
                 }}
                 className="py-2 px-3 transition-all rounded-md duration-300 hover:bg-blue-100 cursor-pointer flex items-center text-sm"

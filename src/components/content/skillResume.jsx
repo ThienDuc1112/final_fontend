@@ -1,11 +1,16 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import MyDialog from "@/components/myDialog";
 import DropdownInput from "@/components/content/dropdownInput";
 
-export default function SkillResume() {
+export default function SkillResume({
+  onChangeData,
+  setAddSkill,
+  setCheck,
+  isValid,
+}) {
   const careerOptions = [
     {
       id: 1,
@@ -30,16 +35,15 @@ export default function SkillResume() {
   ];
 
   const [selectedCareer, setSelectedCareer] = useState(careerOptions[0].name);
-  const [selectedSkill, setSelectedSkill] = useState("");
   const [selectedSkillList, setSelectedSkillList] = useState([
     {
+      resumeId: 0,
       skillId: null,
-      name: "",
+      skillError: false,
     },
   ]);
   const [skillOptions, setSkillOptions] = useState([]);
-
-  console.log(selectedSkillList);
+  const [additonalSkill, setAdditionalSkill] = useState("");
 
   useEffect(() => {
     setSkillOptions(
@@ -47,6 +51,33 @@ export default function SkillResume() {
         []
     );
   }, [selectedCareer]);
+
+  const checkValid = () => {
+    return selectedSkillList.every((skill) => {
+      return skill.skillError === false;
+    });
+  };
+
+  const validateSkill = (skill) => {
+    if (skill.skillId === "" || skill.skillId === null) {
+      skill.skillError = true;
+    } else {
+      skill.skillError = false;
+    }
+  };
+  const handleCheckChange = useCallback(() => {
+    const updatedSkills = [...selectedSkillList];
+    updatedSkills.forEach((skill) => {
+      validateSkill(skill);
+    });
+    setSelectedSkillList(updatedSkills);
+  }, [selectedSkillList]);
+
+  useEffect(() => {
+    handleCheckChange();
+    const data = checkValid();
+    isValid(data);
+  }, [setCheck, isValid]);
 
   const handleCareerChange = (value) => {
     setSelectedCareer(value);
@@ -56,20 +87,31 @@ export default function SkillResume() {
     const updatedSkillList = [...selectedSkillList];
     updatedSkillList[index] = {
       ...updatedSkillList[index],
-      name: value,
+      skillId: value,
     };
     setSelectedSkillList(updatedSkillList);
+    onChangeData(updatedSkillList);
   };
 
   const addSkill = () => {
-    setSelectedSkillList([...selectedSkillList, selectedSkill]);
-    setSelectedSkill("");
+    setSelectedSkillList([
+      ...selectedSkillList,
+      {
+        resumeId: 0,
+        skillId: null,
+        skillError: false,
+      },
+    ]);
   };
 
   const removeSkill = (index) => {
-    const updatedSkillList = [...selectedSkillList];
-    updatedSkillList.splice(index, 1);
-    setSelectedSkillList(updatedSkillList);
+    setSelectedSkillList((prevSelectedSkillList) => {
+      const updatedSkillList = [...prevSelectedSkillList].filter(
+        (_, i) => i !== index
+      );
+      onChangeData(updatedSkillList);
+      return updatedSkillList;
+    });
   };
 
   return (
@@ -88,21 +130,33 @@ export default function SkillResume() {
           />
         </div>
         {selectedSkillList.map((skill, index) => (
-          <div key={index} className="flex items-center max-w-[550px]">
-            <div className="ant-form-item-label">
+          <div
+            key={index}
+            className={`flex items-stretch ${
+              index === 0 ? "max-w-[550px]" : "max-w-[650px]"
+            }`}
+          >
+            <div className="ant-form-item-label pt-5">
               <Label className="ant-form-item-required">Your Skill</Label>
             </div>
-            <DropdownInput
-              DataList={skillOptions}
-              onDataSelect={(value) => handleSkillChange(value, index)}
-            />
-            <div className="pl-6 pb-2">
-              <MyDialog
-                color="destructive"
-                name="Delete"
-                handleConfirm={() => removeSkill(index)}
-              ></MyDialog>
+            <div className="w-full flex flex-col self-start">
+              <DropdownInput
+                DataList={skillOptions}
+                onDataSelect={(value, id) => handleSkillChange(id, index)}
+              />
+              {skill.skillError && (
+                <span className="text-red-500 text-sm">Skill is required</span>
+              )}
             </div>
+            {index >= 1 && (
+              <div className="pl-5 pt-2">
+                <MyDialog
+                  color="destructive"
+                  name="Delete"
+                  handleConfirm={() => removeSkill(index)}
+                ></MyDialog>
+              </div>
+            )}
           </div>
         ))}
         <div className="flex justify-end">
@@ -110,6 +164,24 @@ export default function SkillResume() {
             <Button variant="blue" onClick={addSkill}>
               Add new Skill
             </Button>
+          </div>
+        </div>
+        <div className="border border-gray-400 mb-5 mt-5"></div>
+        <div className="flex mb-6 max-w-[550px]">
+          <div className="ant-form-item-label pt-3">
+            <Label className="pt-5">Additional Skill</Label>
+          </div>
+          <div className="w-full">
+            <Input
+              type="text"
+              value={additonalSkill}
+              onChange={(e) => {
+                setAdditionalSkill(e.target.value);
+                setAddSkill(e.target.value);
+              }}
+              placeHolder="e.g Solid, Angular, .Net core"
+              className="border-gray-700"
+            />
           </div>
         </div>
       </div>
