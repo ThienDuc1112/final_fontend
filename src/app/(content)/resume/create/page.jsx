@@ -20,11 +20,16 @@ import EducationResume from "@/components/content/educationResume";
 import LanguageResume from "@/components/content/languageResume";
 import { createResume } from "@/app/api/resume/api";
 import { Button } from "@/components/ui/button";
+import { SuccessNotify } from "@/components/content/successNotification";
+import { useRouter } from "next/navigation";
 
 export default function Create() {
+  const router = useRouter();
   const avatarRef = useRef(null);
   const [avatarPath, setAvatarPath] = useState("");
   const formRefs = useRef({});
+  const [showToast, setShowToast] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [validate, setValidate] = useState(false);
   const [active, setActive] = useState("form1");
   const [fullName, setFullName] = useState("");
@@ -81,7 +86,7 @@ export default function Create() {
   const [additonalSkill, setAdditionalSkill] = useState("");
   const [fullNameError, setFullNameError] = useState(false);
   const [titleError, setTitleError] = useState(false);
-  const [emailError, setEmailError] = useState(false);
+  const [emailError, setEmailError] = useState("");
   const [phoneError, setPhoneError] = useState(false);
   const [countryError, setCountryError] = useState(false);
   const [avatarUrlError, setAvatarUrlError] = useState(false);
@@ -98,7 +103,7 @@ export default function Create() {
     { id: 2, name: "Data Analyst" },
     { id: 3, name: "UX Designer" },
   ];
-  console.log(careerId);
+  console.log(dateOfBirth);
 
   const handleSetPhoneCountry = (countryCode, countryFlag) => {
     setShow(false);
@@ -132,6 +137,18 @@ export default function Create() {
     }
   };
 
+  function isValidEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }
+
+  const handleShowNoti = () => {
+    setShowToast(true);
+    setTimeout(() => {
+      setShowToast(false);
+    }, 3000);
+  };
+
   const validateData = () => {
     let isValid = true;
     setValidate((prevState) => !prevState);
@@ -160,10 +177,11 @@ export default function Create() {
     }
 
     if (email.trim() === "") {
-      setEmailError(true);
+      setEmailError("Email is required");
       isValid = false;
-    } else {
-      setEmailError(false);
+    } else if (!isValidEmail(email)) {
+      setEmailError("Email is not valid");
+      isValid = false;
     }
 
     if (phone.trim() === "") {
@@ -269,13 +287,15 @@ export default function Create() {
     const response = await createResume(resumeData);
     console.log(response.data);
 
-    if (!response.data.success) {
-      console.log("s");
+    if (!response.data.success&&response.data.success !== undefined) {
+      handleShowNoti();
+      console.log(response.data.success);
     }
     if (response.data.length > 0) {
       const success = response.data.every((item) => item.success);
       if (success) {
         console.log("succ");
+        router.push(`resume/${response.data[0].id}`);
       }
     }
   };
@@ -286,24 +306,37 @@ export default function Create() {
     }
   }, [avatarPath]);
 
-  const handleSubmit = async () => {
+  const handleTrans = () => {
     const isValid = validateData();
-    console.log(isValid);
     if (isValid) {
-      try {
-        await sendImage();
-      } catch (error) {
-        console.log(error);
-      }
+      handleSubmit();
+    }
+  };
+  const handleSubmit = async () => {
+    setIsLoading(true);
+    try {
+      await sendImage();
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <section className="section-box mt-[10px]">
+    <section className="section-box mt-[10px] relative">
       <div className="max-w-[1800px] mx-auto">
         <div className="border-b pt-3 border-black"></div>
-        <div className="flex flex-wrap bg">
+        <div className="flex flex-wrap bg relative">
           <div className="sidebar-left is-fixed w-1/3">
+            {showToast && (
+              <div className="animate-slide-up is-fixed absolute z-10 top-[1px] left-0 p-7">
+                <SuccessNotify
+                  message="Please ensure all data is correct"
+                  variant="destructive"
+                />
+              </div>
+            )}
             <div className="area-title ml-[90px]">
               <h3 className="text-blue-600 font-bold mb-4">Main Information</h3>
               <ul className="list-title">
@@ -405,9 +438,15 @@ export default function Create() {
                 </li>
               </ul>
               <div className="flex justify-center">
-                <Button variant="blue" size="xl" onClick={handleSubmit}>
-                  Save CV
-                </Button>
+                {isLoading ? (
+                  <div className="flex justify-center items-center flex-grow">
+                    <div className="spinner"></div>
+                  </div>
+                ) : (
+                  <Button variant="blue" size="xl" onClick={handleTrans}>
+                    Save CV
+                  </Button>
+                )}
               </div>
             </div>
           </div>
@@ -484,7 +523,7 @@ export default function Create() {
                           />
                           {emailError && (
                             <span className=" text-red-500 text-sm">
-                              Email is required
+                              {emailError}
                             </span>
                           )}
                         </div>

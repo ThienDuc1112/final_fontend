@@ -25,14 +25,14 @@ const Login = () => {
   const dispatch = useDispatch();
 
   const handleChangeIcon = () => {
-    if(icon === true){
+    if (icon === true) {
       setIcon(false);
       setType("text");
-    }else{
+    } else {
       setIcon(true);
       setType("password");
     }
-  }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -40,11 +40,13 @@ const Login = () => {
     try {
       const response = await loginA(email, pwd);
       const userData = await response.json();
-      console.log(userData);
+      const userJwt = TokenService.getUser(userData.access_token);
+      // console.log(userData);
+      console.log(userJwt);
       setEmail("");
       setPwd("");
       if (userData) {
-        dispatch(setCredentials({ ...userData }));
+        dispatch(setCredentials({ ...userJwt }));
         TokenService.updateLocalAccessToken(userData);
         push("/content");
       } else {
@@ -94,16 +96,17 @@ const Login = () => {
           </div>
           <p className="text-gray-600 hidden md:block md:mt-3">
             Do not have an account?
-            <a className="text-blue-500 hover:text-blue-700" href="/auth/register">
+            <a
+              className="text-blue-500 hover:text-blue-700"
+              href="/auth/register"
+            >
               {" "}
               Sign up
             </a>
           </p>
         </div>
 
-        <div
-          className="w-full max-w-md justify-center flex flex-col"
-        >
+        <div className="w-full max-w-md justify-center flex flex-col">
           <h1 className=" text-zinc-950 text-2xl font-bold mb-2 text-center pt-10 pb-2">
             Login to Job Platform
           </h1>
@@ -135,10 +138,12 @@ const Login = () => {
               value={pwd}
               required
             />
-            <Button variant="secondary"
-            onClick={handleChangeIcon}
-             className="absolute top-5 right-0 rounded-lg p-2 flex cursor-pointer border-2 border-blue-100 hover:border-blue-500 bg-white">
-            {icon ? <IoEyeOutline /> : <FaRegEyeSlash />}
+            <Button
+              variant="secondary"
+              onClick={handleChangeIcon}
+              className="absolute top-5 right-0 rounded-lg p-2 flex cursor-pointer border-2 border-blue-100 hover:border-blue-500 bg-white"
+            >
+              {icon ? <IoEyeOutline /> : <FaRegEyeSlash />}
             </Button>
           </div>
           {errMsg && <p className="text-red-500">{errMsg}</p>}

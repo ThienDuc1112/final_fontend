@@ -46,7 +46,7 @@ const Register = () => {
             </p>
           </div>
         </a>
-        { check === "candidate" ? <JobSeekerCT /> : <EmployerCT />}
+        {check === "candidate" ? <JobSeekerCT /> : <EmployerCT />}
       </div>
       <section className="basis-8/12 bg-gray-50 flex-grow flex flex-col min-h-screen px-6 md:px-0">
         <div className="flex justify-center items-center md:justify-end md:px-14 md:py-10 gap-2 text-gray-600">
@@ -91,7 +91,7 @@ const Register = () => {
             </div>
             {check === "candidate" && (
               <Button
-                variant="skyblue"
+                variant="blue"
                 size="lg"
                 className="w-full"
                 onClick={() => push("/auth/register/candidate")}
@@ -136,7 +136,7 @@ const Register = () => {
             </div>
             {check === "employer" && (
               <Button
-                variant="skyblue"
+                variant="blue"
                 size="lg"
                 className="w-full"
                 onClick={() => push("/auth/register/employer")}

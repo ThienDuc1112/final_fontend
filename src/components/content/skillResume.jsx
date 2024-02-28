@@ -179,7 +179,7 @@ export default function SkillResume({
                 setAdditionalSkill(e.target.value);
                 setAddSkill(e.target.value);
               }}
-              placeHolder="e.g Solid, Angular, .Net core"
+              placeholder="e.g Solid, Angular, .Net core"
               className="border-gray-700"
             />
           </div>

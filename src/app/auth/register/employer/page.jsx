@@ -777,7 +777,7 @@ const Candidate = () => {
       )}
       {showSuccess && (
         <div className="animate-slide-up absolute z-10 top-0 right-0 p-7">
-          <SuccessNotify message="You registered an account successfully" />
+          <SuccessNotify message="You registered an account successfully" variant="success" icon="success"/>
         </div>
       )}
     </div>

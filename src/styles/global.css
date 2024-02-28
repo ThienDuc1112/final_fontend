@@ -1196,6 +1196,203 @@ input[type=checkbox]:checked:after {
 }
 
 
+/* ///////resume detail page ////////////////////////////////// */
+.view-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  height: 50px;
+  width: 100%;
+  background-color: #252525;
+  color: #fff;
+}
+
+.wraper {
+  position: relative;
+  border: 1px solid #ccc;
+  background-color: #ffffff;
+  min-height: 29.6cm;
+  margin-bottom: 50px;
+}
+
+.bg-resume {
+  background-color: #33363a;
+}
+
+.main_content {
+  display: inline-block;
+  width: 100%;
+  position: relative;
+  min-height: 1100px;
+}
+
+.info {
+  text-transform: capitalize;
+  text-align: left;
+  font-size: 16px;
+}
+
+.header .box-section {
+  padding: 10px 37px 5px 37px;
+  color: #393e46;
+}
+
+.box-selection{
+  color: #393e46;
+  padding: 10px 37px 5px 37px;
+}
+
+.box-section .avatar_info {
+  display: inline-block;
+  margin: auto;
+  text-align: center;
+  width: 60px;
+  height: 80px;
+}
+
+.avatar_info .avatar {
+  margin: auto;
+  max-width: 100px;
+  max-height: 145px;
+  border: solid 1px #9c9ea1;
+}
+
+.personal_info {
+  display: inline-block;
+  margin-left: 65px;
+  vertical-align: top;
+}
+
+.info .general {
+  text-transform: none;
+  font-size: 13px;
+}
+
+.info .general .resume_person {
+  word-break: break-word;
+}
+
+.personal_info .general p:not(:empty):not(:first-of-type):before {
+  content: '\00a0-\00a0';
+}
+
+.main_title_section {
+  text-transform: capitalize;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+hr.ct_line_hr_color {
+  margin-top: 4px;
+  overflow: hidden;
+}
+.ct_line_hr_color {
+  box-sizing: border-box;
+  height: 1px;
+  width: 100%;
+  border: none;
+  background-color: #979797;
+}
+
+.section_item {
+  margin-top: 9px;
+}
+.desc {
+  font-size: inherit;
+  display: flex;
+  flex-wrap: wrap;
+  word-break: break-word;
+}
+
+.desc ul li {
+  font-size: 13px;
+}
+
+.technical-skill ul li p:not(:empty):not(:last-of-type)::after {
+  content: ',\00a0';
+}
+
+.technical-skill ul li p:not(:empty):last-of-type::after {
+  content: '.';
+}
+
+.item_experience .top_info {
+  font-weight: bold;
+  display: block;
+}
+
+.item_experience .company_and_time {
+  font-size: 16px;
+  width: 100%;
+  float: left;
+  color: #393e46;
+}
+
+.item_experience .work_position {
+  font-size: 14.5px;
+  width: 100%;
+  float: left;
+}
+
+.work_responsipility .title_respo {
+  font-weight: bold;
+}
+
+.work_responsipility .desc {
+  font-size: inherit;
+  display: flex;
+  flex-wrap: wrap;
+  word-break: break-word;
+}
+
+.desc span, p {
+  font-size: 13.5px;
+  color: #393E46;
+  background-color: inherit;
+}
+.br_break {
+  width: 100%;
+  content: '\A';
+  display: flex;
+  white-space: pre;
+}
+
+.content_languages {
+  display: flow-root;
+}
+
+.content_languages .item {
+  width: 33%;
+  float: left;
+}
+
+.content_languages .item_content {
+  width: 90%;
+  float: left;
+}
+
+.content_languages .item p {
+  display: inline-block;
+  text-align: center;
+}
+
+.content_languages .item .item_left {
+  padding-right: 1%;
+  width: 46%;
+}
+.content_languages .item .item_center {
+  width: 1%;
+}
+.content_languages .item .item_right {
+  width: 45%;
+}
+
+
 
 
 
