@@ -299,7 +299,7 @@ const Candidate = () => {
 
         const businessResponse = await createBusiness(businessData);
         console.log(businessResponse.data[0]);
-        if (businessResponse.data[0].success == true) {
+        if (businessResponse.data[0].success === true) {
           handleShowNoti();
         }
       }
@@ -707,7 +707,7 @@ const Candidate = () => {
           <div className="flex flex-col gap-9 my-20 relative">
             <div
               className={`flex gap-5 items-center  ${
-                section === 1 ? "border-white text-white" : "text-gray-300"
+                section === 1 ? "border-white text-white" : "text-white"
               }`}
             >
               <div
@@ -719,11 +719,13 @@ const Candidate = () => {
                   1
                 </div>
               </div>
-              <p>Personal Details</p>
+              <p className={`${section === 1 ? "text-white" : "text-gray-300"}`}>
+                Personal Details
+              </p>
             </div>
             <div
               className={`flex gap-5 items-center  ${
-                section === 2 ? "border-white text-white" : "text-gray-300"
+                section === 2 ? "border-white text-white" : "text-white"
               }`}
             >
               <div
@@ -735,7 +737,7 @@ const Candidate = () => {
                   2
                 </div>
               </div>
-              <p>Company Details</p>
+              <p className={`${section === 2 ? "text-white" : "text-gray-300"}`}>Company Details</p>
             </div>
             <div className="absolute bg-white w-0.5 h-full left-5">
               <div className="bg-white transition-all duration-200"></div>
@@ -777,7 +779,11 @@ const Candidate = () => {
       )}
       {showSuccess && (
         <div className="animate-slide-up absolute z-10 top-0 right-0 p-7">
-          <SuccessNotify message="You registered an account successfully" variant="success" icon="success"/>
+          <SuccessNotify
+            message="You registered an account successfully"
+            variant="success"
+            icon="success"
+          />
         </div>
       )}
     </div>

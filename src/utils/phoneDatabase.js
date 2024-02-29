@@ -231,7 +231,7 @@ const phoneList = [
       "name": "Canada",
       "flag": "🇨🇦",
       "code": "CA",
-      "dial_code": "+1"
+      "dial_code": "+932"
     },
     {
       "name": "Cape Verde",

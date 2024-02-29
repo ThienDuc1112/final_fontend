@@ -41,14 +41,18 @@ const Login = () => {
       const response = await loginA(email, pwd);
       const userData = await response.json();
       const userJwt = TokenService.getUser(userData.access_token);
-      // console.log(userData);
       console.log(userJwt);
       setEmail("");
       setPwd("");
       if (userData) {
         dispatch(setCredentials({ ...userJwt }));
         TokenService.updateLocalAccessToken(userData);
-        push("/content");
+        TokenService.updateUser(userJwt.sub, userJwt.role);
+        if (userJwt.role === "employer") {
+          push("/business");
+        } else {
+          push("/content");
+        }
       } else {
         console.log("not");
       }

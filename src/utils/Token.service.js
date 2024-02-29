@@ -53,6 +53,22 @@ const updateLocalAccessToken = (token) => {
       return "error";
     }
   };
+  const updateUser = (userId, role) => {
+    try {
+      Cookies.set("role", role);
+      Cookies.set("userId", userId);
+    } catch (error) {
+      console.log("Error updating local access token:", error);
+      return "error";
+    }
+  };
+  const getUserProfile = () => {
+      let user = {
+        userId: Cookies.get("userId"),
+        role: Cookies.get("role")
+      }
+      return user;
+  }
 
 const removeUser = () => {
     try {
@@ -105,7 +121,9 @@ const TokenService = {
     getExpiryDate,
     isAccessExpired,
     getLocalRefreshToken,
-    getUser
+    getUser,
+    updateUser,
+    getUserProfile
   };
 
 export default TokenService;

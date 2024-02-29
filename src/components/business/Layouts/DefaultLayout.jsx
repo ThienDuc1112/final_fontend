@@ -7,9 +7,9 @@ export default function DefaultLayout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   return (
     <>
-      <div className="relative flex flex-1 flex-col">
+      <div className="relative flex flex-col default-color">
         <Header />
-        <div className="flex h-screen overflow-hidden mt-[116px]">
+        <div className="flex overflow-visible mt-[116px] mb-[100px]">
           <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
           <div>
             <div className="ml-[230px] max-w-screen-2xl">{children}</div>

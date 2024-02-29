@@ -7,10 +7,10 @@ import { useGetAllCareerQuery } from "@/Context/features/career/careerApiSlice";
 export default function Content() {
   const data2 = TokenService.getLocalAccessToken();
   const isAvailable = TokenService.isAccessExpired();
-  const refreshToken = useSelector(selectUserId);
+  const userId = useSelector(selectUserId);
   const token = useSelector(selectRole);
   const { data, error, isLoading } = useGetAllCareerQuery();
-  console.log(data);
+  console.log(userId);
 
   return (
     <>
@@ -20,7 +20,7 @@ export default function Content() {
         is expired: {isAvailable ? <div>true</div> : <div>false</div>}
       </h2>
       <div>
-        Data: {refreshToken}:{token}
+        {/* Data: {refreshToken}:{token} */}
       </div>
     </>
   );

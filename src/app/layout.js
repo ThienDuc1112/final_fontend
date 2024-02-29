@@ -1,7 +1,6 @@
 import { Inter } from "next/font/google";
 import "@/styles/global.css";
 import { ReduxProvider } from "../Context/provider";
-import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const inter = Inter({ subsets: ["latin"] });
 

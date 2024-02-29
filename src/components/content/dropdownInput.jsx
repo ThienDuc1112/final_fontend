@@ -3,9 +3,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { IoIosArrowDown } from "react-icons/io";
 
-const DropdownInput = ({ MyLabel, DataList, onDataSelect }) => {
+const DropdownInput = ({ MyLabel, DataList, onDataSelect, selectedOption }) => {
   const [show, setShow] = useState(false);
-  const [name, setName] = useState("");
+  const [name, setName] = useState(selectedOption || "");
+
+  useEffect(() => {
+    setName(selectedOption);
+  },[selectedOption]);
 
   return (
     <div className="mb-4 grid w-full max-w-dm items-center gap-1.5">
