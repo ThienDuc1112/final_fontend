@@ -4,6 +4,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import MyDialog from "@/components/myDialog";
 import DropdownInput from "@/components/content/dropdownInput";
+import { getCareersWithSkills } from "@/app/api/provider/api";
 
 export default function SkillResume({
   onChangeData,
@@ -11,46 +12,46 @@ export default function SkillResume({
   setCheck,
   isValid,
 }) {
-  const careerOptions = [
-    {
-      id: 1,
-      name: "Web Developer",
-      skills: [
-        { id: 1, name: "JavaScript" },
-        { id: 2, name: "HTML" },
-        { id: 3, name: "CSS" },
-        { id: 4, name: "Front-end Frameworks" },
-      ],
-    },
-    {
-      id: 2,
-      name: "Data Scientist",
-      skills: [
-        { id: 5, name: "Python" },
-        { id: 6, name: "R" },
-        { id: 7, name: "Machine Learning" },
-        { id: 8, name: "Data Visualization" },
-      ],
-    },
-  ];
+  const [careerOptions, setCareerOptions] = useState(null);
+const [selectedCareer, setSelectedCareer] = useState(null);
+const [selectedSkillList, setSelectedSkillList] = useState([
+  {
+    resumeId: 0,
+    skillId: null,
+    skillError: false,
+  },
+]);
 
-  const [selectedCareer, setSelectedCareer] = useState(careerOptions[0].name);
-  const [selectedSkillList, setSelectedSkillList] = useState([
-    {
-      resumeId: 0,
-      skillId: null,
-      skillError: false,
-    },
-  ]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const allCareerInfo = await getCareersWithSkills();
+        setCareerOptions(allCareerInfo.data);
+        console.log(allCareerInfo.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    if (careerOptions && careerOptions.length > 0) {
+      setSelectedCareer(careerOptions[0].name);
+    }
+  }, [careerOptions]);
+
   const [skillOptions, setSkillOptions] = useState([]);
   const [additonalSkill, setAdditionalSkill] = useState("");
 
   useEffect(() => {
-    setSkillOptions(
-      careerOptions.find((career) => career.name === selectedCareer)?.skills ||
-        []
-    );
-  }, [selectedCareer]);
+    if (selectedCareer && careerOptions) {
+      const selectedCareerInfo = careerOptions.find(
+        (career) => career.name === selectedCareer
+      );
+      setSkillOptions(selectedCareerInfo?.skills || []);
+    }
+  }, [selectedCareer, careerOptions]);
 
   const checkValid = () => {
     return selectedSkillList.every((skill) => {

@@ -8,7 +8,7 @@ const Banner = () => {
         className="bg-cover bg-no-repeat bg-bottom min-h-full z-[-10] w-full top-0 right-0 pt-[100px]"
         style={{ backgroundImage: "url('/images/bannerbg.png')" }}
       >
-        <section class="inline-block w-full overflow-visible">
+        <section className="inline-block w-full overflow-visible">
           <div className="pr-16 pl-4 mx-auto relative">
             <div className="z-10 relative px-3.5">
               <div className="flex flex-wrap">

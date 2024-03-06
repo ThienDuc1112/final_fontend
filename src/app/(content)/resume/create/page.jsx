@@ -22,8 +22,15 @@ import { createResume } from "@/app/api/resume/api";
 import { Button } from "@/components/ui/button";
 import { SuccessNotify } from "@/components/content/successNotification";
 import { useRouter } from "next/navigation";
+import { useGetResumeInfoQuery } from "@/Context/features/resume/resumeApiSlice";
+import TokenService from "@/utils/Token.service";
+import { getCareer } from "@/app/api/provider/api";
 
 export default function Create() {
+  const { userId, role } = TokenService.getUserProfile();
+  const { resumeData, isError2, isLoading2, error2 } = useGetResumeInfoQuery({
+    userId,
+  });
   const router = useRouter();
   const avatarRef = useRef(null);
   const [avatarPath, setAvatarPath] = useState("");
@@ -32,20 +39,23 @@ export default function Create() {
   const [isLoading, setIsLoading] = useState(false);
   const [validate, setValidate] = useState(false);
   const [active, setActive] = useState("form1");
-  const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [phoneCountry, setPhoneCountry] = useState("+1");
-  const [flag, setFlag] = useState("US");
-  const [gender, setGender] = useState("male");
-  const [country, setCountry] = useState("");
-  const [avatarUrl, setAvatarUrl] = useState("");
-  const [dateOfBirth, setDateOfBirth] = useState(null);
-  const [status, setStatus] = useState("");
-  const [description, setDescription] = useState("");
-  const [linkedln, setLinkedl] = useState("");
-  const [title, setTitle] = useState("");
-  const [careerId, setCareerId] = useState(null);
+  const [formData, setFormData] = useState({
+    fullName: "",
+    email: "",
+    phone: "",
+    phoneCountry: "+1",
+    flag: "US",
+    gender: "male",
+    country: "",
+    avatarUrl: "",
+    dateOfBirth: null,
+    status: "",
+    description: "",
+    linkedln: "",
+    title: "",
+    careerId: null,
+  });
+  const [careers, setCareers] = useState(null);
   const [show, setShow] = useState(false);
   const [validExperience, setValidExperience] = useState(false);
   let validSkill = false;
@@ -98,18 +108,28 @@ export default function Create() {
     { name: "Not Currently Seeking" },
     { name: "Employed - Not Open to Offers" },
   ];
-  const careers = [
-    { id: 1, name: "Software Developer" },
-    { id: 2, name: "Data Analyst" },
-    { id: 3, name: "UX Designer" },
-  ];
-  console.log(dateOfBirth);
 
   const handleSetPhoneCountry = (countryCode, countryFlag) => {
     setShow(false);
-    setPhoneCountry(countryCode);
-    setFlag(countryFlag);
+    setFormData({
+      ...formData,
+      phoneCountry: countryCode,
+      flag: countryFlag,
+    });
   };
+  console.log(userId);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const allCareerInfo = await getCareer();
+        setCareers(allCareerInfo.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -162,63 +182,63 @@ export default function Create() {
       isValid = false;
     }
 
-    if (fullName.trim() === "") {
+    if (formData.fullName.trim() === "") {
       setFullNameError(true);
       isValid = false;
     } else {
       setFullNameError(false);
     }
 
-    if (title.trim() === "") {
+    if (formData.title.trim() === "") {
       setTitleError(true);
       isValid = false;
     } else {
       setTitleError(false);
     }
 
-    if (email.trim() === "") {
+    if (formData.email.trim() === "") {
       setEmailError("Email is required");
       isValid = false;
-    } else if (!isValidEmail(email)) {
+    } else if (!isValidEmail(formData.email)) {
       setEmailError("Email is not valid");
       isValid = false;
     }
 
-    if (phone.trim() === "") {
+    if (formData.phone.trim() === "") {
       setPhoneError(true);
       isValid = false;
     } else {
       setPhoneError(false);
     }
 
-    if (country.trim() === "") {
+    if (formData.country.trim() === "") {
       setCountryError(true);
       isValid = false;
     } else {
       setCountryError(false);
     }
-    if (avatarUrl.trim() === "") {
+    if (formData.avatarUrl.trim() === "") {
       setAvatarUrlError(true);
       isValid = false;
     } else {
       setAvatarUrlError(false);
     }
 
-    if (dateOfBirth === null) {
+    if (formData.dateOfBirth === null) {
       setDateOfBirthError(true);
       isValid = false;
     } else {
       setDateOfBirthError(false);
     }
 
-    if (status.trim() === "") {
+    if (formData.status.trim() === "") {
       setStatusError(true);
       isValid = false;
     } else {
       setStatusError(false);
     }
 
-    if (careerId === null) {
+    if (formData.careerId === null) {
       setCareerError(true);
       isValid = false;
     } else {
@@ -256,8 +276,7 @@ export default function Create() {
       const data = await response.json();
       const nameAvatar = data.url.split("/").pop();
       setAvatarPath(nameAvatar);
-      console.log(licenseBackData);
-    } catch {
+    } catch (error) {
       console.log(error);
     }
   };
@@ -265,19 +284,19 @@ export default function Create() {
   const sendData = async () => {
     const resumeData = {
       resume: {
-        userId: "string",
-        careerId: careerId,
-        fullName: fullName,
-        phoneNumber: phoneCountry + "-" + phone,
-        email: email,
-        linkedln: linkedln,
-        gender: gender,
-        country: country,
-        dateOfBirth: dateOfBirth,
-        statusOfEmployment: status,
-        avatarUrl: "avatarUrl",
-        description: description.replace(/\n/g, ""),
-        title: title,
+        userId: userId,
+        careerId: formData.careerId,
+        fullName: formData.fullName,
+        phoneNumber: formData.phoneCountry + "-" + formData.phone,
+        email: formData.email,
+        linkedln: formData.linkedln,
+        gender: formData.gender,
+        country: formData.country,
+        dateOfBirth: formData.dateOfBirth,
+        statusOfEmployment: formData.status,
+        avatarUrl: formData.avatarUrl,
+        description: formData.description.replace(/\n/g, ""),
+        title: formData.title,
       },
       educations: updatedEducations,
       experiences: updatedExperiences,
@@ -287,7 +306,7 @@ export default function Create() {
     const response = await createResume(resumeData);
     console.log(response.data);
 
-    if (!response.data.success&&response.data.success !== undefined) {
+    if (!response.data.success && response.data.success !== undefined) {
       handleShowNoti();
       console.log(response.data.success);
     }
@@ -470,8 +489,13 @@ export default function Create() {
                         <div className="w-full">
                           <Input
                             type="text"
-                            value={fullName}
-                            onChange={(e) => setFullName(e.target.value)}
+                            value={formData.fullName}
+                            onChange={(e) =>
+                              setFormData({
+                                ...formData,
+                                fullName: e.target.value,
+                              })
+                            }
                             required
                             className="border-gray-700"
                             placeholder="Enter your full name..."
@@ -493,8 +517,13 @@ export default function Create() {
                         <div className="w-full">
                           <Input
                             type="text"
-                            value={title}
-                            onChange={(e) => setTitle(e.target.value)}
+                            value={formData.title}
+                            onChange={(e) =>
+                              setFormData({
+                                ...formData,
+                                title: e.target.value,
+                              })
+                            }
                             required
                             className="border-gray-700"
                             placeholder="Enter your title..."
@@ -515,8 +544,13 @@ export default function Create() {
                         <div className="w-full">
                           <Input
                             type="text"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            value={formData.email}
+                            onChange={(e) =>
+                              setFormData({
+                                ...formData,
+                                email: e.target.value,
+                              })
+                            }
                             required
                             className="border-gray-700"
                             placeholder="Enter your email..."
@@ -537,8 +571,13 @@ export default function Create() {
                         <div className="w-full">
                           <Input
                             type="text"
-                            value={country}
-                            onChange={(e) => setCountry(e.target.value)}
+                            value={formData.country}
+                            onChange={(e) =>
+                              setFormData({
+                                ...formData,
+                                country: e.target.value,
+                              })
+                            }
                             required
                             className="border-gray-700"
                             placeholder="Enter your country..."
@@ -556,8 +595,13 @@ export default function Create() {
                         </div>
                         <Input
                           type="text"
-                          value={linkedln}
-                          onChange={(e) => setLinkedl(e.target.value)}
+                          value={formData.linkedln}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              linkedln: e.target.value,
+                            })
+                          }
                           required
                           className="border-gray-700"
                           placeholder="https://lk.id/username"
@@ -572,8 +616,13 @@ export default function Create() {
                         <div className="w-full">
                           <Input
                             type="file"
-                            value={avatarUrl}
-                            onChange={(e) => setAvatarUrl(e.target.value)}
+                            value={formData.avatarUrl}
+                            onChange={(e) =>
+                              setFormData({
+                                ...formData,
+                                avatarUrl: e.target.value,
+                              })
+                            }
                             ref={avatarRef}
                             required
                             className="border-gray-700"
@@ -596,20 +645,25 @@ export default function Create() {
                           <div className="h-input bg-white rounded-lg border border-gray-100 px-4 flex items-center gap-3">
                             <div className="flex items-center gap-3 flex-shrink-0 cursor-pointer h-full">
                               <Flag
-                                countryCode={flag}
+                                countryCode={formData.flag}
                                 svg
                                 onClick={(e) => setShow(true)}
                               />
                               <span className="text-gray-300">|</span>
                               <span className="text-gray-800">
-                                {phoneCountry}
+                                {formData.phoneCountry}
                               </span>
                             </div>
                             <Input
                               type="text"
                               className="border-gray-700"
-                              value={phone}
-                              onChange={(e) => setPhone(e.target.value)}
+                              value={formData.phone}
+                              onChange={(e) =>
+                                setFormData({
+                                  ...formData,
+                                  phone: e.target.value,
+                                })
+                              }
                               placeholder="000000000"
                               maxLength={9}
                             />
@@ -636,7 +690,7 @@ export default function Create() {
                         <div className="flex">
                           <button
                             className={`rounded p-2 mr-2 ${
-                              gender === "male"
+                              formData.gender === "male"
                                 ? "bg-blue-600 text-white"
                                 : "bg-gray-200"
                             }`}
@@ -646,7 +700,7 @@ export default function Create() {
                           </button>
                           <button
                             className={`rounded p-2 mr-2 ${
-                              gender === "female"
+                              formData.gender === "female"
                                 ? "bg-blue-500 text-white"
                                 : "bg-gray-200"
                             }`}
@@ -656,7 +710,7 @@ export default function Create() {
                           </button>
                           <button
                             className={`rounded p-2 mr-2 ${
-                              gender === "na"
+                              formData.gender === "na"
                                 ? "bg-blue-500 text-white"
                                 : "bg-gray-200"
                             }`}
@@ -676,13 +730,15 @@ export default function Create() {
                           <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <DatePicker
                               label="Select Date"
-                              value={dateOfBirth}
+                              value={formData.dateOfBirth}
                               slotProps={{
                                 textField: {
                                   helperText: "MM/DD/YYYY",
                                 },
                               }}
-                              onChange={(e) => setDateOfBirth(e.$d)}
+                              onChange={(e) =>
+                                setFormData({ ...formData, dateOfBirth: e.$d })
+                              }
                             />
                           </LocalizationProvider>
                           {dateOfBirthError && (
@@ -702,7 +758,9 @@ export default function Create() {
                           <DropdownInput
                             MyLabel=""
                             DataList={statusList}
-                            onDataSelect={(e) => setStatus(e)}
+                            onDataSelect={(e) =>
+                              setFormData({ ...formData, status: e })
+                            }
                           />
                           {statusError && (
                             <span className=" text-red-500 text-sm">
@@ -721,7 +779,9 @@ export default function Create() {
                           <DropdownInput
                             MyLabel=""
                             DataList={careers}
-                            onDataSelect={(value, id) => setCareerId(id)}
+                            onDataSelect={(value, id) =>
+                              setFormData({ ...formData, careerId: id })
+                            }
                           />
                           {careerError && (
                             <span className=" text-red-500 text-sm">
@@ -749,7 +809,9 @@ export default function Create() {
                           <Label>Description</Label>
                         </div>
                         <MyTextArea
-                          onTextChange={(value) => setDescription(value)}
+                          onTextChange={(value) =>
+                            setFormData({ ...formData, description: value })
+                          }
                         />
                       </div>
                     </div>

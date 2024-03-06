@@ -51,7 +51,7 @@ const Login = () => {
         if (userJwt.role === "employer") {
           push("/business");
         } else {
-          push("/content");
+          push("/Home");
         }
       } else {
         console.log("not");

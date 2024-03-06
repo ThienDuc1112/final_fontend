@@ -29,6 +29,10 @@ const getLanguages = () => {
    return axiosClient.get("/GetLanguages");
 }
 
+const getCareersWithSkills = () => {
+   return axiosClient.get("/GetCareersWithSkills");
+}
+
  export {
     getBusinessSize,
     getCareer,
@@ -36,7 +40,8 @@ const getLanguages = () => {
     getEducationLevel,
     getExperienceLevel,
     getJobType,
-    getLanguages
+    getLanguages,
+    getCareersWithSkills
  } 
  
   
