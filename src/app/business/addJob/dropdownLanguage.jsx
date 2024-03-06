@@ -2,17 +2,27 @@ import React, { useState, useEffect } from "react";
 import { Label } from "@/components/ui/label";
 import { IoIosArrowDown } from "react-icons/io";
 
-const DropdownInput = ({ MyLabel, DataList, onDataSelect, selectedOption, required }) => {
+const DropdownInputLanguage = ({
+  MyLabel,
+  DataList,
+  onDataSelect,
+  selectedOption,
+  required,
+}) => {
   const [show, setShow] = useState(false);
   const [name, setName] = useState(selectedOption || "");
 
   useEffect(() => {
     setName(selectedOption);
-  },[selectedOption]);
+  }, [selectedOption]);
 
   return (
     <div className="mb-4 grid w-full max-w-dm items-center gap-1.5">
-      <Label className= {`text-gray-600 ${required && 'ant-form-item-required'} `}>{MyLabel}</Label>
+      <Label
+        className={`text-gray-600 ${required && "ant-form-item-required"} `}
+      >
+        {MyLabel}
+      </Label>
       <div className="relative">
         <div className="relative flex items-center">
           <div
@@ -46,12 +56,12 @@ const DropdownInput = ({ MyLabel, DataList, onDataSelect, selectedOption, requir
                 key={index}
                 onClick={() => {
                   setShow(!show);
-                  onDataSelect(element.name, element.id);
-                  setName(element.name);
+                  onDataSelect(element.languageName, element.id);
+                  setName(element.languageName + " - " + element.level);
                 }}
                 className="py-2 px-3 transition-all rounded-md duration-300 hover:bg-blue-100 cursor-pointer flex items-center text-sm"
               >
-                {element.name}
+                {element.languageName} - {element.level}
               </div>
             ))}
           </div>
@@ -61,4 +71,4 @@ const DropdownInput = ({ MyLabel, DataList, onDataSelect, selectedOption, requir
   );
 };
 
-export default DropdownInput;
+export default DropdownInputLanguage;

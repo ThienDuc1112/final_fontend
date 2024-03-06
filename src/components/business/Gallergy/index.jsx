@@ -30,7 +30,7 @@ export default function Gallery({ passedImages, Id }) {
   };
 
   useEffect(() => {
-    setImages(passedImages || []);
+    setImages([...passedImages] || []);
   },[passedImages])
 
   const remainingImagesCount = images.length - 3;
@@ -72,7 +72,6 @@ export default function Gallery({ passedImages, Id }) {
 
       const logo = await response.json();
       const logoPath = logo.url.split("/").pop();
-      console.log(logo);
       setImagePath(logoPath);
     } catch (error) {
       console.log(error);

@@ -12,9 +12,31 @@ const axiosClient = axios.create({
    return axiosClient.get("/GetAllCareer");
  }
 
+const getCareerLevel = () => {
+   return axiosClient.get("/Provider/GetCareerLevel");
+}
+const getEducationLevel = () => {
+   return axiosClient.get("/Provider/GetEducationLevel");
+}
+const getExperienceLevel = () => {
+   return axiosClient.get("/Provider/GetExperienceYear");
+}
+const getJobType = () => {
+   return axiosClient.get("/Provider/GetJobType");
+}
+
+const getLanguages = () => {
+   return axiosClient.get("/GetLanguages");
+}
+
  export {
     getBusinessSize,
     getCareer,
+    getCareerLevel,
+    getEducationLevel,
+    getExperienceLevel,
+    getJobType,
+    getLanguages
  } 
  
   

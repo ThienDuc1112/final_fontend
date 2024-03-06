@@ -1189,8 +1189,9 @@ input[type=checkbox]:checked:after {
   font-size: 16px;
   line-height: 1.5;
   padding: 8px;
-  min-width: 500px;
-  border: solid 1px #bebcbb;
+  min-width: 600px;
+  min-height: 200px;
+  border: solid 1px #5c5a59;
   border-radius: 5px;
   min-height: 200px;
 }

@@ -12,7 +12,7 @@ import Flag from "react-country-flag";
 import phoneList from "@/utils/phoneDatabase";
 import PhoneSelection from "@/components/content/phoneSelection";
 import DropdownInput from "@/components/content/dropdownInput";
-import DMInput from "@/components/content/dropdownManyInput";
+import { SuccessNotify } from "@/components/content/successNotification";
 import { getBusinessSize } from "@/app/api/provider/api";
 import { useUpdateBusinessMutation } from "@/Context/features/business/businessApiSlice";
 import Gallergy from "@/components/business/Gallergy";
@@ -50,6 +50,7 @@ export default function Profile() {
   const [flag, setFlag] = useState(country.code);
   const [show, setShow] = useState(false);
   const [businessSizeData, setBusinessSizeData] = useState([]);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const [fullNameError, setFullNameError] = useState("");
   const [foundedYearError, setFoundedYearError] = useState("");
@@ -96,6 +97,13 @@ export default function Profile() {
     };
     fetchData();
   }, []);
+
+  const handleShowNoti = () => {
+    setShowSuccess(true);
+    setTimeout(() => {
+      setShowSuccess(false);
+    }, 5000);
+  };
 
   const handleSetPhoneCountry = (countryCode, countryFlag) => {
     setShow(false);
@@ -209,17 +217,19 @@ export default function Profile() {
       Description: description,
     };
     try {
+      setLoadingData(true);
       let isValid = checkValidData();
       if (isValid) {
         const response = await updateBusinessData(businessData);
         console.log(response);
-        setLoadingData(true);
-        if (response) {
-          setLoadingData(false);
+        if (response.data === null) {
+          handleShowNoti();
         }
       }
     } catch (error) {
       console.log("error:" + error);
+    } finally {
+      setLoadingData(false);
     }
   };
 
@@ -557,6 +567,18 @@ export default function Profile() {
             </div>
             <Gallergy passedImages={images} Id={businessId} />
           </div>
+          {showSuccess && (
+            <div
+              className="animate-slide-up fixed z-30 top-20 right-0 p-7"
+              style={{ position: "fixed" }}
+            >
+              <SuccessNotify
+                message="You updated your business profile successfully"
+                variant="success"
+                icon="success"
+              />
+            </div>
+          )}
         </DefaultLayout>
       )}
     </>
