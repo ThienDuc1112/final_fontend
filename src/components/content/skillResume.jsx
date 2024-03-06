@@ -5,22 +5,17 @@ import { Button } from "@/components/ui/button";
 import MyDialog from "@/components/myDialog";
 import DropdownInput from "@/components/content/dropdownInput";
 import { getCareersWithSkills } from "@/app/api/provider/api";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  selectSelectedSkillList,
+  setSelectedSkillList,
+} from "@/Context/features/resume/resumeSlice";
 
-export default function SkillResume({
-  onChangeData,
-  setAddSkill,
-  setCheck,
-  isValid,
-}) {
+export default function SkillResume({ setAddSkill, setCheck, isValid }) {
   const [careerOptions, setCareerOptions] = useState(null);
-const [selectedCareer, setSelectedCareer] = useState(null);
-const [selectedSkillList, setSelectedSkillList] = useState([
-  {
-    resumeId: 0,
-    skillId: null,
-    skillError: false,
-  },
-]);
+  const [selectedCareer, setSelectedCareer] = useState(null);
+  const dispatch = useDispatch();
+  const selectedSkillList = useSelector(selectSelectedSkillList);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -61,18 +56,21 @@ const [selectedSkillList, setSelectedSkillList] = useState([
 
   const validateSkill = (skill) => {
     if (skill.skillId === "" || skill.skillId === null) {
-      skill.skillError = true;
+      return { ...skill, skillError: true };
     } else {
-      skill.skillError = false;
+      return { ...skill, skillError: false };
     }
   };
   const handleCheckChange = useCallback(() => {
-    const updatedSkills = [...selectedSkillList];
-    updatedSkills.forEach((skill) => {
-      validateSkill(skill);
-    });
-    setSelectedSkillList(updatedSkills);
-  }, [selectedSkillList]);
+    const updatedSkills = selectedSkillList.map((skill) =>
+      validateSkill(skill)
+    );
+    const hasDifference = updatedSkills.some((skill, index) => skill.skillError !== selectedSkillList[index].skillError);
+
+  if (hasDifference) {
+    dispatch(setSelectedSkillList(updatedSkills));
+  }
+  }, [selectedSkillList, dispatch]);
 
   useEffect(() => {
     handleCheckChange();
@@ -90,29 +88,24 @@ const [selectedSkillList, setSelectedSkillList] = useState([
       ...updatedSkillList[index],
       skillId: value,
     };
-    setSelectedSkillList(updatedSkillList);
-    onChangeData(updatedSkillList);
+    dispatch(setSelectedSkillList(updatedSkillList));
   };
 
   const addSkill = () => {
-    setSelectedSkillList([
+    const newSkillList = [
       ...selectedSkillList,
       {
         resumeId: 0,
         skillId: null,
         skillError: false,
       },
-    ]);
+    ];
+    dispatch(setSelectedSkillList(newSkillList));
   };
 
   const removeSkill = (index) => {
-    setSelectedSkillList((prevSelectedSkillList) => {
-      const updatedSkillList = [...prevSelectedSkillList].filter(
-        (_, i) => i !== index
-      );
-      onChangeData(updatedSkillList);
-      return updatedSkillList;
-    });
+    const updatedSkillList = selectedSkillList.filter((_, i) => i !== index);
+    dispatch(setSelectedSkillList(updatedSkillList));
   };
 
   return (

@@ -4,8 +4,15 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import MyDialog from "@/components/myDialog";
 import DropdownInput from "@/components/content/dropdownInput";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  selectSelectedLanguageList,
+  setSelectedLanguageList,
+} from "@/Context/features/resume/resumeSlice";
 
-export default function LanguageResume({ onChangeData, setCheck, isValid }) {
+export default function LanguageResume({ setCheck, isValid }) {
+  const dispatch = useDispatch();
+  const selectedLanguageList = useSelector(selectSelectedLanguageList);
   const [selectedLanguage, setSelectedLanguage] = useState("");
   const [selectedLevel, setSelectedLevel] = useState("");
   const [inde, setInde] = useState(null);
@@ -36,15 +43,6 @@ export default function LanguageResume({ onChangeData, setCheck, isValid }) {
     { id: 2, name: "Intermediate" },
     { id: 3, name: "Advanced" },
   ];
-
-  const [selectedLanguageList, setSelectedLanguageList] = useState([
-    {
-      resumeId: 0,
-      languageId: null,
-      languageError: false,
-    },
-  ]);
-  console.log(selectedLanguageList);
   const findIdByLanguageAndLevel = (selectedLanguage, selectedLevel) => {
     const language = languageOptions.find(
       (option) =>
@@ -61,19 +59,25 @@ export default function LanguageResume({ onChangeData, setCheck, isValid }) {
 
   const validateLanguage = (language) => {
     if (language.languageId === "" || language.languageId === null) {
-      language.languageError = true;
+      return { ...language, languageError: true };
     } else {
-      language.languageError = false;
+      return { ...language, languageError: false };
     }
   };
 
   const handleCheckChange = useCallback(() => {
-    const updatedLanguages = [...selectedLanguageList];
-    updatedLanguages.forEach((language) => {
-      validateLanguage(language);
-    });
-    setSelectedLanguageList(updatedLanguages);
-  }, [selectedLanguageList]);
+    const updatedLanguages = selectedLanguageList.map((language) =>
+      validateLanguage(language)
+    );
+    const hasDifference = updatedLanguages.some(
+      (language, index) =>
+        language.languageError !== selectedLanguageList[index].languageError
+    );
+
+    if (hasDifference) {
+      dispatch(setSelectedLanguageList(updatedLanguages));
+    }
+  }, [selectedLanguageList, dispatch]);
 
   useEffect(() => {
     handleCheckChange();
@@ -82,35 +86,27 @@ export default function LanguageResume({ onChangeData, setCheck, isValid }) {
   }, [setCheck, isValid]);
 
   useEffect(() => {
-    const founId = findIdByLanguageAndLevel(selectedLanguage, selectedLevel);
-    const updatedLanguageList = [...selectedLanguageList];
-    updatedLanguageList[inde] = {
-      ...updatedLanguageList[inde],
-      languageId: founId,
-    };
-    setSelectedLanguageList(updatedLanguageList);
-    onChangeData(updatedLanguageList);
+    if (inde !== null) {
+      const founId = findIdByLanguageAndLevel(selectedLanguage, selectedLevel);
+      const updatedLanguageList = selectedLanguageList.map((language, index) =>
+        index === inde ? { ...language, languageId: founId } : language
+      );
+      dispatch(setSelectedLanguageList(updatedLanguageList));
+    }
   }, [selectedLanguage, selectedLevel, inde]);
 
   const addLanguage = () => {
-    setSelectedLanguageList([
-      ...selectedLanguageList,
-      {
-        resumeId: 0,
-        languageId: null,
-        languageError: false,
-      },
-    ]);
+    const newLanguage = {
+      resumeId: 0,
+      languageId: null,
+      languageError: false,
+    };
+    dispatch(setSelectedLanguageList([...selectedLanguageList, newLanguage]));
   };
 
   const removeLanguage = (index) => {
-    setSelectedLanguageList((prevSelectedLanguageList) => {
-      const updatedLanguageList = [...prevSelectedLanguageList].filter(
-        (_, i) => i !== index
-      );
-      onChangeData(updatedLanguageList);
-      return updatedLanguageList;
-    });
+    const updatedLanguageList = selectedLanguageList.filter((_, i) => i !== index);
+    dispatch(setSelectedLanguageList(updatedLanguageList));
   };
 
   return (

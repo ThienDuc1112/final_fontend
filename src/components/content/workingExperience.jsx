@@ -8,54 +8,33 @@ import { Label } from "@/components/ui/label";
 import MyTextArea from "@/components/myTextArea";
 import { Button } from "@/components/ui/button";
 import MyDialog from "@/components/myDialog";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  selectExperiences,
+  setExperiences,
+} from "@/Context/features/resume/resumeSlice";
 
-export default function WorkingExperience({ onChangeData, setCheck, isValid }) {
-  const [experiences, setExperiences] = useState([
-    {
-      company: "",
-      title: "",
-      startDate: null,
-      endDate: null,
-      responsibility: "",
-      companyError: false,
-      titleError: false,
-      startTimeError: false,
-      endTimeError: false,
-      responsibilityError: false,
-    },
-  ]);
+export default function WorkingExperience({ setCheck, isValid }) {
+  const dispatch = useDispatch();
+  const experiences = useSelector(selectExperiences);
 
   const validateExperience = (experience) => {
     const { company, title, startDate, endDate, responsibility } = experience;
-
-    if (company === "" || company === null) {
-      experience.companyError = true;
-    } else {
-      experience.companyError = false;
-    }
-    if (title === "" || title === null) {
-      experience.titleError = true;
-    } else {
-      experience.titleError = false;
-    }
-
-    if (startDate === null) {
-      experience.startTimeError = true;
-    } else {
-      experience.startTimeError = false;
-    }
-
-    if (endDate === null) {
-      experience.endTimeError = true;
-    } else {
-      experience.endTimeError = false;
-    }
-
-    if (!responsibility) {
-      experience.responsibilityError = true;
-    } else {
-      experience.responsibilityError = false;
-    }
+  
+    const companyError = company === "" || company === null;
+    const titleError = title === "" || title === null;
+    const startTimeError = startDate === null;
+    const endTimeError = endDate === null;
+    const responsibilityError = !responsibility;
+  
+    return {
+      ...experience,
+      companyError,
+      titleError,
+      startTimeError,
+      endTimeError,
+      responsibilityError,
+    };
   };
 
   const checkValid = () => {
@@ -71,12 +50,20 @@ export default function WorkingExperience({ onChangeData, setCheck, isValid }) {
   };
 
   const handleCheckChange = useCallback(() => {
-    const updatedExperiences = [...experiences];
-    updatedExperiences.forEach((experience) => {
-      validateExperience(experience);
-    });
-    setExperiences(updatedExperiences);
-  }, [experiences]);
+    const validatedExperiences = experiences.map((experience) => validateExperience(experience));
+    const hasDifference = validatedExperiences.some((exp, index) => 
+      exp.companyError !== experiences[index].companyError ||
+      exp.titleError !== experiences[index].titleError ||
+      exp.startTimeError !== experiences[index].startTimeError ||
+      exp.endTimeError !== experiences[index].endTimeError ||
+      exp.responsibilityError !== experiences[index].responsibilityError
+    );
+  
+    if (hasDifference) {
+      dispatch(setExperiences(validatedExperiences));
+    }
+  }, [dispatch, experiences]);
+  
 
   useEffect(() => {
     handleCheckChange();
@@ -85,40 +72,32 @@ export default function WorkingExperience({ onChangeData, setCheck, isValid }) {
   }, [setCheck, isValid]);
 
   const handleChange = (index, field, value) => {
-    setExperiences((prevExperiences) => {
-      const updatedExperiences = [...prevExperiences];
-      updatedExperiences[index][field] = value;
-      return updatedExperiences;
-    });
-    onChangeData(experiences);
+    const updatedExperiences = experiences.map((exp, idx) => 
+    idx === index ? { ...exp, [field]: value } : exp
+  );
+  dispatch(setExperiences(updatedExperiences));
   };
 
   const handleAddExperience = () => {
-    setExperiences((prevExperiences) => [
-      ...prevExperiences,
-      {
-        company: "",
-        title: "",
-        startDate: "",
-        endDate: "",
-        responsibility: "",
-        companyError: false,
-        titleError: false,
-        startTimeError: false,
-        endTimeError: false,
-        responsibilityError: false,
-      },
-    ]);
-    onChangeData(experiences);
+    const newExperience = {
+      company: "",
+      title: "",
+      startDate: null,
+      endDate: null, 
+      responsibility: "",
+      companyError: false,
+      titleError: false,
+      startTimeError: false,
+      endTimeError: false,
+      responsibilityError: false,
+    };
+    const updatedExperiences = [...experiences, newExperience];
+    dispatch(setExperiences(updatedExperiences));
   };
 
   const handleRemoveExperience = (index) => {
-    setExperiences((prevExperiences) => {
-      const updatedExperiences = [...prevExperiences];
-      updatedExperiences.splice(index, 1);
-      return updatedExperiences;
-    });
-    onChangeData(experiences);
+    const updatedExperiences = experiences.filter((_, idx) => idx !== index);
+  dispatch(setExperiences(updatedExperiences));
   };
 
   return (

@@ -25,8 +25,24 @@ import { useRouter } from "next/navigation";
 import { useGetResumeInfoQuery } from "@/Context/features/resume/resumeApiSlice";
 import TokenService from "@/utils/Token.service";
 import { getCareer } from "@/app/api/provider/api";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  selectSelectedSkillList,
+  setSelectedSkillList,
+  selectSelectedLanguageList,
+  setSelectedLanguageList,
+  selectExperiences,
+  setExperiences,
+  selectEducations,
+  setEducations,
+} from "@/Context/features/resume/resumeSlice";
 
 export default function Create() {
+  const dispatch = useDispatch();
+  const selectedSkillList = useSelector(selectSelectedSkillList);
+  const selectedLanguageList = useSelector(selectSelectedLanguageList);
+  const experiences = useSelector(selectExperiences);
+  const educations = useSelector(selectEducations);
   const { userId, role } = TokenService.getUserProfile();
   const { resumeData, isError2, isLoading2, error2 } = useGetResumeInfoQuery({
     userId,
@@ -61,38 +77,7 @@ export default function Create() {
   let validSkill = false;
   let validEducation = false;
   let validLanguage = false;
-  const [experiences, setExperiences] = useState([
-    {
-      company: "",
-      title: "",
-      startTime: null,
-      endTime: null,
-      responsibility: "",
-    },
-  ]);
-  const [selectedSkillList, setSelectedSkillList] = useState([
-    {
-      resumeId: 0,
-      skillId: null,
-    },
-  ]);
-  const [selectedLanguageList, setSelectedLanguageList] = useState([
-    {
-      resumeId: 0,
-      languageId: null,
-    },
-  ]);
-  const [educations, setEducations] = useState([
-    {
-      resumeId: 0,
-      universityName: "",
-      degree: "",
-      major: "",
-      startDate: null,
-      endDate: null,
-      description: "",
-    },
-  ]);
+
   const [additonalSkill, setAdditionalSkill] = useState("");
   const [fullNameError, setFullNameError] = useState(false);
   const [titleError, setTitleError] = useState(false);
@@ -117,7 +102,7 @@ export default function Create() {
       flag: countryFlag,
     });
   };
-  console.log(userId);
+  console.log(educations);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -823,7 +808,6 @@ export default function Create() {
                   className="formColor"
                 >
                   <WorkingExperience
-                    onChangeData={(experiences) => setExperiences(experiences)}
                     setCheck={validate}
                     isValid={(data) => setValidExperience(data)}
                   />
@@ -834,9 +818,6 @@ export default function Create() {
                   className="formColor"
                 >
                   <SkillResume
-                    onChangeData={(skillList) =>
-                      setSelectedSkillList(skillList)
-                    }
                     setAddSkill={(addSkill) => setAdditionalSkill(addSkill)}
                     setCheck={validate}
                     isValid={(data) => (validSkill = data)}
@@ -848,7 +829,6 @@ export default function Create() {
                   className="formColor"
                 >
                   <EducationResume
-                    onChangeData={(education) => setEducations(education)}
                     setCheck={validate}
                     isValid={(data) => {
                       validEducation = data;
@@ -861,9 +841,6 @@ export default function Create() {
                   className="formColor"
                 >
                   <LanguageResume
-                    onChangeData={(languages) =>
-                      setSelectedLanguageList(languages)
-                    }
                     setCheck={validate}
                     isValid={(data) => (validLanguage = data)}
                   />

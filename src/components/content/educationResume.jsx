@@ -8,24 +8,15 @@ import MyTextArea from "@/components/myTextArea";
 import { Button } from "@/components/ui/button";
 import MyDialog from "@/components/myDialog";
 import DropdownInput from "@/components/content/dropdownInput";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  selectEducations,
+  setEducations,
+} from "@/Context/features/resume/resumeSlice";
 
-export default function Education({ onChangeData, setCheck, isValid }) {
-  const [educations, setEducations] = useState([
-    {
-      resumeId: 0,
-      universityName: "",
-      degree: "",
-      major: "",
-      startDate: null,
-      endDate: null,
-      universityError: false,
-      degreeError: false,
-      majorError: false,
-      startDateError: false,
-      endDateError: false,
-      description: "",
-    },
-  ]);
+export default function Education({ setCheck, isValid }) {
+  const educations = useSelector(selectEducations);
+  const dispatch = useDispatch();
   const educationData = [
     { id: 1, name: "High School" },
     { id: 2, name: "Associate Degree" },
@@ -38,41 +29,22 @@ export default function Education({ onChangeData, setCheck, isValid }) {
     const { universityName, degree, major, startDate, endDate, description } =
       education;
 
-    if (universityName === "" || universityName === null) {
-      education.universityError = true;
-    } else {
-      education.universityError = false;
-    }
+    const universityError = universityName === "" || universityName === null;
+    const degreeError = degree === "" || degree === null;
+    const majorError = major === "" || major === null;
+    const startDateError = startDate === null;
+    const endDateError = endDate === null;
+    const descriptionError = description === "" || description === null;
 
-    if (degree === null || degree === "") {
-      education.degreeError = true;
-    } else {
-      education.degreeError = false;
-    }
-
-    if (major === "" || major === null) {
-      education.majorError = true;
-    } else {
-      education.majorError = false;
-    }
-
-    if (startDate === null) {
-      education.startDateError = true;
-    } else {
-      education.startDateError = false;
-    }
-
-    if (endDate === null) {
-      education.endDateError = true;
-    } else {
-      education.endDateError = false;
-    }
-
-    if (description === "" || description === null) {
-      education.descriptionError = true;
-    } else {
-      education.descriptionError = false;
-    }
+    return {
+      ...education,
+      universityError,
+      degreeError,
+      majorError,
+      startDateError,
+      endDateError,
+      descriptionError,
+    };
   };
 
   const checkValid = () => {
@@ -88,51 +60,59 @@ export default function Education({ onChangeData, setCheck, isValid }) {
   };
 
   const handleEducationCheckChange = useCallback(() => {
-    const updatedEducations = [...educations];
-    updatedEducations.forEach((education) => {
-      validateEducation(education);
-    });
-    setEducations(updatedEducations);
+    const updatedEducations = educations.map((education) =>
+      validateEducation(education)
+    );
+    const hasDifference = updatedEducations.some(
+      (edu, index) =>
+        edu.universityError !== educations[index].universityError ||
+        edu.degreeError !== educations[index].degreeError ||
+        edu.majorError !== educations[index].majorError ||
+        edu.startDateError !== educations[index].startDateError ||
+        edu.endDateError !== educations[index].endDateError ||
+        edu.descriptionError !== educations[index].descriptionError
+    );
+
+    if (hasDifference) {
+      dispatch(setEducations(updatedEducations));
+    }
   }, [educations]);
 
   useEffect(() => {
     handleEducationCheckChange();
     const data = checkValid();
     isValid(data);
-  }, [setCheck,isValid]);
+  }, [setCheck, isValid]);
 
   const handleChange = (index, field, value) => {
-    setEducations((prevEducations) => {
-      const updatedEducations = [...prevEducations];
-      updatedEducations[index][field] = value;
-      return updatedEducations;
-    });
-    onChangeData(educations);
+    const updatedEducations = educations.map((education, idx) =>
+      idx === index ? { ...education, [field]: value } : education
+    );
+    dispatch(setEducations(updatedEducations));
   };
 
   const handleAddEducation = () => {
-    setEducations((prevEducations) => [
-      ...prevEducations,
-      {
-        resumeId: 0,
-        universityName: "",
-        degree: "",
-        major: "",
-        startDate: null,
-        endDate: null,
-        description: "",
-      },
-    ]);
-    onChangeData(educations);
+    const newEducation = {
+      resumeId: 0,
+      universityName: "",
+      degree: "",
+      major: "",
+      startDate: null,
+      endDate: null,
+      description: "",
+      universityError: false,
+      degreeError: false,
+      majorError: false,
+      startDateError: false,
+      endDateError: false,
+    };
+    const updatedEducations = [...educations, newEducation];
+    dispatch(setEducations(updatedEducations));
   };
 
   const handleRemoveEducation = (index) => {
-    setEducations((prevEducations) => {
-      const updatedEducations = [...prevEducations];
-      updatedEducations.splice(index, 1);
-      return updatedEducations;
-    });
-    onChangeData(educations);
+    const updatedEducations = educations.filter((_, idx) => idx !== index);
+    dispatch(setEducations(updatedEducations));
   };
 
   return (
