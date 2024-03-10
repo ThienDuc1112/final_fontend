@@ -1,6 +1,7 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
+import { getListJob } from "@/app/api/job/api";
 import {
   selectPosition,
   selectExperience,
@@ -11,10 +12,12 @@ import {
   selectQuery,
   selectJobType,
   selectCareer,
+  selectPageNumber,
 } from "@/Context/features/search/searchSlice";
 import Image from "next/image";
 import JobCard from "@/components/content/jobCard";
 import MyPagination from "@/components/myPagination";
+import { useSearchParams } from "next/navigation";
 let jobs = [
   {
     id: 1,
@@ -115,6 +118,9 @@ let jobs = [
 ];
 
 const ListJob = () => {
+  const [jobData, setJobData] = useState([]);
+  const searchParams = useSearchParams();
+  const params = new URLSearchParams(searchParams);
   const query = useSelector(selectQuery);
   const jobType = useSelector(selectJobType);
   const career = useSelector(selectCareer);
@@ -124,15 +130,46 @@ const ListJob = () => {
   const date = useSelector(selectDate);
   const minSalary = useSelector(selectMinSalary);
   const maxSalary = useSelector(selectMaxSalary);
+  const page = params.get("page");
 
   useEffect(() => {
-    console.log("Position:", position);
-    console.log("Experience:", experience);
-    console.log("Education:", education);
-    console.log("Date:", date);
-    console.log("Min Salary:", minSalary);
-    console.log("Max Salary:", maxSalary);
-  }, [position, experience, education, date, minSalary, maxSalary]);
+    const abortController = new AbortController();
+    const queryParams = {
+      Page: page,
+      Query: query,
+      JobType: "",
+      MinSalary: minSalary,
+      MaxSalary: maxSalary,
+      Career: career,
+      Experience: experience,
+      Date: date,
+      Position: position,
+      Education: education,
+    };
+    const fetchData = async () => {
+      try {
+        let response = await getListJob(queryParams);
+        setJobData(response.data);
+        console.log(response.data);
+        console.log(queryParams);
+      } catch (error) {
+        console.log("Error", error);
+      }
+    };
+    fetchData();
+    return () => abortController.abort();
+  }, [
+    page,
+    query,
+    jobType,
+    career,
+    position,
+    experience,
+    education,
+    date,
+    minSalary,
+    maxSalary,
+  ]);
   return (
     <div className="lg:w-9/12 md:w-full sm:w-full w-full float-right">
       <div className="content-page mx-3 mt-1">
@@ -147,20 +184,22 @@ const ListJob = () => {
             </span>
           </div>
           <div className="flex flex-wrap">
-            {jobs.map((job, index) => (
+            {jobData.map((job, index) => (
               <JobCard
                 id={job.id}
                 className="xl:w-1/3"
                 key={index}
-                companyName={job.companyName}
-                location={job.location}
+                companyName={job.fullName}
+                location={job.address}
                 title={job.title}
-                type={job.type}
+                type={job.jobType}
                 skills={job.skills}
                 description={job.description}
                 expirationDate={job.expirationDate}
-                minSalary={job.minSalary}
-                maxSalary={job.maxSalary}
+                minSalary={job.salaryMin}
+                maxSalary={job.salaryMax}
+                businessId={job.businessid}
+                logoUrl={job.logoUrl}
               />
             ))}
           </div>

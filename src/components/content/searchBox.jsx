@@ -63,7 +63,7 @@ const SearchBox = () => {
     const selectedIndustry = event.target.value;
     dispatch(setCareer(selectedIndustry));
     setCaree(selectedIndustry);
-    if (selectedIndustry === "All Industries") {
+    if (selectedIndustry === 0 || selectedIndustry === '0') {
       params.delete("career");
     } else {
       params.set("career", selectedIndustry);
@@ -100,7 +100,7 @@ const SearchBox = () => {
             {industries.map((industry) => (
               <option
                 key={industry.id}
-                value={industry.name}
+                value={industry.id}
                 style={{
                   color: "gray",
                 }}

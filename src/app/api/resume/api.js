@@ -8,7 +8,12 @@ const createResume = (resumeData) => {
 return axiosClient.post("/DesignResume", resumeData);
 } 
 
+const getResumeByUser = (userId) => {
+  return axiosClient.get(`/GetResume/${userId}`);
+}
+
 export {
     createResume,
+    getResumeByUser
 }
 

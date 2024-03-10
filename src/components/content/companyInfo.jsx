@@ -11,12 +11,17 @@ export default function CompanyInfo({
   career,
   businessSize,
 }) {
+  const path = "https://fcfqw1pzmmyfx1ve.public.blob.vercel-storage.com";
   return (
     <div className="sidebar-border">
       <div className="sidebar-heading flex items-center gap-7">
         <div className="avatar-sidebar">
           <Image
-            src={logo}
+            src={
+              logo !== null && logo !== ""
+                ? `${path}/${logo}`
+                : "/images/job.png"
+            }
             width={85}
             height={85}
             alt="logo"

@@ -65,11 +65,13 @@ export default function SkillResume({ setAddSkill, setCheck, isValid }) {
     const updatedSkills = selectedSkillList.map((skill) =>
       validateSkill(skill)
     );
-    const hasDifference = updatedSkills.some((skill, index) => skill.skillError !== selectedSkillList[index].skillError);
+    const hasDifference = updatedSkills.some(
+      (skill, index) => skill.skillError !== selectedSkillList[index].skillError
+    );
 
-  if (hasDifference) {
-    dispatch(setSelectedSkillList(updatedSkills));
-  }
+    if (hasDifference) {
+      dispatch(setSelectedSkillList(updatedSkills));
+    }
   }, [selectedSkillList, dispatch]);
 
   useEffect(() => {
@@ -137,6 +139,7 @@ export default function SkillResume({ setAddSkill, setCheck, isValid }) {
               <DropdownInput
                 DataList={skillOptions}
                 onDataSelect={(value, id) => handleSkillChange(id, index)}
+                selectedOption={skill.name}
               />
               {skill.skillError && (
                 <span className="text-red-500 text-sm">Skill is required</span>

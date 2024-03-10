@@ -1,11 +1,25 @@
 "use client";
 import Link from "next/link";
+import { useState, useEffect } from "react";
 import styles from "./header.module.css"; // Import CSS module
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import UserDropDown from "@/components/content/userDropDown";
+import TokenService from "@/utils/Token.service";
 const Header = () => {
   const pathName = usePathname();
+  const [isClient, setIsClient] = useState(false);
+  const [expired, setExpired] = useState(null);
 
+  useEffect(() => {
+    const checkTokenExpiration = async () => {
+      const isExpired = await TokenService.isAccessExpired();
+      console.log(isExpired);
+      setExpired(isExpired);
+    };
+    setIsClient(true);
+    checkTokenExpiration();
+  }, []);
   return (
     <header className="py-3 w-full bg-header fixed z-20 pb-9">
       <div className="mx-auto px-4 lg:max-w-screen-2xl">
@@ -23,8 +37,8 @@ const Header = () => {
             </Link>
           </div>
           {/* center */}
-          <div className="inline-block w-full text-center">
-            <nav className="inline-block w-auto p-0 text-left">
+          <div className="inline-block basis-2/3 text-center">
+            <div className="inline-block w-auto p-0 text-left">
               <ul className="flex">
                 <li className="float-left p-2.5 md:p-5">
                   <Link
@@ -72,22 +86,30 @@ const Header = () => {
                   </Link>
                 </li>
               </ul>
-            </nav>
+            </div>
           </div>
           {/* right */}
-          <div className="flex items-center gap-5 min-w-64 text-right">
-            <a
-              className="font-normal font-medium text-lg leading-6 relative inline-block underline hover:text-blue-btn"
-              href="/auth/register"
-            >
-              register
-            </a>
-            <a
-              href="/auth/login"
-              className="text-white bg-blue-btn px-4 py-2.5 leading-6 align-middle cursor-pointer rounded-md hover:bg-skyblue"
-            >
-              Sign in
-            </a>
+          <div>
+            {expired === true ? (
+              <div className="flex items-center gap-5 min-w-64 text-right">
+                <a
+                  className="font-normal font-medium text-lg leading-6 relative inline-block underline hover:text-blue-btn"
+                  href="/auth/register"
+                >
+                  register
+                </a>
+                <a
+                  href="/auth/login"
+                  className="text-white bg-blue-btn px-4 py-2.5 leading-6 align-middle cursor-pointer rounded-md hover:bg-skyblue"
+                >
+                  Sign in
+                </a>
+              </div>
+            ) : (
+              <div className="flex items-center gap-5 min-w-64 text-right">
+                {isClient && <UserDropDown />}
+              </div>
+            )}
           </div>
         </div>
       </div>

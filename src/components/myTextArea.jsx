@@ -1,7 +1,13 @@
 import React, { useRef, useEffect } from "react";
 
-const DotTextArea = ({onTextChange}) => {
+const DotTextArea = ({onTextChange,text}) => {
   const textAreaRef = useRef(null);
+
+useEffect(() => {
+  if(text){
+    onTextChange(textAreaRef.current.value = text);
+  }
+}),[];
 
   const handleInput = () => {
     const currentTextArea = textAreaRef.current;

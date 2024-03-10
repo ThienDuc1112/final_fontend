@@ -9,6 +9,9 @@ import {
   selectSelectedLanguageList,
   setSelectedLanguageList,
 } from "@/Context/features/resume/resumeSlice";
+import {
+  getLanguages,
+} from "@/app/api/provider/api";
 
 export default function LanguageResume({ setCheck, isValid }) {
   const dispatch = useDispatch();
@@ -16,20 +19,26 @@ export default function LanguageResume({ setCheck, isValid }) {
   const [selectedLanguage, setSelectedLanguage] = useState("");
   const [selectedLevel, setSelectedLevel] = useState("");
   const [inde, setInde] = useState(null);
-  const languageOptions = [
-    { id: 1, name: "English", level: "Basic" },
-    { id: 2, name: "English", level: "Intermediate" },
-    { id: 3, name: "English", level: "Advanced" },
-    { id: 4, name: "Spanish", level: "Basic" },
-    { id: 5, name: "Spanish", level: "Intermediate" },
-    { id: 6, name: "Spanish", level: "Advanced" },
-    { id: 7, name: "French", level: "Basic" },
-    { id: 8, name: "French", level: "Intermediate" },
-    { id: 9, name: "French", level: "Advanced" },
-    { id: 10, name: "German", level: "Basic" },
-    { id: 11, name: "German", level: "Intermediate" },
-    { id: 12, name: "German", level: "Advanced" },
-  ];
+  const [languageOptions, setLanguageOptions] = useState([]);
+
+  useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const allLanguageData = await getLanguages();
+       var languages = allLanguageData.data.map((language) => {
+        return {
+          ...language,
+          name: language.languageName,
+        };
+      });
+      setLanguageOptions(languages);
+      console.log(allLanguageData.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  fetchData();
+}, []);
 
   const languageNames = languageOptions.reduce((uniqueNames, option) => {
     if (!uniqueNames.some((item) => item.name === option.name)) {

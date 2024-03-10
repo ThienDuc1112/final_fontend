@@ -76,6 +76,7 @@ const JobArea = () => {
     const newMinSalary = Number(e.target.value);
     if (newMinSalary <= maxSalary) {
       setMin(newMinSalary);
+      
     }
   };
 
@@ -92,6 +93,7 @@ const JobArea = () => {
     else {
       dispatch(setMaxSalary(max));
       params.set("maxSalary", max);
+      params.set("page", "1");
     } 
 
     if(min === 1){
@@ -100,6 +102,7 @@ const JobArea = () => {
     else{
       dispatch(setMinSalary(min));
       params.set("minSalary", min);
+      params.set("page", "1");
     }
     router.push(`${pathname}?${params.toString()}`);
   }
@@ -113,6 +116,7 @@ const JobArea = () => {
     dispatch(setPosition(updatedPositions));
     setPositions(updatedPositions);
     params.set("position", updatedPositions.join(","));
+    params.set("page", "1");
     if (updatedPositions.length === 0) {
       params.delete("position");
     }
@@ -128,6 +132,7 @@ const JobArea = () => {
     dispatch(setExperience(updatedExperiences));
     setExperiences(updatedExperiences);
     params.set("experience", updatedExperiences.join(","));
+    params.set("page", "1");
     if (updatedExperiences.length === 0) {
       params.delete("experience");
     }
@@ -143,6 +148,7 @@ const JobArea = () => {
     dispatch(setEducation(updatedEducations));
     setEducations(updatedEducations);
     params.set("education", updatedEducations.join(","));
+    params.set("page", "1");
     if (updatedEducations.length === 0) {
       params.delete("education");
     }
@@ -154,6 +160,7 @@ const JobArea = () => {
     dispatch(setDate(value));
     setDay(value);
     params.set("date", value);
+    params.set("page", "1");
     if (value === "All") {
       params.delete("date");
     }

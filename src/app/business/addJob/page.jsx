@@ -19,17 +19,14 @@ import {
   getJobType,
   getLanguages,
 } from "@/app/api/provider/api";
-import { getBusinessID } from "@/app/api/business/api";
 import { useCreateJobMutation } from "@/Context/features/job/jobApiSlice";
 import TokenService from "@/utils/Token.service";
-import { data } from "autoprefixer";
 
 export default function AddJob() {
-  const { userId, role } = TokenService.getUserProfile();
   const [addJob, { isLoading, error, success, isError }] =
     useCreateJobMutation();
 
-  const [businessId, setBusinessId] = useState(0);
+  const businessId = TokenService.getBusinessId();
   const [careerId, setCareerId] = useState(null);
   const [title, setTitle] = useState("");
   const [numberRecruitment, setNumberRecruitment] = useState(null);
@@ -89,6 +86,8 @@ export default function AddJob() {
     { id: 3, name: "Closed" },
   ];
 
+  console.log("test");
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -98,7 +97,6 @@ export default function AddJob() {
         const experienceYearInfo = await getExperienceLevel();
         const jobTypeInfo = await getJobType();
         const languageInfo = await getLanguages();
-        const businessID = await getBusinessID(userId);
 
         setCareerLevelData(careerLevelInfo.data);
         setEducationLevelData(educationLevelInfo.data);
@@ -106,7 +104,6 @@ export default function AddJob() {
         setJobTypeData(jobTypeInfo.data);
         setCareerData(allCareerInfo.data);
         setLanguageData(languageInfo.data);
-        setBusinessId(businessID.data.id);
       } catch (error) {
         console.log(error);
       }
@@ -283,7 +280,7 @@ export default function AddJob() {
       };
       const response = await addJob(jobData);
       console.log(response);
-      if(response.data.success){
+      if (response.data.success) {
         setShowSuccess(true);
       }
     }
@@ -530,7 +527,7 @@ export default function AddJob() {
                 <div className="w-full">
                   <Input
                     type="text"
-                    value={title}
+                    value={requiredSkills}
                     placeHolder="e.g. C#, Asp.net, Javascript, NestJs"
                     onChange={(e) => setRequiredSkills(e.target.value)}
                     maxLength={100}
@@ -547,7 +544,7 @@ export default function AddJob() {
                     type="text"
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
-                    maxLength={5}
+                    maxLength={60}
                     className="border-gray-700 bg-blue-100/25"
                   />
                 </div>

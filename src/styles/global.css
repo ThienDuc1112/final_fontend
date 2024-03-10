@@ -430,6 +430,13 @@ img {
     line-height: 24px;
 }
 
+.card-color {
+  font-size: 14px;
+    color: #6c6f72;
+    padding: 0 0 0 2px;
+    line-height: 24px;
+}
+
 .btn-tags-sm {
   border-radius: 5px;
   min-width: 42px;
@@ -1399,10 +1406,49 @@ business profile */
   background-color: #f5f5fb;
 }
 
+/* header */
 
+.dropdown-container {
+  position: relative;
+}
+.dropdown-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #ffffff;
+  padding: 10px;
+  list-style: none;
+  display: none;
+}
+.dropdown-container:hover .dropdown-list {
+  display: block;
+}
 
+.rotate-icon:hover .my-icon {
+  transform: rotate(180deg);
+}
 
+.my-icon {
+  transition: transform 0.5s;
+}
 
+.text-span {
+  font-size: 14px;
+  line-height: 1.25rem;
+  letter-spacing: 0.00875rem;
+}
+
+.hover-item :hover {
+  background-color: #e5e7eb;
+}
+
+.hover-item :hover .change-item {
+  background-color: #ffffff;
+}
+
+.hover-item:hover .change-icon, .hover-item:hover .change-text {
+  color: #2563eb;
+}
 
 
 

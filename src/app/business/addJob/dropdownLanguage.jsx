@@ -10,10 +10,12 @@ const DropdownInputLanguage = ({
   required,
 }) => {
   const [show, setShow] = useState(false);
-  const [name, setName] = useState(selectedOption || "");
+  const [name, setName] = useState("");
 
   useEffect(() => {
-    setName(selectedOption);
+    if(selectedOption){
+      setName(selectedOption.languageName + "-" + selectedOption.level);
+    }
   }, [selectedOption]);
 
   return (

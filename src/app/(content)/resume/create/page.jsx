@@ -21,8 +21,7 @@ import LanguageResume from "@/components/content/languageResume";
 import { createResume } from "@/app/api/resume/api";
 import { Button } from "@/components/ui/button";
 import { SuccessNotify } from "@/components/content/successNotification";
-import { useRouter } from "next/navigation";
-import { useGetResumeInfoQuery } from "@/Context/features/resume/resumeApiSlice";
+import { useRouter } from "next/navigation";  
 import TokenService from "@/utils/Token.service";
 import { getCareer } from "@/app/api/provider/api";
 import { useSelector, useDispatch } from "react-redux";
@@ -36,6 +35,7 @@ import {
   selectEducations,
   setEducations,
 } from "@/Context/features/resume/resumeSlice";
+import dayjs from "dayjs";
 
 export default function Create() {
   const dispatch = useDispatch();
@@ -44,9 +44,6 @@ export default function Create() {
   const experiences = useSelector(selectExperiences);
   const educations = useSelector(selectEducations);
   const { userId, role } = TokenService.getUserProfile();
-  const { resumeData, isError2, isLoading2, error2 } = useGetResumeInfoQuery({
-    userId,
-  });
   const router = useRouter();
   const avatarRef = useRef(null);
   const [avatarPath, setAvatarPath] = useState("");
@@ -56,6 +53,7 @@ export default function Create() {
   const [validate, setValidate] = useState(false);
   const [active, setActive] = useState("form1");
   const [formData, setFormData] = useState({
+    id: null,
     fullName: "",
     email: "",
     phone: "",
@@ -102,7 +100,6 @@ export default function Create() {
       flag: countryFlag,
     });
   };
-  console.log(educations);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -279,7 +276,7 @@ export default function Create() {
         country: formData.country,
         dateOfBirth: formData.dateOfBirth,
         statusOfEmployment: formData.status,
-        avatarUrl: formData.avatarUrl,
+        avatarUrl: avatarPath,
         description: formData.description.replace(/\n/g, ""),
         title: formData.title,
       },
@@ -746,6 +743,7 @@ export default function Create() {
                             onDataSelect={(e) =>
                               setFormData({ ...formData, status: e })
                             }
+                            selectedOption={formData.status}
                           />
                           {statusError && (
                             <span className=" text-red-500 text-sm">

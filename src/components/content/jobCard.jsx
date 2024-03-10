@@ -3,7 +3,7 @@ import { MdLocationOn } from "react-icons/md";
 import { FaCalendarDays } from "react-icons/fa6";
 import { FaBriefcase } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
-import Link from 'next/link';
+import Link from "next/link";
 
 const JobCard = ({
   id,
@@ -17,11 +17,14 @@ const JobCard = ({
   minSalary,
   maxSalary,
   className,
+  businessId,
+  logoUrl,
 }) => {
   const date = new Date(expirationDate);
   const day = date.getDate();
   const month = date.getMonth() + 1;
   const year = date.getFullYear();
+  const path = "https://fcfqw1pzmmyfx1ve.public.blob.vercel-storage.com";
   return (
     <>
       <div className={`mt-1 ${className} lg:w-1/3 md:w-1/2 sm:w-full w-full`}>
@@ -30,7 +33,11 @@ const JobCard = ({
             <span className="flash"></span>
             <div className="image-box">
               <Image
-                src="/images/job.png"
+                src={
+                  logoUrl !== null && logoUrl !== ""
+                    ? `${path}/${logoUrl}`
+                    : "/images/job.png"
+                }
                 width={100}
                 height={60}
                 alt="logo"
@@ -58,13 +65,13 @@ const JobCard = ({
               </Link>
             </h4>
             <div className="flex justify-start items-center gap-3">
-              <div className="mt-1 flex card-time items-center gap-1">
+              <div className="mt-1 flex card-color items-center gap-1">
                 <FaCalendarDays width={20} height={20} />
                 <p>
                   Deadline: {day}/{month}/{year}
                 </p>
               </div>
-              <div className="mt-1 flex card-time items-center gap-1">
+              <div className="mt-1 flex card-color items-center gap-1">
                 <FaBriefcase width={20} height={20} />
                 <p>{type}</p>
               </div>

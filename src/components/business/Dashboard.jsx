@@ -1,3 +1,5 @@
+"use client";
+import { useState, useEffect } from "react";
 import Table from "@/components/business/Table";
 import SmallNotification from "@/components/business/SmallNotification";
 import { FaBriefcase } from "react-icons/fa";
@@ -5,8 +7,22 @@ import { AiOutlineSolution } from "react-icons/ai";
 import { IoNotifications } from "react-icons/io5";
 import { BsFillPersonVcardFill } from "react-icons/bs";
 import ApplicationList from "@/components/business/ApplicationList";
+import { getBusinessID } from "@/app/api/business/api";
+import TokenService from "@/utils/Token.service";
 
 export default function Dashboard() {
+  const { userId, role } = TokenService.getUserProfile();
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const businessID = await getBusinessID(userId);
+        TokenService.setBusinessId(businessID.data.id);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
+  }, []);
   return (
     <div className="relative max-w-[1600px] mt-10 mx-10">
       <section className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5 pb-5">

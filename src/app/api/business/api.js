@@ -10,4 +10,7 @@ const createBusiness = (businessData) => {
 const getBusinessID = (userId) => {
   return axiosClient.get(`/BusinessID/${userId}`);
 };
-export { createBusiness, getBusinessID };
+const getBusinessDetail = (id) => {
+  return axiosClient.get(`/BusinessInforDetail/${id}`);
+}
+export { createBusiness, getBusinessID, getBusinessDetail };

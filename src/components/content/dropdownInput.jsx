@@ -2,17 +2,29 @@ import React, { useState, useEffect } from "react";
 import { Label } from "@/components/ui/label";
 import { IoIosArrowDown } from "react-icons/io";
 
-const DropdownInput = ({ MyLabel, DataList, onDataSelect, selectedOption, required }) => {
+const DropdownInput = ({
+  MyLabel,
+  DataList,
+  onDataSelect,
+  selectedOption,
+  required,
+}) => {
   const [show, setShow] = useState(false);
-  const [name, setName] = useState(selectedOption || "");
+  const [name, setName] = useState("");
 
   useEffect(() => {
-    setName(selectedOption);
-  },[selectedOption]);
+    if (selectedOption) {
+      setName(selectedOption);
+    }
+  }, [selectedOption]);
 
   return (
     <div className="mb-4 grid w-full max-w-dm items-center gap-1.5">
-      <Label className= {`text-gray-600 ${required && 'ant-form-item-required'} `}>{MyLabel}</Label>
+      <Label
+        className={`text-gray-600 ${required && "ant-form-item-required"} `}
+      >
+        {MyLabel}
+      </Label>
       <div className="relative">
         <div className="relative flex items-center">
           <div

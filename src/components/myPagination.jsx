@@ -52,9 +52,11 @@ export default function MyPagination({ totalPages }) {
             </PaginationLink>
           </PaginationItem>
         ))}
-        <PaginationItem>
-          <PaginationEllipsis />
-        </PaginationItem>
+        {totalPages > 3 && (
+          <PaginationItem>
+            <PaginationEllipsis />
+          </PaginationItem>
+        )}
         <PaginationItem>
           <PaginationNext href={createPageURL(currentPage + 1)} />
         </PaginationItem>

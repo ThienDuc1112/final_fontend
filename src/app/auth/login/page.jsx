@@ -45,7 +45,7 @@ const Login = () => {
       setEmail("");
       setPwd("");
       if (userData) {
-        dispatch(setCredentials({ ...userJwt }));
+        // dispatch(setCredentials({ ...userJwt }));
         TokenService.updateLocalAccessToken(userData);
         TokenService.updateUser(userJwt.sub, userJwt.role);
         if (userJwt.role === "employer") {
