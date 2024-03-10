@@ -12,6 +12,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
+import { useUpdateJobMutation } from "@/Context/features/job/jobApiSlice";
 import {
   getCareer,
   getCareerLevel,
@@ -23,7 +24,10 @@ import {
 import { getJobDetail } from "@/app/api/job/api";
 import TokenService from "@/utils/Token.service";
 export default function Edit({ params }) {
+  const [updateJob, { isLoading, error, success, isError }] =
+  useUpdateJobMutation();
   const businessId = TokenService.getBusinessId();
+  const [id, setId] = useState(null);
   const [careerId, setCareerId] = useState(null);
   const [title, setTitle] = useState("");
   const [numberRecruitment, setNumberRecruitment] = useState(null);
@@ -91,7 +95,7 @@ export default function Edit({ params }) {
     return foundItem ? foundItem.id : null;
   }
   function findIdLanguage(dataList, name, level) {
-    const foundedItem = dataList.find(item => item.name === name && item.level === level);
+    const foundedItem = dataList.find(item => item.languageName === name && item.level === level);
     return foundedItem ? foundedItem.id : null;
   }
   useEffect(() => {
@@ -114,13 +118,14 @@ export default function Edit({ params }) {
           getLanguages(),
           getJobDetail(params.id),
         ]);
-        console.log(jobDatas.data);
         setCareerLevelData(careerLevelInfo.data);
         setEducationLevelData(educationLevelInfo.data);
         setExperienceYearData(experienceYearInfo.data);
         setJobTypeData(jobTypeInfo.data);
         setCareerData(allCareerInfo.data);
         setLanguageData(languageInfo.data);
+
+        setId(jobDatas.data.id);
         setStatus(jobDatas.data.status);
         setCareerName(jobDatas.data.careerName);
         setCareerId(findIdByName(allCareerInfo.data, jobDatas.data.careerName));
@@ -292,10 +297,19 @@ export default function Edit({ params }) {
 
     return isValid;
   };
+
+  const handleShowNoti = () => {
+    setShowSuccess(true);
+    setTimeout(() => {
+      setShowSuccess(false);
+    }, 5000);
+  };
+
   const handleSubmit = async () => {
     let isValid = checkValidData();
     if (isValid) {
       const jobData = {
+        id: id,
         careerId: careerId,
         businessId: businessId,
         title: title,
@@ -317,16 +331,15 @@ export default function Edit({ params }) {
         responsibilities: responsibilities,
         status: status,
       };
-      const response = await addJob(jobData);
-      console.log(response);
+      const response = await updateJob(jobData);
       if (response.data.success) {
-        setShowSuccess(true);
+        handleShowNoti();
       }
     }
   };
   return (
     <DefaultLayout>
-      {loading ? (
+      {loading || isLoading ? (
         <div>loading</div>
       ) : (
         <div className="relative max-w-[1600px] mt-10 mx-10">
@@ -692,7 +705,7 @@ export default function Edit({ params }) {
           style={{ position: "fixed" }}
         >
           <SuccessNotify
-            message="You created a new job successfully"
+            message="You Updated the job successfully"
             variant="success"
             icon="success"
           />
