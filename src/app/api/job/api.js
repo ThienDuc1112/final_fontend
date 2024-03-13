@@ -14,4 +14,8 @@ const getListJob = (params) => {
   return axiosClient.get("/GetListJob", {params: params});
 };
 
-export  {getJobDetail, getJobManagement, getListJob}
+const getJobApp = (params) => {
+  return axiosClient.get("/GetJobApp",{params: params});
+}
+
+export  {getJobDetail, getJobManagement, getListJob, getJobApp}

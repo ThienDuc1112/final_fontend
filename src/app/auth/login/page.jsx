@@ -42,8 +42,6 @@ const Login = () => {
       const userData = await response.json();
       const userJwt = TokenService.getUser(userData.access_token);
       console.log(userJwt);
-      setEmail("");
-      setPwd("");
       if (userData) {
         // dispatch(setCredentials({ ...userJwt }));
         TokenService.updateLocalAccessToken(userData);
@@ -57,10 +55,9 @@ const Login = () => {
         console.log("not");
       }
     } catch (err) {
-      if (!err?.originalStatus) {
-        setErrMsg("No Server Response");
-        console.log(err);
-      } else if (err.originalStatus === 400) {
+      setEmail("");
+      setPwd("");
+      if (err.originalStatus === 400) {
         setErrMsg("Missing Username or Password");
       } else if (err.originalStatus === 401) {
         setErrMsg("Unauthorized");

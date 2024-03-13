@@ -4,6 +4,7 @@ import { apiSlice } from "./api";
 import searchReducer from "./features/search/searchSlice";
 import authReducer from "./features/auth/authSlice";
 import resumeReducer from "./features/resume/resumeSlice";
+import applicationReducer from "./features/application/applicationSlice";
 
 export const store = configureStore({
   reducer: {
@@ -11,6 +12,7 @@ export const store = configureStore({
     auth: authReducer,
     search: searchReducer,
     resume: resumeReducer,
+    application: applicationReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(apiSlice.middleware),

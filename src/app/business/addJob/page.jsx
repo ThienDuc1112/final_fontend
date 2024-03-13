@@ -86,8 +86,6 @@ export default function AddJob() {
     { id: 3, name: "Closed" },
   ];
 
-  console.log("test");
-
   useEffect(() => {
     const fetchData = async () => {
       try {
