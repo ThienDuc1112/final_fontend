@@ -11,21 +11,14 @@ import {
   setLoading,
 } from "@/Context/features/application/applicationSlice";
 import { FaArrowUpRightFromSquare } from "react-icons/fa6";
+import HelpFunctions from "@/utils/functions";
 
-export default function ApplicationList({ item, onClick }) {
+export default function ApplicationList({ appId, item, onClick }) {
   const [updateApplication, { isLoading, error, success }] =
     useUpdateApplicationMutation();
   const dispatch = useDispatch();
   const loading = useSelector(selectLoading);
 
-  function convertToDayMonthYear(dat) {
-    const date = new Date(dat);
-    const day = date.getDate().toString().padStart(2, "0");
-    const month = (date.getMonth() + 1).toString().padStart(2, "0");
-    const year = date.getFullYear().toString();
-
-    return `${day}/${month}/${year}`;
-  }
   const url = "https://fcfqw1pzmmyfx1ve.public.blob.vercel-storage.com/";
   const imagePath = item.avatarUrl ? url + item.avatarUrl : "/images/mya.jpg";
 
@@ -67,7 +60,7 @@ export default function ApplicationList({ item, onClick }) {
     <div className="rounded-lg border border-gray-200 p-5">
       <div className="flex justify-between">
         <div className="flex justify-start items-center">
-          <div className=" p-3">
+          <div className="p-3">
             <Image
               src={imagePath}
               width={100}
@@ -89,7 +82,7 @@ export default function ApplicationList({ item, onClick }) {
             <div className="flex items-center gap-2 pt-1">
               <IoMdTime size={18} color="#575653" />
               <p className="font-normal text-sm">
-                {convertToDayMonthYear(item.createdDate)}
+                {HelpFunctions.convertToDayMonthYear(item.createdDate)}
               </p>
             </div>
           </div>
@@ -129,7 +122,7 @@ export default function ApplicationList({ item, onClick }) {
             {item.status === "Shortlisted" || item.status === "Interviewing" ? (
               <div className="flex items-center gap-3">
                 <Link
-                  href=""
+                  href={`/business/manageApplications/detail/${appId}`}
                   className="px-2 rounded-xl font-small mt-[60px] bg-gray-100"
                 >
                   <div className="flex items-center gap-2">

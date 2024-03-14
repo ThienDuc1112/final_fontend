@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { useGetResumeInfoQuery } from "@/Context/features/resume/resumeApiSlice";
 import { Button } from "@/components/ui/button";
 import TokenService from "@/utils/Token.service";
-import { useEffect, useState } from "react";
 
 export default function Management() {
   const { userId, role } = TokenService.getUserProfile();
@@ -30,9 +29,9 @@ export default function Management() {
   return (
     <section className="section-box mt-[10px] relative">
       {isLoading2 ? (
-        <div className="max-w-[1800px] ml-[500px] my-[200px]">
-          is loading.....
-        </div>
+        <div className="flex justify-center items-center flex-grow mt-[200px] ml-[500px] mb-[500px]">
+        <div className="spinner"></div>
+      </div>
       ) : (
         <div className="max-w-[1800px] mx-auto my-[200px]">
           <div className="div flex items-center justify-center">

@@ -43,7 +43,6 @@ const Login = () => {
       const userJwt = TokenService.getUser(userData.access_token);
       console.log(userJwt);
       if (userData) {
-        // dispatch(setCredentials({ ...userJwt }));
         TokenService.updateLocalAccessToken(userData);
         TokenService.updateUser(userJwt.sub, userJwt.role);
         if (userJwt.role === "employer") {

@@ -110,6 +110,7 @@ export default function ManageApplications() {
                 {data &&
                   data.map((item, index) => (
                     <ApplicationComponent
+                      appId={item.id}
                       item={item}
                       key={index}
                       onClick={(data) => {
