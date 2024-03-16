@@ -4,8 +4,8 @@ const searchSlice = createSlice({
   name: 'search',
   initialState: {
     query: "",
-    jobType: "",
-    career: null,
+    jobType: "Job Type",
+    career: 0,
     pageNumber: 1,
     minSalary: 1,
     maxSalary: 200,

@@ -28,6 +28,20 @@ export const applicationApiSlice = apiSlice.injectEndpoints({
         body: app,
       }),
     }),
+    updateMeeting: builder.mutation({
+      query: (app) => ({
+        url: "/UpdatingMeeting",
+        method: "PUT",
+        body: app,
+      }),
+    }),
+    createApplication: builder.mutation({
+      query: (app) => ({
+        url: "/AppliedJob",
+        method: "POST",
+        body: app,
+      }),
+    }),
   }),
 });
 
@@ -36,4 +50,6 @@ export const {
   useGetApplicationDetailQuery,
   useGetApplicationsUserQuery,
   useUpdateApplicationMutation,
+  useUpdateMeetingMutation,
+  useCreateApplicationMutation,
 } = applicationApiSlice;

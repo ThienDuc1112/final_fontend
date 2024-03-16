@@ -7,7 +7,8 @@ import CompanyInfo from "@/components/content/companyInfo";
 import { Button } from "@/components/ui/button";
 import { FaCircleCheck } from "react-icons/fa6";
 import LetterBox from "@/components/content/letterBox";
-import MyDialog from "@/components/myDialog";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import SelectingResume from "@/components/content/selectingResume";
 import { getJobDetail } from "@/app/api/job/api";
 
@@ -18,7 +19,6 @@ export default function Job({ params }) {
     const fetchData = async () => {
       try {
         let response = await getJobDetail(params.id);
-        console.log(response.data);
         setCareer2(response.data);
       } catch (error) {
         console.log(error);
@@ -29,40 +29,6 @@ export default function Job({ params }) {
     fetchData();
   }, []);
 
-  const career = {
-    careerName: "Information Technology",
-    businessId: 1,
-    title: "Senior Backend Web Developer",
-    numberRecruitment: 5,
-    expirationDate: "2024-11-30",
-    educationLevelMin: "Bachelor's degree",
-    yearExpMin: "1-2 years",
-    genderRequirement: "Any",
-    languageRequirementId: 1,
-    address: "123 Main St, New York",
-    jobType: "Full-time",
-    careerLevel: "Mid-level",
-    salaryMin: 500,
-    salaryMax: 800,
-    description:
-      "The IT Support Specialist is responsible for providing technical assistance and support to end-users within the organization. They will diagnose and resolve software and hardware issues, install and configure computer systems, and provide guidance on proper computer usage. The IT Support Specialist will also assist in maintaining the organization's network infrastructure and ensuring data security.",
-    welfare: "Health insurance.Paid time off.",
-    responsibilities:
-      "Responding to user inquiries and providing technical support via phone, email, or in-person.Diagnosing and resolving software and hardware issues for end-users.Installing, configuring, and maintaining computer systems and software applications.Assisting in the setup and maintenance of network infrastructure, including routers, switches, and firewalls.",
-    requiredSkills: "HTML, CSS, JavaScript",
-    requirement:
-      "Bachelor's degree in Computer Science, Information Technology, or a related field.Proven experience in providing technical support and troubleshooting software and hardware issues.Strong knowledge of computer systems, networks, and operating systems.",
-    status: "Active",
-    dayCreated: "2024-11-30",
-    businessId: 2,
-    fullName: "NFQ",
-    email: "nfq@gmail.com",
-    location: "123 Hawdcood, New Zealand",
-    phoneNumber: "(67) 789567654",
-    logo: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMwAAADACAMAAAB/Pny7AAAAq1BMVEX/agP////8///7aAD+18b6agD9diz9YwD///377uf/ayn5ejP+dC//iUb807z5////hlP949f/j2T/dzv85NL+3tD/Yg/5l1/7bwL89Oj+o3n+roj/nnn8+/H/bzj/XQD8uJn/ahf7jlb8mmr8z7/6xq34cR/6x6P62cP9jlD4wZn86t35k2L4pnn89fH0qH31tY38gEP2o2n/TQD0ehf379r3dBH7v6r3r4wYgWSNAAAD8ElEQVR4nO3a4XqaOgAG4JAsJhRr2qqr2HJQOxhOi+Vs3Xr/VzZwpwgSLTI8DX2+9yeEwGcQEhJCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA4ANhNRF20gHvkYQwXtOfMLUP2Bb/X3P6om67MCb87AhR9wiRXfOkinPmZ0TbWcTm0wlm8/SIRd3S44e0bcb6fV+C2dRJfxzG28vCQs86gXIEmX9V9QpTekc4O7hTxnY0m/jtZSHcqXllW1ItBekP6N+HkVJSqZS0v5EW4zgnZEnDXGZhrHppjrZMbrVo76/TJEwLLbOjvIfW0rx7GEnba5t3D5MKwpYeaSaE8dbtZDEiDA3mHyiMO+xGGFKr2pYeAcUwUlrKXdlFrrLk0TCeerYPcR8Z4XFls6do+s4sVbtpPwyl6mnevyjZFLs7upYZDy8O6YdcsOpWZxko5RUqkdbXM7SM93wjyr1zkYyOh6HT07vzwr90aallRp/bD0Ptm72fSFxdvxWmyY/q33ilMKsuhyFhUKrWNSUM0wwmif7e21Uu7or/GWpKmEf9GFP3Ggyn4Wv14sEuVCtNCRMteo7GpHoqsfGC5L/RC1sU6jUmjCVXY53L/b8SI2FM5fUjEVmvUiRjE8Po0eV+mIk/yHbEg952j/OpM2EkrbSMWNLssql0//2etlOHw6TPN3+V740+iy6HIcyf0fww6t36w+6GYeKHpwrvfDVYdjcMmUflAtRzOxtG3MZ7JWixB9CtMMSZuZTKUoDOhmFCrL+oYre/VNrsMJWXZtpd67+4B9IYE4Z6m1udsHoqsRhkA2aTw7wQzYBGP8Zh80dXaZrVnDBT3ddITvRb/WHUahjO80k8xvj5RprpqKY6McjE93u7cqNJ9ewzzZjhbfPhzvyMYfpDnSTpO3vvz+y83u28yTSnWEejV1EizhbmYneafZUw6UNOzZIG3xL8+zi/lvjqfGH+8WiNJ3ih5tG0d3Lj+Pd2/rS3zQmT3WozzeP8rTCxmWEsGpw8S2Nqy1jWqjI4rRHGzJax4qfTp50NbRlKRw2m0A1tGUmdRo9mY1pm2+eU9nbYphrcZAaFkZIqGq+eJhubUuo2Wqdx7KVp6cKsigVaDKM8+zq6+ymYuBp4at1oLkGsB/k6o0FCSK+06ii42g+T/Cruj9I7O3wpbVnoz9OPjq13GgTBr9k0Yb4gnPn85VvDBTShM8y/bnPCeK8orHy852G5QFZDacuB3i7rHRNy4fsi/+FE48V0TOwmHjgrLdWrFs6W8xVlL2le2nDoOo4sqtMUbhrmb/DKmd/lMgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD6E39SbeXkwqsj9AAAAAElFTkSuQmCC",
-    businessSize: "100 - 500 employees",
-  };
-
   function convertToDayMonthYear(day2) {
     const date = new Date(day2);
     const day = date.getDate().toString().padStart(2, "0");
@@ -71,6 +37,25 @@ export default function Job({ params }) {
 
     return `${day}/${month}/${year}`;
   }
+
+  const notify = (success, notifyMess) => {
+    const toastOptions = {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    };
+
+    if (success) {
+      toast.success(notifyMess, toastOptions);
+    } else {
+      toast.error(notifyMess, toastOptions);
+    }
+  };
+
   let requirements = null;
   if (career2 !== null) {
     requirements = career2.requirement.split("•");
@@ -102,14 +87,16 @@ export default function Job({ params }) {
     }
   }
 
-  const handleConfirm = () => {
-    console.log("Confirmed!");
+  const handleConfirm = (success, message) => {
+    notify(success, message);
   };
 
   return (
-    <>
+    <section className="section-box mt-[10px] mb-5">
       {isLoading ? (
-        <div>Is loading</div>
+        <div className="flex justify-center items-center flex-grow mt-[300px] ml-[200px] mb-[500px]">
+          <div className="spinner"></div>
+        </div>
       ) : (
         <div>
           <section className="section-box mt-[10px] mb-5">
@@ -139,7 +126,8 @@ export default function Job({ params }) {
                     color="blue"
                     name="Apply Now"
                     handleConfirm={handleConfirm}
-                  ></SelectingResume>
+                    jobId={params.id}
+                  />
                   <Button variant="outline" size="xl">
                     Save Job
                   </Button>
@@ -254,6 +242,7 @@ export default function Job({ params }) {
           <LetterBox />
         </div>
       )}
-    </>
+      <ToastContainer />
+    </section>
   );
 }

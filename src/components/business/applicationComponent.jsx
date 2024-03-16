@@ -98,6 +98,8 @@ export default function ApplicationList({ appId, item, onClick }) {
                     ? "bg-red-100 text-red-600"
                     : item.status === "Shortlisted"
                     ? "bg-blue-100 text-blue-600"
+                    : item.status === "Interviewing"
+                    ? "bg-blue-100 text-blue-600"
                     : ""
                 }`}
               >
@@ -119,7 +121,7 @@ export default function ApplicationList({ appId, item, onClick }) {
                 </button>
               </div>
             )}
-            {item.status === "Shortlisted" || item.status === "Interviewing" ? (
+            {item.status !== "Pending" || item.status !== "Rejected" ? (
               <div className="flex items-center gap-3">
                 <Link
                   href={`/business/manageApplications/detail/${appId}`}

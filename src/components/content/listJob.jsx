@@ -18,104 +18,6 @@ import Image from "next/image";
 import JobCard from "@/components/content/jobCard";
 import MyPagination from "@/components/myPagination";
 import { useSearchParams } from "next/navigation";
-let jobs = [
-  {
-    id: 1,
-    companyName: "ABC Company",
-    location: "New York, United Of State",
-    title: "Software Engineer",
-    type: "Full-time",
-    skills: ["C#", "Java", ".NET", "API"],
-    expirationDate: "2024-11-30",
-    minSalary: 22,
-    maxSalary: 45,
-    description: "Job description for Software Engineer at ABC Company.",
-  },
-  {
-    id: 2,
-    companyName: "XYZ Corporation",
-    location: "New York, United Of State",
-    title: "Web Developer",
-    type: "Part-time",
-    skills: ["HTML", "CSS", "JavaScript"],
-    expirationDate: "2024-11-30",
-    minSalary: 22,
-    maxSalary: 45,
-    description: "Job description for Web Developer at XYZ Corporation.",
-  },
-  {
-    id: 3,
-    companyName: "FPt Corporation",
-    location: "New York, United Of State",
-    title: "Web Developer",
-    type: "Part-time",
-    skills: ["HTML", "CSS", "JavaScript"],
-    expirationDate: "2024-11-30",
-    minSalary: 22,
-    maxSalary: 45,
-    description: "Job description for Web Developer at XYZ Corporation.",
-  },
-  {
-    id: 4,
-    companyName: "XYZ Corporation",
-    location: "New York, United Of State",
-    title: "Web Developer",
-    type: "Part-time",
-    skills: ["HTML", "CSS", "JavaScript"],
-    expirationDate: "2024-11-30",
-    minSalary: 22,
-    maxSalary: 45,
-    description: "Job description for Web Developer at XYZ Corporation.",
-  },
-  {
-    id: 1,
-    companyName: "ABC Company",
-    location: "New York, United Of State",
-    title: "Software Engineer",
-    type: "Full-time",
-    skills: ["C#", "Java", ".NET", "API"],
-    expirationDate: "2024-11-30",
-    minSalary: 22,
-    maxSalary: 45,
-    description: "Job description for Software Engineer at ABC Company.",
-  },
-  {
-    id: 1,
-    companyName: "XYZ Corporation",
-    location: "New York, United Of State",
-    title: "Web Developer",
-    type: "Part-time",
-    skills: ["HTML", "CSS", "JavaScript"],
-    expirationDate: "2024-11-30",
-    minSalary: 22,
-    maxSalary: 45,
-    description: "Job description for Web Developer at XYZ Corporation.",
-  },
-  {
-    id: 1,
-    companyName: "FPt Corporation",
-    location: "New York, United Of State",
-    title: "Web Developer",
-    type: "Part-time",
-    skills: ["HTML", "CSS", "JavaScript"],
-    expirationDate: "2024-11-30",
-    minSalary: 22,
-    maxSalary: 45,
-    description: "Job description for Web Developer at XYZ Corporation.",
-  },
-  {
-    id: 1,
-    companyName: "XYZ Corporation",
-    location: "New York, United Of State",
-    title: "Web Developer",
-    type: "Part-time",
-    skills: ["HTML", "CSS", "JavaScript"],
-    expirationDate: "2024-11-30",
-    minSalary: 22,
-    maxSalary: 45,
-    description: "Job description for Web Developer at XYZ Corporation.",
-  },
-];
 
 const ListJob = () => {
   const [jobData, setJobData] = useState([]);
@@ -135,22 +37,21 @@ const ListJob = () => {
   useEffect(() => {
     const abortController = new AbortController();
     const queryParams = {
-      Page: page,
-      Query: query,
-      JobType: "",
-      MinSalary: minSalary,
-      MaxSalary: maxSalary,
-      Career: career,
-      Experience: experience,
-      Date: date,
-      Position: position,
-      Education: education,
+      page: page,
+      query: query,
+      jobType: jobType,
+      minSalary: minSalary,
+      maxSalary: maxSalary,
+      career: career,
+      experience: JSON.stringify(experience),
+      date: date,
+      position: JSON.stringify(position),
+      education: JSON.stringify(education),
     };
     const fetchData = async () => {
       try {
         let response = await getListJob(queryParams);
         setJobData(response.data);
-        console.log(response.data);
         console.log(queryParams);
       } catch (error) {
         console.log("Error", error);

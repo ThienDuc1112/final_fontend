@@ -11,10 +11,9 @@ const getLocalAccessToken = () => {
   }
 };
 
-const getUser = () => {
+const getUser = (accessToken) => {
   try {
-    const user = Cookies.get("accessToken");
-    return jwtDecode(user);
+    return jwtDecode(accessToken);
   } catch (error) {
     return null;
   }

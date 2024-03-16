@@ -23,7 +23,7 @@ const Dropdown = () => {
           <AiOutlineDown size={22} className="my-icon" />
         </div>
         <div className="dropdown-list z-30 w-[240px] shadow-lg">
-          <a className="hover-item" href="#">
+          <a className="hover-item" href="/applications">
             <div className="px-2 py-3 flex items-center justify-start gap-2">
               <div className="p-1 bg-gray-200 rounded-sm change-item">
                 <TbReportSearch size={22} className="change-icon" />
@@ -31,7 +31,7 @@ const Dropdown = () => {
               <span className="change-text">Manage Applications</span>
             </div>
           </a>
-          <a className="hover-item" href="#">
+          <a className="hover-item" href="/resume/management">
             <div className="px-2 py-3 flex items-center justify-start gap-2">
               <div className="p-1 bg-gray-200 rounded-sm change-item">
                 <FaRegFileLines size={22} className="change-icon" />

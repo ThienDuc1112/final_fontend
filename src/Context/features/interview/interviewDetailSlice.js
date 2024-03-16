@@ -4,7 +4,9 @@ const initialState = {
   trigger: false,
   interviewSchedule: null,
   meetingUrl: null,
-  notify: ""
+  notify: "",
+  applicationId: 0,
+  status: "",
 };
 
 const interviewSlice = createSlice({
@@ -22,12 +24,24 @@ const interviewSlice = createSlice({
     },
     setNotify: (state, action) => {
       state.notify = action.payload;
-    }
+    },
+    setApplicationId: (state, action) => {
+      state.applicationId = action.payload;
+    },
+    setStatus: (state, action) => {
+      state.status = action.payload;
+    },
   },
 });
 
-export const { setTrigger, setInterviewSchedule, setMeetingUrl, setNotify } =
-  interviewSlice.actions;
+export const {
+  setTrigger,
+  setInterviewSchedule,
+  setMeetingUrl,
+  setNotify,
+  setApplicationId,
+  setStatus,
+} = interviewSlice.actions;
 
 export default interviewSlice.reducer;
 
@@ -36,3 +50,6 @@ export const selectInterviewSchedule = (state) =>
   state.interview.interviewSchedule;
 export const selectMeetingUrl = (state) => state.interview.meetingUrl;
 export const selectNotify = (state) => state.interview.notify;
+export const selectApplicationId = (state) => state.interview.applicationId;
+export const selectStatus = (state) => state.interview.status;
+

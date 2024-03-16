@@ -11,9 +11,11 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useGetResumeInfoQuery } from "@/Context/features/resume/resumeApiSlice";
 import TokenService from "@/utils/Token.service";
-import { FaRegEye } from "react-icons/fa";
+import { useCreateApplicationMutation } from "@/Context/features/application/applicationApiSlice";
+import { useState } from "react";
 
-export default function SelectingResume({ color, name, handleConfirm }) {
+export default function SelectingResume({ color, name, handleConfirm, jobId }) {
+  const [isOpen, setIsOpen] = useState(false);
   const { userId, role } = TokenService.getUserProfile();
   const {
     data: resumeData,
@@ -21,8 +23,11 @@ export default function SelectingResume({ color, name, handleConfirm }) {
     isLoading,
     error,
   } = useGetResumeInfoQuery(userId);
+  const [
+    createApplication,
+    { data: appData, isError: isError2, isLoading: isLoading2 },
+  ] = useCreateApplicationMutation();
   const router = useRouter();
-  console.log(resumeData);
 
   function convertToDayMonthYear(dateString) {
     const date = new Date(dateString);
@@ -38,8 +43,27 @@ export default function SelectingResume({ color, name, handleConfirm }) {
       router.push("/auth/login");
     }
   };
+
+  const handleSubmit = async (resumeId) => {
+    try {
+      var app = {
+        candidateId: userId,
+        jobId: jobId,
+        resumeId: resumeId,
+      };
+      const response = await createApplication(app);
+      console.log(response);
+      handleConfirm(response.data.success, response.data.message);
+      handleClose();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handleClose = () => {
+    setIsOpen(false);
+  };
   return (
-    <Dialog variant="blue">
+    <Dialog variant="blue" open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         {color === "blue" ? (
           <Button
@@ -120,7 +144,7 @@ export default function SelectingResume({ color, name, handleConfirm }) {
                                     <div className="flex items-center space-x-3.5">
                                       <Button
                                         variant="blue"
-                                        onClick={handleConfirm}
+                                        onClick={() => handleSubmit(item.id)}
                                       >
                                         Select
                                       </Button>

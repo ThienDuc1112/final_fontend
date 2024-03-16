@@ -1450,6 +1450,22 @@ business profile */
   color: #2563eb;
 }
 
+.timeline {
+  position: relative;
+  list-style: none;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 24px; 
+  top: 0;
+  bottom: 0;
+  width: 2px; 
+  background-color: #c5c5c5; 
+  z-index: 10;
+}
+
 
 
 

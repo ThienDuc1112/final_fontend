@@ -53,7 +53,7 @@ export default function CompanyInfo({
               <h3>Industry</h3>
               <p className="text-sm text-gray-500">{career}</p>
             </div>
-            <div className="ml-2 flex flex-col items-center">
+            <div className="ml-[70px] flex flex-col items-center">
               <Image
                 src="/images/group.svg"
                 width={40}

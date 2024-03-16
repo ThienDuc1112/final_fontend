@@ -12,18 +12,34 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Button } from "@/components/ui/button";
 import { useDispatch, useSelector } from "react-redux";
+import { useUpdateMeetingMutation } from "@/Context/features/application/applicationApiSlice";
+import { useUpdateApplicationMutation } from "@/Context/features/application/applicationApiSlice";
 import {
+  selectApplicationId,
   selectTrigger,
+  selectStatus,
+  selectMeetingUrl,
+  selectInterviewSchedule,
   setTrigger,
   setNotify,
   setMeetingUrl,
+  setStatus
 } from "@/Context/features/interview/interviewDetailSlice";
 import { useGetMeetingRoomQuery } from "@/Context/features/interview/interviewApiSlice";
 import { format } from "date-fns";
 
 export default function MeetingRoom({ open, setOpen }) {
+  const [updateMeeting, { isLoading: isLoading2, error: error2, success }] =
+    useUpdateMeetingMutation();
+    const [updateApplication, { isLoading:loading2, error:err, success:suc }] =
+    useUpdateApplicationMutation();
+  useUpdateApplicationMutation();
   const dispatch = useDispatch();
   const trigger = useSelector(selectTrigger);
+  const applicationId = useSelector(selectApplicationId);
+  const meetingUrl = useSelector(selectMeetingUrl);
+  const scheduleInterview = useSelector(selectInterviewSchedule);
+  const status= useSelector(selectStatus);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [check, setCheck] = useState(false);
 
@@ -43,12 +59,33 @@ export default function MeetingRoom({ open, setOpen }) {
     setCheck(true);
   };
 
-    useEffect(() => {
-      if(data!==null&&data!==undefined){
-          dispatch(setMeetingUrl(data.join_url));
+  useEffect(() => {
+    const updateMeetingUrl = async () => {
+      if (data !== null && data !== undefined) {
+        dispatch(setMeetingUrl(data.join_url));
+        const app = {
+          id: applicationId,
+          url: data.join_url,
+        };
+        await updateMeeting(app);
       }
-    },[data])
-  console.log(data);
+    };
+    updateMeetingUrl();
+  }, [data]);
+
+  useEffect(() => {
+    const updateApp = async () => {
+      if (meetingUrl !== null && scheduleInterview !== null && status==="Shortlisted") {
+        const app = {
+          id: applicationId,
+          status: "Interviewing",
+        };
+        const response = await updateApplication(app);
+        dispatch(setStatus("Interviewing"))
+      }
+    }
+    updateApp();
+  },[scheduleInterview,meetingUrl])
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent>

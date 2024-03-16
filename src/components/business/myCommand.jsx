@@ -6,12 +6,54 @@ import { FaRegCircleCheck } from "react-icons/fa6";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import MeetingRoom from "@/components/business/MeetingRoom";
 import InterviewSchedule from "@/components/business/InterviewSchedule";
+import { useUpdateApplicationMutation } from "@/Context/features/application/applicationApiSlice";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  selectStatus,
+  setStatus,
+  selectApplicationId,
+  selectTrigger,
+  setTrigger,
+  setNotify,
+} from "@/Context/features/interview/interviewDetailSlice";
 
-const DropdownInput = () => {
+const MyCommand = () => {
+  const [updateApplication, { isLoading: loading2, error: err, success: suc }] =
+    useUpdateApplicationMutation();
+  const dispatch = useDispatch();
+  const applicationId = useSelector(selectApplicationId);
+  const status = useSelector(selectStatus);
+  const trigger = useSelector(selectTrigger);
   const [show, setShow] = useState(false);
 
   const [isOpen, setIsOpen] = useState(false);
   const [isOpen2, setIsOpen2] = useState(false);
+
+  const handleAccept = async () => {
+    const app = {
+      id: applicationId,
+      status: "Accepted",
+    };
+    const response = await updateApplication(app);
+    if (response) {
+      dispatch(setTrigger(!trigger));
+      dispatch(setNotify("Accepting this applicant successfully"));
+      dispatch(setStatus("Accepted"));
+    }
+  };
+
+  const handleReject = async () => {
+    const app = {
+      id: applicationId,
+      status: "Rejected",
+    };
+    const response = await updateApplication(app);
+    if (response) {
+      dispatch(setTrigger(!trigger));
+      dispatch(setNotify("Rejecting this applicant successfully"));
+      dispatch(setStatus("Rejected"));
+    }
+  };
 
   return (
     <div className="mb-4 grid w-full max-w-[200px] items-center gap-1.5">
@@ -44,9 +86,13 @@ const DropdownInput = () => {
             <div
               onClick={() => {
                 setShow(!show);
-                setIsOpen(true);
+                if (status === "Shortlisted") {
+                  setIsOpen(true);
+                }
               }}
-              className="py-2 px-1 transition-all rounded-md duration-300 hover:bg-gray-100 cursor-pointer flex items-center gap-3"
+              className={`py-2 px-1 transition-all rounded-md duration-300 hover:bg-gray-100 cursor-pointer flex items-center gap-3 ${
+                status === "Shortlisted" ? "" : "opacity-50 cursor-not-allowed"
+              }`}
             >
               <MdAddToQueue color="#4b5563" size={24} />
               <p className="text-gray-600 font-semibold">
@@ -56,9 +102,13 @@ const DropdownInput = () => {
             <div
               onClick={() => {
                 setShow(!show);
-                setIsOpen2(true);
+                if (status === "Shortlisted") {
+                  setIsOpen2(true);
+                }
               }}
-              className="py-2 px-1 transition-all rounded-md duration-300 hover:bg-gray-100 cursor-pointer flex items-center gap-3"
+              className={`py-2 px-1 transition-all rounded-md duration-300 hover:bg-gray-100 cursor-pointer flex items-center gap-3 ${
+                status === "Shortlisted" ? "" : "opacity-50 cursor-not-allowed"
+              }`}
             >
               <FaRegCalendarCheck color="#4b5563" size={24} />
               <p className="text-gray-600 font-semibold">Seting Up Schedules</p>
@@ -66,8 +116,13 @@ const DropdownInput = () => {
             <div
               onClick={() => {
                 setShow(!show);
+                if (status === "Interviewing") {
+                  handleAccept();
+                }
               }}
-              className="py-2 px-1 transition-all rounded-md duration-300 hover:bg-gray-100 cursor-pointer flex items-center gap-3"
+              className={`py-2 px-1 transition-all rounded-md duration-300 hover:bg-gray-100 cursor-pointer flex items-center gap-3 ${
+                status === "Interviewing" ? "" : "opacity-50 cursor-not-allowed"
+              }`}
             >
               <AiOutlineCloseCircle color="#4b5563" size={24} />
               <p className="text-gray-600 font-semibold">
@@ -77,8 +132,13 @@ const DropdownInput = () => {
             <div
               onClick={() => {
                 setShow(!show);
+                if (status === "Interviewing") {
+                  handleReject();
+                }
               }}
-              className="py-2 px-1 transition-all rounded-md duration-300 hover:bg-gray-100 cursor-pointer flex items-center gap-3"
+              className={`py-2 px-1 transition-all rounded-md duration-300 hover:bg-gray-100 cursor-pointer flex items-center gap-3 ${
+                status === "Interviewing" ? "" : "opacity-50 cursor-not-allowed"
+              }`}
             >
               <FaRegCircleCheck color="#4b5563" size={24} />
               <p className="text-gray-600 font-semibold">
@@ -94,4 +154,4 @@ const DropdownInput = () => {
   );
 };
 
-export default DropdownInput;
+export default MyCommand;

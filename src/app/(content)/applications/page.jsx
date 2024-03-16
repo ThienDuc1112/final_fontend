@@ -119,7 +119,7 @@ export default function Applications() {
                       </td>
                       <td className="px-4 text-base text-center">
                         <Link
-                          href={`/jobs/${item.jobId}`}
+                          href={`/applications/${item.id}`}
                           target="_blank"
                           className="bg-orange-500 text-white px-2 py-2 rounded hover:bg-blue-500"
                         >

@@ -12,40 +12,51 @@ import {
   selectJobType,
   selectCareer,
 } from "@/Context/features/search/searchSlice";
+import { getCareer, getJobType } from "@/app/api/provider/api";
 
-const industries = [
-  { id: 0, name: "All Industries" },
-  { id: 1, name: "Design & Creative" },
-  { id: 2, name: "Development" },
-  { id: 3, name: "Marketing & Branding" },
-];
+// const industries = [
+//   { id: 0, name: "All Industries" },
+//   { id: 1, name: "Design & Creative" },
+//   { id: 2, name: "Development" },
+//   { id: 3, name: "Marketing & Branding" },
+// ];
 
-const types = [
-  { id: 0, name: "Job Type" },
-  { id: 1, name: "Full-Time" },
-  { id: 2, name: "Part-Time" },
-  { id: 3, name: "Freelance" },
-];
+// const types = [
+//   { id: 0, name: "Job Type" },
+//   { id: 1, name: "Full-Time" },
+//   { id: 2, name: "Part-Time" },
+//   { id: 3, name: "Freelance" },
+// ];
 
 const SearchBox = () => {
+  const [industries, setIndustries] = useState([]);
+  const [types, setTypes] = useState([]);
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
   const params = new URLSearchParams(searchParams);
   const dispatch = useDispatch();
-  // const query = useSelector(selectQuery);
-  // const jobType = useSelector(selectJobType);
-  // const career = useSelector(selectCareer);
   const [type, setType] = useState(searchParams.get("jobType") || "Job Type");
   const [caree, setCaree] = useState(
     searchParams.get("career") || "All Industries"
   );
-  const [keyword, setKeyword] = useState(searchParams.get("query") || "");
+  const keyword = useSelector(selectQuery);
 
-  // useEffect(() => {
-  //   params.set("page", "1");
-  //   router.push(`${pathname}?${params.toString()}`);
-  // }, []);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const industryData = await getCareer();
+        const jobTypeData = await getJobType();
+        const firstIndustry = {id: 0, name:"All Industries"}
+        const firstJobType = {id: 0, name:"Job Type"}
+        setIndustries([firstIndustry,...industryData.data]);
+        setTypes([firstJobType,...jobTypeData.data]);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
+  }, []);
 
   function handleSearch(e) {
     e.preventDefault();
@@ -63,7 +74,7 @@ const SearchBox = () => {
     const selectedIndustry = event.target.value;
     dispatch(setCareer(selectedIndustry));
     setCaree(selectedIndustry);
-    if (selectedIndustry === 0 || selectedIndustry === '0') {
+    if (selectedIndustry === 0 || selectedIndustry === "0") {
       params.delete("career");
     } else {
       params.set("career", selectedIndustry);
@@ -83,9 +94,6 @@ const SearchBox = () => {
       params.delete("jobType");
     }
     router.push(`${pathname}?${params.toString()}`);
-  };
-  const handleKeywordChange = (event) => {
-    setKeyword(event.target.value);
   };
 
   return (
@@ -142,8 +150,7 @@ const SearchBox = () => {
             type="text"
             placeholder="Your keywords..."
             value={keyword}
-            defaultValue={searchParams.get("query")?.toString()}
-            onChange={handleKeywordChange}
+            onChange={(e) => dispatch(setQuery(e.target.value))}
             className="form-input input-keysearch mr-5 text-gray-500 text-sm"
           />
         </div>

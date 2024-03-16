@@ -13,7 +13,14 @@ export const interviewApiSlice = apiSlice.injectEndpoints({
         url: `/Zoom/${date}`,
       }),
     }),
+    addInterview: builder.mutation({
+      query: (interview) => ({
+        url: "/Interview",
+        method: "POST",
+        body: interview,
+      }),
+    }),
   }),
 });
 
-export const { useGetInterviewListQuery, useGetMeetingRoomQuery } = interviewApiSlice;
+export const { useGetInterviewListQuery, useGetMeetingRoomQuery, useAddInterviewMutation } = interviewApiSlice;

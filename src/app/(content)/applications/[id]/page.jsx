@@ -11,87 +11,25 @@ import { useGetApplicationDetailQuery } from "@/Context/features/application/app
 import { useGetInterviewListQuery } from "@/Context/features/interview/interviewApiSlice";
 import { FaArrowUpRightFromSquare } from "react-icons/fa6";
 import HelpFunctions from "@/utils/functions";
-import MyCommand from "@/components/business/myCommand";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  selectInterviewSchedule,
-  selectMeetingUrl,
-  selectNotify,
-  selectTrigger,
-  selectStatus,
-  setInterviewSchedule,
-  setMeetingUrl,
-  setApplicationId,
-  setStatus,
-} from "@/Context/features/interview/interviewDetailSlice";
 
 export default function Detail({ params }) {
-  const dispatch = useDispatch();
-  const schedule = useSelector(selectInterviewSchedule);
-  const meetingUrl = useSelector(selectMeetingUrl);
-  const notifyMess = useSelector(selectNotify);
-  const status = useSelector(selectStatus);
-  const trigger = useSelector(selectTrigger);
   const [loading, setLoading] = useState(false);
-  const [isInitialRender, setIsInitialRender] = useState(true);
-  const { data, isLoading, error, refetch } = useGetApplicationDetailQuery({
+  const [schedule, setSchedule] = useState(null);
+  const { data, isLoading, error } = useGetApplicationDetailQuery({
     id: params.id,
   });
+  console.log(data);
   const {
     data: interviewData,
     isLoading: isLoading2,
     error: error2,
   } = useGetInterviewListQuery({ appId: params.id });
-  if (interviewData !== undefined) {
-    if (interviewData.length !== 0) {
-      dispatch(setInterviewSchedule(interviewData[0].interviewTime));
-    }
-  }
-
-  const notify = () => {
-    toast.success(notifyMess, {
-      position: "top-right",
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
-  };
-  console.log(data);
 
   useEffect(() => {
-    const fetchData = async () => {
-      await refetch();
-    };
-    fetchData();
-  }, [trigger, status]);
-
-  useEffect(() => {
-    if (data !== undefined) {
-      if (data.url !== null) {
-        dispatch(setMeetingUrl(data.url));
-      }
-      if (data !== null) {
-        dispatch(setApplicationId(data.id));
-        dispatch(setStatus(data.status));
-      }
+    if (interviewData !== undefined && interviewData.length !== 0) {
+      setSchedule(interviewData[0].interviewTime);
     }
-  }, [data]);
-
-  useEffect(() => {
-    if (isInitialRender) {
-      setIsInitialRender(false);
-      return;
-    }
-
-    if (notifyMess !== null && notifyMess !== "") {
-      notify();
-    }
-  }, [notifyMess]);
+  }, [interviewData]);
 
   const url = "https://fcfqw1pzmmyfx1ve.public.blob.vercel-storage.com/";
   let avatarPath = "/images/mya.jpg";
@@ -102,20 +40,20 @@ export default function Detail({ params }) {
   }
 
   return (
-    <DefaultLayout>
+    <section className="section-box mt-[10px] relative">
       {loading || isLoading ? (
-        <div className="flex justify-center items-center flex-grow mt-[200px] ml-[700px] mb-[500px]">
+        <div className="flex justify-center items-center flex-grow mt-[300px] ml-[200px] mb-[500px]">
           <div className="spinner"></div>
         </div>
       ) : (
-        <div className="relative max-w-[1600px] mt-10 mb-[300px]">
+        <div className="max-w-[1100px] mx-auto my-[200px]">
           <div className="mx-5">
-            <h2>Processing Job Application</h2>
+            <h2>Managing your Job Application</h2>
             <p className="text-base font-normal">
               {" "}
               Streamline Your Job Application Workflow{" "}
             </p>
-            <div className="mt-10 py-5 px-5 bg-white border rounded-lg shadow-md xl:min-w-[1300px]">
+            <div className="mt-10 py-5 px-5 bg-white border rounded-lg shadow-md xl:min-w-[1100px]">
               <div className="border border-gray-200 rounded-lg p-3">
                 <div className="grid grid-cols-5 gap-4">
                   <div className="col-span-2">
@@ -163,6 +101,7 @@ export default function Detail({ params }) {
                         </Link>
                       </div>
                     </div>
+
                     <div className="mt-[40px] flex gap-7 justify-start pl-1">
                       <div>
                         <Image
@@ -189,16 +128,11 @@ export default function Detail({ params }) {
                           Number of Recruitment:{" "}
                           {data && data.numberRecruitment}
                         </span>
-                        <span className="text-gray-500 text-sm font-normal">
-                          Number of Applying: {data && data.appliedNumber}
-                        </span>
-                        <span className="text-gray-500 text-sm font-normal">
-                          Number of Accepted: {data && data.acceptedNumber}
-                        </span>
                       </div>
                     </div>
                   </div>
-                  <div className="col-span-1">
+
+                  <div className="col-span-2">
                     <div className="flex flex-col items-center">
                       <h3 className="text-black text-lg font-medium mb-2">
                         Interview Schedule
@@ -210,18 +144,18 @@ export default function Detail({ params }) {
                           </span>
                         ) : (
                           <div className="text-blue-600 text-sm">
-                            {HelpFunctions.formatTimeAndDate(schedule)}(UTC+0)
+                            {HelpFunctions.formatTimeAndDate(schedule)} (UTC+0)
                           </div>
                         )}
                       </div>
                       <div className="px-4 rounded-xl font-small mt-[20px] bg-gray-100 max-w-[170px]">
-                        {meetingUrl === null ? (
+                        {data.url === null ? (
                           <span className="text-gray-700 text-base">
                             No Meeting Room
                           </span>
                         ) : (
                           <Link
-                            href={meetingUrl}
+                            href={data.url}
                             target="_blank"
                             className="underline px-2 py-1 text-blue-600 text-sm"
                           >
@@ -236,20 +170,15 @@ export default function Detail({ params }) {
                       </h3>
                       <p
                         className={`p-2 mt-4 rounded-lg font-medium ${
-                          status === "Accepted"
+                          data.status === "Accepted"
                             ? "bg-emerald-100 text-emerald-600"
-                            : status === "Rejected"
+                            : data.status === "Rejected"
                             ? "bg-red-100 text-red-600"
                             : "bg-blue-100 text-blue-600"
                         }`}
                       >
-                        {status}
+                        {data.status}
                       </p>
-                    </div>
-                  </div>
-                  <div className="col-span-2">
-                    <div className="flex justify-end">
-                      <MyCommand />
                     </div>
                   </div>
                 </div>
@@ -265,7 +194,7 @@ export default function Detail({ params }) {
                     <div className="mb-[35px] z-20 flex items-center gap-6">
                       <div
                         className={`rounded-full p-4 ${
-                          status !== "Pending"
+                          data.status !== "Pending"
                             ? "bg-blue-100"
                             : "bg-emerald-100"
                         }`}
@@ -273,12 +202,18 @@ export default function Detail({ params }) {
                         <BsFillClipboard2CheckFill
                           size={24}
                           color={`${
-                            status !== "Pending" ? "#2563eb" : "#22c55e"
+                            data.status !== "Pending" ? "#2563eb" : "#22c55e"
                           }`}
                         />
                       </div>
                       <div className="flex flex-col">
-                        <h5 className="text-lg">
+                        <h5
+                          className={`text-lg ${
+                            data.status !== "Pending"
+                              ? "text-blue-500"
+                              : "text-emerald-500"
+                          }`}
+                        >
                           Candidate Applying (Pending)
                         </h5>
                         <p className="text-sm italic text-gray-500">
@@ -290,7 +225,7 @@ export default function Detail({ params }) {
                     <div className="mb-[35px] z-20 flex items-center gap-6">
                       <div
                         className={`rounded-full p-4 ${
-                          status !== "Shortlisted"
+                          data.status !== "Shortlisted"
                             ? "bg-blue-100"
                             : "bg-emerald-100"
                         }`}
@@ -298,12 +233,20 @@ export default function Detail({ params }) {
                         <PiFileMagnifyingGlassBold
                           size={24}
                           color={`${
-                            status !== "Shortlisted" ? "#2563eb" : "#22c55e"
+                            data.status !== "Shortlisted"
+                              ? "#2563eb"
+                              : "#22c55e"
                           }`}
                         />
                       </div>
                       <div className="flex flex-col">
-                        <h5 className="text-lg">
+                        <h5
+                          className={`text-lg ${
+                            data.status !== "Shortlisted"
+                              ? "text-blue-500"
+                              : "text-emerald-500"
+                          }`}
+                        >
                           Business Screening (Shortlisted)
                         </h5>
                         <p className="text-sm italic text-gray-500">
@@ -316,7 +259,7 @@ export default function Detail({ params }) {
                     <div className="mb-[35px] z-20 flex items-center gap-6">
                       <div
                         className={`rounded-full p-4 ${
-                          status !== "Interviewing"
+                          data.status !== "Interviewing"
                             ? "bg-blue-100"
                             : "bg-emerald-100"
                         }`}
@@ -324,12 +267,20 @@ export default function Detail({ params }) {
                         <FaRegCalendarCheck
                           size={24}
                           color={`${
-                            status !== "Interviewing" ? "#2563eb" : "#22c55e"
+                            data.status !== "Interviewing"
+                              ? "#2563eb"
+                              : "#22c55e"
                           }`}
                         />
                       </div>
                       <div className="flex flex-col">
-                        <h5 className="text-lg">
+                        <h5
+                          className={`text-lg ${
+                            data.status === "Interviewing"
+                              ? "text-emerald-500"
+                              : "text-blue-500"
+                          }`}
+                        >
                           Interview Process (Interviewing)
                         </h5>
                         <p className="text-sm italic text-gray-500">
@@ -341,9 +292,9 @@ export default function Detail({ params }) {
                     <div className=" z-20 flex items-center gap-6">
                       <div
                         className={`rounded-full p-4 ${
-                          status === "Accepted"
+                          data.status === "Accepted"
                             ? "bg-emerald-100"
-                            : status === "Rejected"
+                            : data.status === "Rejected"
                             ? "bg-rose-100"
                             : "bg-blue-100"
                         }`}
@@ -351,16 +302,24 @@ export default function Detail({ params }) {
                         <AiOutlineNotification
                           size={24}
                           color={`${
-                            status === "Accepted"
+                            data.status === "Accepted"
                               ? "#22c55e"
-                              : status === "Rejected"
+                              : data.status === "Rejected"
                               ? "#f43f5e"
                               : "#3b82f6"
                           }`}
                         />
                       </div>
                       <div className="flex flex-col">
-                        <h5 className="text-lg">
+                        <h5
+                          className={`text-lg ${
+                            data.status === "Accepted"
+                              ? "text-emerald-500"
+                              : data.status === "Rejected"
+                              ? "text-rose-100"
+                              : "bg-blue-100"
+                          }`}
+                        >
                           Interview Result (Accepted/Rejected)
                         </h5>
                         <p className="text-sm italic text-gray-500">
@@ -375,7 +334,6 @@ export default function Detail({ params }) {
           </div>
         </div>
       )}
-      <ToastContainer />
-    </DefaultLayout>
+    </section>
   );
 }

@@ -11,16 +11,31 @@ import { FaRegCalendarCheck } from "react-icons/fa6";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Button } from "@/components/ui/button";
+import { useAddInterviewMutation } from "@/Context/features/interview/interviewApiSlice";
+import { useUpdateApplicationMutation } from "@/Context/features/application/applicationApiSlice";
 import { useDispatch, useSelector } from "react-redux";
 import {
   selectTrigger,
+  selectApplicationId,
+  selectMeetingUrl,
+  selectInterviewSchedule,
+  selectStatus,
   setTrigger,
   setNotify,
   setInterviewSchedule,
+  setStatus,
 } from "@/Context/features/interview/interviewDetailSlice";
 import { format } from "date-fns";
 
 export default function InterviewSchedule({ open, setOpen }) {
+  const [addInterview, { isLoading: isLoading2, error: error2, success }] =
+    useAddInterviewMutation();
+  const [updateApplication, { isLoading:loading2, error:err, success:suc }] =
+    useUpdateApplicationMutation();
+  const applicationId = useSelector(selectApplicationId);
+  const meetingUrl = useSelector(selectMeetingUrl);
+  const scheduleInterview = useSelector(selectInterviewSchedule);
+  const status = useSelector(selectStatus);
   const dispatch = useDispatch();
   const trigger = useSelector(selectTrigger);
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -30,12 +45,32 @@ export default function InterviewSchedule({ open, setOpen }) {
   };
   const formattedDateTime = format(selectedDate, "yyyy-MM-dd HH:mm");
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     dispatch(setTrigger(!trigger));
     dispatch(setNotify("Interviewing schedule is created succesfully"));
     setOpen(false);
     dispatch(setInterviewSchedule(formattedDateTime));
+    const schedule = {
+      appliedJobId: applicationId,
+      interviewTime: selectedDate,
+    };
+    await addInterview(schedule);
   };
+
+  useEffect(() => {
+    const updateApp = async () => {
+      if (meetingUrl !== null && scheduleInterview !== null && status==="Shortlisted") {
+        const app = {
+          id: applicationId,
+          status: "Interviewing",
+        };
+        const response = await updateApplication(app);
+        dispatch(setStatus("Interviewing"));
+        console.log(response);
+      }
+    }
+    updateApp();
+  },[scheduleInterview,meetingUrl])
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

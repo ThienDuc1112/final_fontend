@@ -1,9 +1,11 @@
+"use client";
 import Image from "next/image";
 import { MdLocationOn } from "react-icons/md";
 import { FaCalendarDays } from "react-icons/fa6";
 import { FaBriefcase } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const JobCard = ({
   id,
@@ -20,6 +22,7 @@ const JobCard = ({
   businessId,
   logoUrl,
 }) => {
+  const route = useRouter();
   const date = new Date(expirationDate);
   const day = date.getDate();
   const month = date.getMonth() + 1;
@@ -95,7 +98,14 @@ const JobCard = ({
                 </span>
                 <span className="text-muted">/Hour</span>
               </div>
-              <Button variant="blue">Apply Now</Button>
+              <Button
+                variant="blue"
+                onClick={() => {
+                  route.push(`/jobs/${id}`);
+                }}
+              >
+                View Detail
+              </Button>
             </div>
           </div>
         </div>
