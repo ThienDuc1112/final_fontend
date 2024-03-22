@@ -1,6 +1,7 @@
 import Image from "next/image";
 export default function ResumeComponent({ resumeData }) {
-  function convertToDayMonthYear(date) {
+  function convertToDayMonthYear(dat) {
+    const date = new Date(dat);
     const day = date.getDate().toString().padStart(2, "0");
     const month = (date.getMonth() + 1).toString().padStart(2, "0");
     const year = date.getFullYear().toString();
@@ -11,7 +12,10 @@ export default function ResumeComponent({ resumeData }) {
     .trim()
     .split("• ")
     .filter((element) => element !== "");
-  console.log(resumeData.skillOfResumeDTOs);
+  console.log(resumeData);
+  let avatar =
+    "https://fcfqw1pzmmyfx1ve.public.blob.vercel-storage.com/" +
+    resumeData.avatarUrl;
   return (
     <>
       <div className="wraper relative">
@@ -21,7 +25,7 @@ export default function ResumeComponent({ resumeData }) {
               <div className="box-section">
                 <div className="avatar_info">
                   <Image
-                    src="/images/avatar.png"
+                    src={avatar}
                     width={100}
                     height={176}
                     alt="avatar"
@@ -70,15 +74,13 @@ export default function ResumeComponent({ resumeData }) {
               <div className="content_summary section_item">
                 <ul
                   style={{
-                    // listStyleType: "disc",
-                    // paddingLeft: "1em",
                     fontSize: "13px",
                   }}
                 >
                   <li>
                     <span className="flex flex-wrap">
                       <strong>{resumeData?.nameCareer}:&nbsp;</strong>
-                      {resumeData.skillOfResumeDTOs.map((skill, index) => (
+                      {resumeData?.skillOfResumeDTOs.map((skill, index) => (
                         <p key={index}>{skill?.skillName}</p>
                       ))}
                     </span>
@@ -145,15 +147,16 @@ export default function ResumeComponent({ resumeData }) {
                   </div>
                   <div className="work_responsipility section_item">
                     <div className="title_respo">Description</div>
-                    {education?.description
-                      .split("• ")
-                      .filter((element) => element !== "")
-                      .map((res, index) => (
-                        <div key={index} className="desc">
-                          <p>- {res}</p>
-                          <br className="br_break" />
-                        </div>
-                      ))}
+                    {education?.description &&
+                      education.description
+                        .split("• ")
+                        .filter((element) => element !== "")
+                        .map((res, index) => (
+                          <div key={index} className="desc">
+                            <p>- {res}</p>
+                            <br className="br_break" />
+                          </div>
+                        ))}
                   </div>
                 </div>
               ))}

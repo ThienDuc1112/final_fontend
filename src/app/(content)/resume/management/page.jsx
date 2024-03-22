@@ -2,21 +2,21 @@
 import { FaRegEye } from "react-icons/fa";
 import MyIconDialog from "@/components/MyIconDialog";
 import { useRouter } from "next/navigation";
-import { useGetResumeInfoQuery } from "@/Context/features/resume/resumeApiSlice";
+import { useGetAllResumeInfoQuery } from "@/Context/features/resume/resumeApiSlice";
 import { Button } from "@/components/ui/button";
 import TokenService from "@/utils/Token.service";
 
 export default function Management() {
   const { userId, role } = TokenService.getUserProfile();
- 
+
   const {
     data: resumeData,
     isError: isError2,
     isLoading: isLoading2,
     error: error2,
-  } = useGetResumeInfoQuery(userId);
+  } = useGetAllResumeInfoQuery({userId: userId});
   const router = useRouter();
-  
+  console.log(resumeData);
 
   function convertToDayMonthYear(dateString) {
     const date = new Date(dateString);
@@ -29,9 +29,9 @@ export default function Management() {
   return (
     <section className="section-box mt-[10px] relative">
       {isLoading2 ? (
-        <div className="flex justify-center items-center flex-grow mt-[200px] ml-[500px] mb-[500px]">
-        <div className="spinner"></div>
-      </div>
+        <div className="flex justify-center items-center flex-grow mt-[400px] ml-[200px] mb-[500px]">
+          <div className="spinner"></div>
+        </div>
       ) : (
         <div className="max-w-[1800px] mx-auto my-[200px]">
           <div className="div flex items-center justify-center">

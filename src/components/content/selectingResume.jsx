@@ -14,7 +14,7 @@ import TokenService from "@/utils/Token.service";
 import { useCreateApplicationMutation } from "@/Context/features/application/applicationApiSlice";
 import { useState } from "react";
 
-export default function SelectingResume({ color, name, handleConfirm, jobId }) {
+export default function SelectingResume({ color, name, handleConfirm, jobId, businessUserId }) {
   const [isOpen, setIsOpen] = useState(false);
   const { userId, role } = TokenService.getUserProfile();
   const {
@@ -50,6 +50,7 @@ export default function SelectingResume({ color, name, handleConfirm, jobId }) {
         candidateId: userId,
         jobId: jobId,
         resumeId: resumeId,
+        businessUserId: businessUserId,
       };
       const response = await createApplication(app);
       console.log(response);

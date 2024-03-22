@@ -52,6 +52,7 @@ const updateUser = (userId, role) => {
   try {
     Cookies.set("role", role);
     Cookies.set("userId", userId);
+    Cookies.set("count", 0);
   } catch (error) {
     console.log("Error updating local access token:", error);
     return "error";

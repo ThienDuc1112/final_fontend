@@ -42,7 +42,7 @@ export default function Detail({ params }) {
   return (
     <section className="section-box mt-[10px] relative">
       {loading || isLoading ? (
-        <div className="flex justify-center items-center flex-grow mt-[300px] ml-[200px] mb-[500px]">
+        <div className="flex justify-center items-center flex-grow mt-[400px] ml-[200px] mb-[500px]">
           <div className="spinner"></div>
         </div>
       ) : (
@@ -317,7 +317,7 @@ export default function Detail({ params }) {
                               ? "text-emerald-500"
                               : data.status === "Rejected"
                               ? "text-rose-100"
-                              : "bg-blue-100"
+                              : "text-blue-100"
                           }`}
                         >
                           Interview Result (Accepted/Rejected)

@@ -20,7 +20,8 @@ export default function ApplicationList({ appId, item, onClick }) {
   const loading = useSelector(selectLoading);
 
   const url = "https://fcfqw1pzmmyfx1ve.public.blob.vercel-storage.com/";
-  const imagePath = item.avatarUrl ? url + item.avatarUrl : "/images/mya.jpg";
+  const imagePath =
+    item.avatarUrl !== null ? url + item.avatarUrl : "/images/mya.jpg";
 
   const handleAccept = async () => {
     const app = {
@@ -121,7 +122,7 @@ export default function ApplicationList({ appId, item, onClick }) {
                 </button>
               </div>
             )}
-            {item.status !== "Pending" || item.status !== "Rejected" ? (
+            {item.status !== "Pending" && item.status !== "Rejected" ? (
               <div className="flex items-center gap-3">
                 <Link
                   href={`/business/manageApplications/detail/${appId}`}

@@ -1,3 +1,5 @@
+"use client";
+import React, { useEffect, useState } from "react";
 import { IoIosNotifications } from "react-icons/io";
 import { FaCircleUser } from "react-icons/fa6";
 import { AiOutlineDown } from "react-icons/ai";
@@ -5,16 +7,89 @@ import { TbReportSearch } from "react-icons/tb";
 import { FaRegFileLines } from "react-icons/fa6";
 import { PiSignOutBold } from "react-icons/pi";
 import TokenService from "@/utils/Token.service";
+import { useGetNewMessageCountQuery } from "@/Context/features/message/messageApiSlice";
+import { useRouter } from "next/navigation";
+import SignalRService from "@/utils/signalrService";
+import CustomTooltip from "@/components/content/toolTip";
 
 const Dropdown = () => {
+  const router = useRouter();
   const handleSignOut = () => {
     TokenService.removeUser();
   };
+  const { userId, role } = TokenService.getUserProfile();
+  const { data, isLoading, error, refetch } = useGetNewMessageCountQuery({
+    userId: userId,
+  });
+  const [notificationCount, setNotificationCount] = useState(0);
+  const [click, setClick] = useState(false);
+
+  useEffect(() => {
+    if (data !== undefined) {
+      setNotificationCount(data);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        refetch();
+        if (data !== undefined) {
+          setNotificationCount(data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
+  }, [click]);
+
+  useEffect(() => {
+    const signalRService = new SignalRService();
+
+    signalRService.startConnection();
+    signalRService.addNotificationCountListener((userId2, count) => {
+      if (userId2 === userId) {
+        setNotificationCount(count);
+        console.log(count);
+      }
+    });
+    return () => {
+      signalRService.connection.stop();
+    };
+  }, [userId]);
+
+  console.log(userId);
+  let href;
+  if (role === "employer") {
+    href = "/business/notifications";
+  } else {
+    href = "/notifications";
+  }
 
   return (
     <div className="flex items-center justify-start gap-[15px]">
-      <div className="p-3 rounded-lg hover:bg-gray-300">
+      <div
+        className="p-3 rounded-lg hover:bg-gray-300 relative"
+        onClick={() => {
+          router.push(`${href}`);
+          setClick(!click);
+        }}
+      >
         <IoIosNotifications size={24} />
+        <CustomTooltip
+          content={`You have new ${
+            notificationCount === 1
+              ? "1 notification"
+              : `${notificationCount} notifications`
+          }`}
+          position="bottom"
+          duration={4000}
+          count={notificationCount}
+        />
+        <p className="rounded-full bg-blue-500 text-white text-center count-notification">
+          {notificationCount}
+        </p>
       </div>
       <div className="dropdown-container">
         <div className="p-3 rounded-lg hover:bg-gray-200 flex items-center gap-3 rotate-icon">

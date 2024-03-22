@@ -94,7 +94,7 @@ export default function Job({ params }) {
   return (
     <section className="section-box mt-[10px] mb-5">
       {isLoading ? (
-        <div className="flex justify-center items-center flex-grow mt-[300px] ml-[200px] mb-[500px]">
+        <div className="flex justify-center items-center flex-grow mt-[400px] ml-[200px] mb-[500px]">
           <div className="spinner"></div>
         </div>
       ) : (
@@ -127,6 +127,7 @@ export default function Job({ params }) {
                     name="Apply Now"
                     handleConfirm={handleConfirm}
                     jobId={params.id}
+                    businessUserId={career2.getBusinessPartDTO.businessUserId}
                   />
                   <Button variant="outline" size="xl">
                     Save Job
