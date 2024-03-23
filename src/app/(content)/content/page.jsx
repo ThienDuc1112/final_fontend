@@ -7,8 +7,8 @@ export default function Home() {
 
   return (
     <div>
-      <h1>Generated JWT Token:</h1>
-      <pre>{jwtToken}</pre>
+      <h1>NotFound</h1>
+     
     </div>
   );
 }

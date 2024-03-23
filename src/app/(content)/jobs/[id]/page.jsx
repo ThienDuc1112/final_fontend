@@ -228,13 +228,14 @@ export default function Job({ params }) {
                 </div>
                 <div class="lg:w-4/12 md:w-full sm:w-full w-full pl-10">
                   <CompanyInfo
+                    businessId={career2.getBusinessPartDTO.id}
                     logo={career2.getBusinessPartDTO.logoUrl}
                     name={career2.getBusinessPartDTO.fullName}
                     career={career2.careerName}
                     businessSize={career2.getBusinessPartDTO.businessSize}
                     location={career2.getBusinessPartDTO.address}
                     email={career2.getBusinessPartDTO.email}
-                    phone={career2.getBusinessPartDTO.phoneNumber}
+                    phone={career2.getBusinessPartDTO.phoneNumber}                 
                   />
                 </div>
               </div>

@@ -12,5 +12,8 @@ const getBusinessID = (userId) => {
 };
 const getBusinessDetail = (id) => {
   return axiosClient.get(`/BusinessInforDetail/${id}`);
+};
+const getBusinessDetailById = (id) => {
+  return axiosClient.get(`/BusinessDetail/${id}`);
 }
-export { createBusiness, getBusinessID, getBusinessDetail };
+export { createBusiness, getBusinessID, getBusinessDetail, getBusinessDetailById};

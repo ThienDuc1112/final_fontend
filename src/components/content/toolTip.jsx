@@ -2,10 +2,9 @@ import React, { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 const CustomTooltip = ({ content, position, duration, count }) => {
   const [showTooltip, setShowTooltip] = useState(false);
-   let mycount = Cookies.get("count")
-  console.log(mycount);
+  let mycount = Cookies.get("count");
   useEffect(() => {
-    if (count > mycount ) {
+    if (count > mycount) {
       setShowTooltip(true);
 
       const timeout = setTimeout(() => {

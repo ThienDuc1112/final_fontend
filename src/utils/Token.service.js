@@ -59,9 +59,10 @@ const updateUser = (userId, role) => {
   }
 };
 
-const setBusinessId = (id) => {
+const setBusinessId = (id, access) => {
   try {
     Cookies.set("businessId", id);
+    Cookies.set("access", access);
   } catch (error) {
     console.log("Error");
   }

@@ -15,8 +15,8 @@ export default function Dashboard() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const businessID = await getBusinessID(userId);
-        TokenService.setBusinessId(businessID.data.id);
+        const response = await getBusinessID(userId);
+        TokenService.setBusinessId(response.data.id, response.data.isApproved);
       } catch (error) {
         console.log(error);
       }

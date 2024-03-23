@@ -6,6 +6,7 @@ import MyIconDialog from "@/components/MyIconDialog";
 import { useSearchParams } from "next/navigation";
 import TokenService from "@/utils/Token.service";
 import Link from "next/link";
+import Cookies from "js-cookie";
 import { MdMailOutline } from "react-icons/md";
 import {
   useGetMessageQuery,
@@ -69,6 +70,7 @@ export default function Notification() {
         if (shouldUpdate) {
           handleUpdateMessage();
           refetch();
+          Cookies.set("count", 0);
         }
       }
     }

@@ -14,21 +14,8 @@ import {
 } from "@/Context/features/search/searchSlice";
 import { getCareer, getJobType } from "@/app/api/provider/api";
 
-// const industries = [
-//   { id: 0, name: "All Industries" },
-//   { id: 1, name: "Design & Creative" },
-//   { id: 2, name: "Development" },
-//   { id: 3, name: "Marketing & Branding" },
-// ];
-
-// const types = [
-//   { id: 0, name: "Job Type" },
-//   { id: 1, name: "Full-Time" },
-//   { id: 2, name: "Part-Time" },
-//   { id: 3, name: "Freelance" },
-// ];
-
 const SearchBox = () => {
+  const [searchText, setSearchText] = useState("");
   const [industries, setIndustries] = useState([]);
   const [types, setTypes] = useState([]);
   const searchParams = useSearchParams();
@@ -47,10 +34,10 @@ const SearchBox = () => {
       try {
         const industryData = await getCareer();
         const jobTypeData = await getJobType();
-        const firstIndustry = {id: 0, name:"All Industries"}
-        const firstJobType = {id: 0, name:"Job Type"}
-        setIndustries([firstIndustry,...industryData.data]);
-        setTypes([firstJobType,...jobTypeData.data]);
+        const firstIndustry = { id: 0, name: "All Industries" };
+        const firstJobType = { id: 0, name: "Job Type" };
+        setIndustries([firstIndustry, ...industryData.data]);
+        setTypes([firstJobType, ...jobTypeData.data]);
       } catch (error) {
         console.log(error);
       }
@@ -60,14 +47,26 @@ const SearchBox = () => {
 
   function handleSearch(e) {
     e.preventDefault();
-    params.set("page", "1");
-    if (keyword) {
-      params.set("query", keyword);
-      dispatch(setQuery(keyword));
+    if (searchText) {
+      if (pathname.includes("jobs")) {
+        params.set("query", searchText);
+        params.set("page", "1");
+        router.push(`${pathname}?${params.toString()}`);
+      }
+      dispatch(setQuery(searchText));
     } else {
       params.delete("query");
     }
-    router.push(`${pathname}?${params.toString()}`);
+
+    if (
+      searchText !== "" ||
+      type !== "Job Type" ||
+      caree !== "All Industries"
+    ) {
+      params.set("query", searchText);
+      params.set("page", "1");
+      router.push(`/jobs?${params.toString()}`);
+    }
   }
 
   const handleIndustryChange = (event) => {
@@ -77,8 +76,10 @@ const SearchBox = () => {
     if (selectedIndustry === 0 || selectedIndustry === "0") {
       params.delete("career");
     } else {
-      params.set("career", selectedIndustry);
-      params.set("page", "1");
+      if (pathname.includes("jobs")) {
+        params.set("career", selectedIndustry);
+        params.set("page", "1");
+      }
     }
 
     router.push(`${pathname}?${params.toString()}`);
@@ -88,8 +89,10 @@ const SearchBox = () => {
     dispatch(setJobType(selectedType));
     setType(selectedType);
     if (selectedType !== "Job Type") {
-      params.set("jobType", selectedType);
-      params.set("page", "1");
+      if (pathname.includes("jobs")) {
+        params.set("jobType", selectedType);
+        params.set("page", "1");
+      }
     } else {
       params.delete("jobType");
     }
@@ -149,8 +152,8 @@ const SearchBox = () => {
           <input
             type="text"
             placeholder="Your keywords..."
-            value={keyword}
-            onChange={(e) => dispatch(setQuery(e.target.value))}
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
             className="form-input input-keysearch mr-5 text-gray-500 text-sm"
           />
         </div>

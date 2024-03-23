@@ -29,11 +29,14 @@ export default function CompanyInfo({
           />
         </div>
         <div className="sidebar-info">
-          <Link href="/jobs" className="sidebar-company hover:text-blue-600">
+          <Link
+            href={`/businessDetail/${businessId}`}
+            className="sidebar-company hover:text-blue-600"
+          >
             NastTech Founded Quize ({name})
           </Link>
           <Link
-            href={`businesses/${businessId}`}
+            href={`/businessDetail/${businessId}`}
             className="link-underline mt-4"
           >
             See more jobs

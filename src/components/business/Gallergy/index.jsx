@@ -7,7 +7,6 @@ import { useCreateMediaMutation } from "@/Context/features/business/businessApiS
 export default function Gallery({ passedImages, Id }) {
   const [images, setImages] = useState([]);
   const [imagePath, setImagePath] = useState();
-  const [businessId, setBusinessId] = useState(null);
   const [showAll, setShowAll] = useState(false);
   const [hovered, setHovered] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -18,8 +17,6 @@ export default function Gallery({ passedImages, Id }) {
   const toggleShowAll = () => {
     setIsOpen(true);
   };
-
-  console.log(passedImages, images[0]);
 
   const handleMouseEnter = () => {
     setHovered(true);

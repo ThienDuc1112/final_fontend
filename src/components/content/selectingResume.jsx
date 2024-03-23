@@ -9,7 +9,7 @@ import {
 } from "@/components/business/Gallergy/dialog";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import { useGetResumeInfoQuery } from "@/Context/features/resume/resumeApiSlice";
+import { useGetAllResumeInfoQuery } from "@/Context/features/resume/resumeApiSlice";
 import TokenService from "@/utils/Token.service";
 import { useCreateApplicationMutation } from "@/Context/features/application/applicationApiSlice";
 import { useState } from "react";
@@ -22,7 +22,7 @@ export default function SelectingResume({ color, name, handleConfirm, jobId, bus
     isError,
     isLoading,
     error,
-  } = useGetResumeInfoQuery(userId);
+  } = useGetAllResumeInfoQuery({userId: userId});
   const [
     createApplication,
     { data: appData, isError: isError2, isLoading: isLoading2 },

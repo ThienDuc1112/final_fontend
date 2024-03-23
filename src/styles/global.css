@@ -1529,6 +1529,18 @@ business profile */
   border-color: transparent transparent #333 transparent;
 }
 
+.avatar-company {
+  border-radius: 16px;
+  bottom: 0px;
+  left: 40px;
+}
+
+.text-business {
+  display: block;
+  padding-top: 0;
+  color: #05264e;
+}
+
 
 
 
