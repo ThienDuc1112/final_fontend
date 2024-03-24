@@ -15,5 +15,14 @@ const getBusinessDetail = (id) => {
 };
 const getBusinessDetailById = (id) => {
   return axiosClient.get(`/BusinessDetail/${id}`);
-}
-export { createBusiness, getBusinessID, getBusinessDetail, getBusinessDetailById};
+};
+const GetBusinessList = ({params}) => {
+  return axiosClient.get(`/BusinessList`,{params: params});
+};
+export {
+  createBusiness,
+  getBusinessID,
+  getBusinessDetail,
+  getBusinessDetailById,
+  GetBusinessList
+};

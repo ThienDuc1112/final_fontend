@@ -15,6 +15,13 @@ export const businessApiSlice = apiSlice.injectEndpoints({
         body: business,
       }),
     }),
+    reviewBusiness: builder.mutation({
+      query: (business) => ({
+        url: `/ReviewBusiness`,
+        method: "PUT",
+        body: business,
+      }),
+    }),
   }),
 });
 
@@ -31,4 +38,4 @@ export const mediaApiSlice = apiSlice.injectEndpoints({
 });
 
 export const { useCreateMediaMutation } = mediaApiSlice;
-export const { useGetBusinessInfoQuery, useUpdateBusinessMutation } = businessApiSlice;
+export const { useGetBusinessInfoQuery, useUpdateBusinessMutation, useReviewBusinessMutation } = businessApiSlice;

@@ -1,17 +1,41 @@
-"use client"
-import { fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+"use client";
+import { fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { apiSlice } from "../../api";
 
 export const careerApiSlice = apiSlice.injectEndpoints({
-    endpoints: builder => ({
-        getAllCareer: builder.query({
-            query: () => ({
-                url: `/GetAllCareer`,
-            })
-        })
-    })
-})
+  endpoints: (builder) => ({
+    getAllCareer: builder.query({
+      query: () => ({
+        url: `/GetAllCareer`,
+      }),
+    }),
+    addCareer: builder.mutation({
+      query: (career) => ({
+        url: `/Career`,
+        method: "POST",
+        body: career,
+      }),
+    }),
+    updateCareer: builder.mutation({
+      query: (career) => ({
+        url: `/Career`,
+        method: "PUT",
+        body: career,
+      }),
+    }),
+    triggerCareer: builder.mutation({
+      query: (career) => ({
+        url: `/TriggerCareer`,
+        method: "PUT",
+        body: career,
+      }),
+    }),
+  }),
+});
 
 export const {
-    useGetAllCareerQuery
-} = careerApiSlice 
+  useGetAllCareerQuery,
+  useAddCareerMutation,
+  useUpdateCareerMutation,
+  useTriggerCareerMutation,
+} = careerApiSlice;

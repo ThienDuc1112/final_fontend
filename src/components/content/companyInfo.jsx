@@ -20,7 +20,7 @@ export default function CompanyInfo({
             src={
               logo !== null && logo !== ""
                 ? `${path}/${logo}`
-                : "/images/job.png"
+                : "/images/logo.png"
             }
             width={85}
             height={85}

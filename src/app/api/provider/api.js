@@ -12,6 +12,10 @@ const axiosClient = axios.create({
    return axiosClient.get("/GetAllCareer");
  }
 
+ const getAdminCareer = () => {
+   return axiosClient.get("/GetAdminCareers");
+ }
+
 const getCareerLevel = () => {
    return axiosClient.get("/Provider/GetCareerLevel");
 }
@@ -41,7 +45,8 @@ const getCareersWithSkills = () => {
     getExperienceLevel,
     getJobType,
     getLanguages,
-    getCareersWithSkills
+    getCareersWithSkills,
+    getAdminCareer
  } 
  
   
