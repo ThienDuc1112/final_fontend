@@ -1,52 +1,55 @@
-import axios from 'axios';
+import axios from "axios";
 
 const axiosClient = axios.create({
-    baseURL: "https://localhost:5011/", 
-  });
+  baseURL: "https://localhost:5011/",
+});
 
- const getBusinessSize = () => {
-    return axiosClient.get("/Provider/GetBusinessSize");
- } ;
+const getBusinessSize = () => {
+  return axiosClient.get("/Provider/GetBusinessSize");
+};
 
- const getCareer = () => {
-   return axiosClient.get("/GetAllCareer");
- }
+const getCareer = () => {
+  return axiosClient.get("/GetAllCareer");
+};
 
- const getAdminCareer = () => {
-   return axiosClient.get("/GetAdminCareers");
- }
+const getAdminCareer = () => {
+  return axiosClient.get("/GetAdminCareers");
+};
 
 const getCareerLevel = () => {
-   return axiosClient.get("/Provider/GetCareerLevel");
-}
+  return axiosClient.get("/Provider/GetCareerLevel");
+};
 const getEducationLevel = () => {
-   return axiosClient.get("/Provider/GetEducationLevel");
-}
+  return axiosClient.get("/Provider/GetEducationLevel");
+};
 const getExperienceLevel = () => {
-   return axiosClient.get("/Provider/GetExperienceYear");
-}
+  return axiosClient.get("/Provider/GetExperienceYear");
+};
 const getJobType = () => {
-   return axiosClient.get("/Provider/GetJobType");
-}
+  return axiosClient.get("/Provider/GetJobType");
+};
 
 const getLanguages = () => {
-   return axiosClient.get("/GetLanguages");
-}
+  return axiosClient.get("/GetLanguages");
+};
 
 const getCareersWithSkills = () => {
-   return axiosClient.get("/GetCareersWithSkills");
-}
+  return axiosClient.get("/GetCareersWithSkills");
+};
 
- export {
-    getBusinessSize,
-    getCareer,
-    getCareerLevel,
-    getEducationLevel,
-    getExperienceLevel,
-    getJobType,
-    getLanguages,
-    getCareersWithSkills,
-    getAdminCareer
- } 
- 
-  
+const getSkillsByAdmin = ({params}) => {
+  return axiosClient.get("/GetSkillsByAdmin", {params: params });
+};
+
+export {
+  getBusinessSize,
+  getCareer,
+  getCareerLevel,
+  getEducationLevel,
+  getExperienceLevel,
+  getJobType,
+  getLanguages,
+  getCareersWithSkills,
+  getAdminCareer,
+  getSkillsByAdmin,
+};

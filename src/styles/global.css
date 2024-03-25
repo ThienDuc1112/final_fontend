@@ -1174,6 +1174,14 @@ input[type=checkbox]:checked:after {
   max-width: 850px;
 }
 
+.section-form2 {
+  position: relative;
+  display: block;
+  padding: 35px 20px;
+  background-color: rgb(255, 255, 255);
+  max-width: 850px;
+}
+
 .section-form .ant-form-item-label {
   display: inline-block;
   width: 120px;

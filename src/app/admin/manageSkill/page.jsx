@@ -1,21 +1,41 @@
 "use client";
 import { useState, useEffect } from "react";
-import { getAdminCareer } from "@/app/api/provider/api";
 import HelpFunctions from "@/utils/functions";
-import {
-  useAddCareerMutation,
-  useUpdateCareerMutation,
-  useTriggerCareerMutation,
-} from "@/Context/features/career/careerApiSlice";
-import UpdateCareer from "@/components/admin/Dialog/updateCareerDialog";
-import CreateBusinessDialog from "@/components/admin/Dialog/createCareerDialog";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { getSkillsByAdmin } from "@/app/api/provider/api";
+import { useSearchParams } from "next/navigation";
+import MyPagination from "@/components/myPagination";
+import { useTriggerSkillMutation } from "@/Context/features/skill";
 
-export default function CareerManagement() {
+export default function ManageSkill() {
+  const [triggerSkill] = useTriggerSkillMutation();
   const [isLoading, setIsLoading] = useState(false);
-  const [careers, setCareers] = useState([]);
-  const [TriggerCareer] = useTriggerCareerMutation();
+  const [skills, setSkills] = useState([]);
+  const [careerId, setCareerId] = useState(0);
+  const [totalPages, setTotalPages] = useState();
+  const searchParams = useSearchParams();
+  const currentPage = Number(searchParams.get("page")) || 1;
+
+  const handleToggle = async (index, id) => {
+    const updatedSkills = [...skills];
+    if (updatedSkills[index].createdBy !== "admin") {
+      updatedSkills[index] = {
+        ...updatedSkills[index],
+        createdBy: "admin",
+      };
+      const skill = { id: id, createdBy: "admin" };
+      await triggerSkill(skill);
+    } else {
+        updatedSkills[index] = {
+        ...updatedSkills[index],
+        createdBy: "unknown",
+      };
+      const skill = { id: id, createdBy: "unknown" };
+      await triggerSkill(skill);
+    }
+    setSkills(updatedSkills);
+  };
 
   const notify = (success, mess) => {
     const toastOptions = {
@@ -35,10 +55,15 @@ export default function CareerManagement() {
     }
   };
   const fetchData = async () => {
+    const params = {
+      page: currentPage,
+      careerId: careerId,
+    };
     try {
       setIsLoading(true);
-      const response = await getAdminCareer();
-      setCareers(response.data);
+      const response = await getSkillsByAdmin({ params });
+      setSkills(response.data.getSkillAdminDTOs);
+      setTotalPages(Math.ceil(response.data.totalNumber / 10));
       console.log(response.data);
     } catch (error) {
       console.log(error);
@@ -52,30 +77,9 @@ export default function CareerManagement() {
   }, []);
 
   const trigger = (data) => {
-    if(data){
+    if (data) {
       fetchData();
     }
-  }
-
-  const handleToggle = async (index, id) => {
-    const updatedCareers = [...careers];
-    if (updatedCareers[index].isAllowed === false) {
-      updatedCareers[index] = {
-        ...updatedCareers[index],
-        isAllowed: true,
-      };
-      const career = { id: id, isAllowed: true };
-      await TriggerCareer(career);
-    } else {
-      updatedCareers[index] = {
-        ...updatedCareers[index],
-        isAllowed: false,
-      };
-      const career = { id: id, isAllowed: false };
-      const response = await TriggerCareer(career);
-      console.log(response);
-    }
-    setCareers(updatedCareers);
   };
 
   return (
@@ -86,68 +90,59 @@ export default function CareerManagement() {
         </div>
       ) : (
         <div className="relative max-w-[1600px] mt-10 mb-[300px] ml-[180px]">
-          <h2>Manage Career</h2>
+          <h2>Manage Skill</h2>
           <div className="mt-10 py-5 px-5 bg-white border rounded-sm shadow-md xl:min-w-[1370px]">
-            <div className="flex justify-end mb-3">
-              <div className="min-w-[100px] ">
-                <CreateBusinessDialog notify={notify} trigger={trigger} />
-              </div>
-            </div>
             <div className="bg-slate-100 px-2 py-3 font-medium rounded-md">
               <div className="grid grid-cols-12 gap-4 text-slate-700 text-start text-lg">
-                <div className="col-span-2 pl-4">Career Name</div>
-                <div className="col-span-5">Description</div>
+                <div className="col-span-3 pl-4">Skill Name</div>
+                <div className="col-span-3">Career Name</div>
                 <div className="col-span-2">Created Date</div>
-                <div className="col-span-1">Status</div>
-                <div className="col-span-1">IsActive</div>
-                <div className="col-span-1">Update</div>
+                <div className="col-span-2">Status</div>
+                <div className="col-span-2">IsActive</div>
               </div>
             </div>
-            {careers.length > 0 &&
-              careers.map((item, index) => (
+            {skills.length > 0 &&
+              skills.map((item, index) => (
                 <div className="px-2 py-3 text-base" key={index}>
                   <div className="grid grid-cols-12 gap-4 text-slate-700 text-start text-lg">
-                    <div className="col-span-2 pl-4 text-black">
+                    <div className="col-span-3 pl-4 text-black">
                       {item?.name}
                     </div>
-                    <div className="col-span-5">{item?.description}</div>
+                    <div className="col-span-3">{item?.careerName}</div>
                     <div className="col-span-2 italic">
                       {" "}
                       {HelpFunctions.convertToDayMonthYear(item?.createdDate)}
                     </div>
-                    <div className="col-span-1">
+                    <div className="col-span-2">
                       <span
                         className={`font-semibold ${
-                          item?.isAllowed === true
+                          item?.createdBy === "admin"
                             ? "text-emerald-600"
                             : "text-red-600"
                         } `}
                       >
-                        {item?.isAllowed === true ? "Active" : "Blocked"}
+                        {item?.createdBy === "admin" ? "Active" : "Blocked"}
                       </span>
                     </div>
                     <div className="col-span-1">
                       <label className={`toggle`}>
                         <input
                           type="checkbox"
-                          checked={item?.isAllowed}
+                          checked={item?.createdBy === "admin" ? true : false}
                           onChange={() => handleToggle(index, item.id)}
                         />
                         <span className="toggle-slider"></span>
                       </label>
                     </div>
-                    <div className="col-span-1 ml-4">
-                      <UpdateCareer
-                        id={item.id}
-                        name={item.name}
-                        description={item.description}
-                        notify={notify}
-                      />
-                    </div>
                   </div>
                   <hr className="mt-2" />
                 </div>
               ))}
+            {totalPages !== undefined && totalPages > 1 && (
+              <div className="pagination mt-5 mb-1 mx-auto">
+                <MyPagination totalPages={totalPages} />
+              </div>
+            )}
           </div>
         </div>
       )}
