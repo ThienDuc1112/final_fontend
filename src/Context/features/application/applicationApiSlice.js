@@ -42,6 +42,12 @@ export const applicationApiSlice = apiSlice.injectEndpoints({
         body: app,
       }),
     }),
+    getMatching: builder.query({
+      query: ({ resumeId,jobId }) => ({
+        url: `/Matching`,
+        params: { resumeId,jobId },
+      }),
+    }),
   }),
 });
 
@@ -52,4 +58,5 @@ export const {
   useUpdateApplicationMutation,
   useUpdateMeetingMutation,
   useCreateApplicationMutation,
+  useGetMatchingQuery
 } = applicationApiSlice;

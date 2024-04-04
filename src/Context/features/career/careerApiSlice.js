@@ -1,5 +1,4 @@
 "use client";
-import { fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { apiSlice } from "../../api";
 
 export const careerApiSlice = apiSlice.injectEndpoints({

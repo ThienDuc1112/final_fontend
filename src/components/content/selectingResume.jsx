@@ -11,22 +11,39 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useGetAllResumeInfoQuery } from "@/Context/features/resume/resumeApiSlice";
 import TokenService from "@/utils/Token.service";
-import { useCreateApplicationMutation } from "@/Context/features/application/applicationApiSlice";
-import { useState } from "react";
+import {
+  useCreateApplicationMutation,
+  useGetMatchingQuery,
+} from "@/Context/features/application/applicationApiSlice";
+import { useState, useEffect } from "react";
 
-export default function SelectingResume({ color, name, handleConfirm, jobId, businessUserId }) {
+export default function SelectingResume({
+  color,
+  name,
+  handleConfirm,
+  jobId,
+  businessUserId,
+  type,
+  receiveMatching,
+}) {
   const [isOpen, setIsOpen] = useState(false);
+  const [resumeId, setResumeId] = useState(null);
   const { userId, role } = TokenService.getUserProfile();
   const {
     data: resumeData,
     isError,
     isLoading,
     error,
-  } = useGetAllResumeInfoQuery({userId: userId});
+  } = useGetAllResumeInfoQuery({ userId: userId });
+
   const [
     createApplication,
     { data: appData, isError: isError2, isLoading: isLoading2 },
   ] = useCreateApplicationMutation();
+
+  const { data: matchingData, isLoading: isMatchingLoading } =
+    useGetMatchingQuery({ resumeId: resumeId, jobId: jobId });
+
   const router = useRouter();
 
   function convertToDayMonthYear(dateString) {
@@ -59,6 +76,19 @@ export default function SelectingResume({ color, name, handleConfirm, jobId, bus
     } catch (error) {
       console.log(error);
     }
+  };
+
+  useEffect(() => {
+    if (matchingData) {
+      console.log(matchingData);
+      //receiveMatching(response.data);
+      console.log("success");
+      handleClose();
+    }
+  }, [matchingData]);
+
+  const handleAnalyze = async (resumeId) => {
+    setResumeId(resumeId);
   };
   const handleClose = () => {
     setIsOpen(false);
@@ -145,7 +175,13 @@ export default function SelectingResume({ color, name, handleConfirm, jobId, bus
                                     <div className="flex items-center space-x-3.5">
                                       <Button
                                         variant="blue"
-                                        onClick={() => handleSubmit(item.id)}
+                                        onClick={() => {
+                                          if (type === "apply") {
+                                            handleSubmit(item.id);
+                                          } else {
+                                            handleAnalyze(item.id);
+                                          }
+                                        }}
                                       >
                                         Select
                                       </Button>

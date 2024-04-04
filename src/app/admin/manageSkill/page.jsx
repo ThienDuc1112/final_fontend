@@ -6,10 +6,14 @@ import "react-toastify/dist/ReactToastify.css";
 import { getSkillsByAdmin } from "@/app/api/provider/api";
 import { useSearchParams } from "next/navigation";
 import MyPagination from "@/components/myPagination";
-import { useTriggerSkillMutation } from "@/Context/features/skill";
+import { useTriggerSkillMutation } from "@/Context/features/skill/skillApiSlice";
+import CreateSkillDialog from "@/components/admin/Dialog/createSkillDialog";
+import { getCareer } from "@/app/api/provider/api";
+import DropdownInput from "@/components/content/dropdownInput";
 
 export default function ManageSkill() {
   const [triggerSkill] = useTriggerSkillMutation();
+  const [careers, setCareers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [skills, setSkills] = useState([]);
   const [careerId, setCareerId] = useState(0);
@@ -27,7 +31,7 @@ export default function ManageSkill() {
       const skill = { id: id, createdBy: "admin" };
       await triggerSkill(skill);
     } else {
-        updatedSkills[index] = {
+      updatedSkills[index] = {
         ...updatedSkills[index],
         createdBy: "unknown",
       };
@@ -62,9 +66,12 @@ export default function ManageSkill() {
     try {
       setIsLoading(true);
       const response = await getSkillsByAdmin({ params });
+      const careerData = await getCareer();
+      const nullCareer = { id: 0, name: "All Careers" };
       setSkills(response.data.getSkillAdminDTOs);
       setTotalPages(Math.ceil(response.data.totalNumber / 10));
-      console.log(response.data);
+      setCareers([nullCareer, ...careerData.data]);
+      console.log(careerData.data);
     } catch (error) {
       console.log(error);
     } finally {
@@ -74,7 +81,7 @@ export default function ManageSkill() {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [careerId]);
 
   const trigger = (data) => {
     if (data) {
@@ -92,6 +99,18 @@ export default function ManageSkill() {
         <div className="relative max-w-[1600px] mt-10 mb-[300px] ml-[180px]">
           <h2>Manage Skill</h2>
           <div className="mt-10 py-5 px-5 bg-white border rounded-sm shadow-md xl:min-w-[1370px]">
+            <div className="flex justify-between mb-3">
+              <div className="min-w-[300px]">
+                <DropdownInput
+                  MyLabel="Selecting a career"
+                  DataList={careers}
+                  onDataSelect={(value, id) => setCareerId(id)}
+                />
+              </div>
+              <div className="min-w-[100px] ">
+                <CreateSkillDialog notify={notify} trigger={trigger} />
+              </div>
+            </div>
             <div className="bg-slate-100 px-2 py-3 font-medium rounded-md">
               <div className="grid grid-cols-12 gap-4 text-slate-700 text-start text-lg">
                 <div className="col-span-3 pl-4">Skill Name</div>

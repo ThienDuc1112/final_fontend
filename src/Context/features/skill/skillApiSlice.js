@@ -10,7 +10,14 @@ export const skillApiSlice = apiSlice.injectEndpoints({
         body: skill,
       }),
     }),
+    createSkill: builder.mutation({
+      query: (skill) => ({
+        url: `/Skill`,
+        method: "POST",
+        body: skill,
+      }),
+    }),
   }),
 });
 
-export const {useTriggerSkillMutation} = skillApiSlice;
+export const {useTriggerSkillMutation, useCreateSkillMutation} = skillApiSlice;

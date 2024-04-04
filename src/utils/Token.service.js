@@ -48,11 +48,12 @@ const updateLocalAccessToken = (token) => {
     return "error";
   }
 };
-const updateUser = (userId, role) => {
+const updateUser = (userId, role, name) => {
   try {
     Cookies.set("role", role);
     Cookies.set("userId", userId);
     Cookies.set("count", 0);
+    Cookies.set("name", name);
   } catch (error) {
     console.log("Error updating local access token:", error);
     return "error";
@@ -79,6 +80,7 @@ const getUserProfile = () => {
   let user = {
     userId: Cookies.get("userId"),
     role: Cookies.get("role"),
+    name: Cookies.get("name"),
   };
   return user;
 };

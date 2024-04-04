@@ -90,6 +90,7 @@ export default function Job({ params }) {
   const handleConfirm = (success, message) => {
     notify(success, message);
   };
+  const receiveMatching = () => {};
 
   return (
     <section className="section-box mt-[10px] mb-5">
@@ -128,6 +129,7 @@ export default function Job({ params }) {
                     handleConfirm={handleConfirm}
                     jobId={params.id}
                     businessUserId={career2.getBusinessPartDTO.businessUserId}
+                    type="apply"
                   />
                   <Button variant="outline" size="xl">
                     Save Job
@@ -235,7 +237,14 @@ export default function Job({ params }) {
                     businessSize={career2.getBusinessPartDTO.businessSize}
                     location={career2.getBusinessPartDTO.address}
                     email={career2.getBusinessPartDTO.email}
-                    phone={career2.getBusinessPartDTO.phoneNumber}                 
+                    phone={career2.getBusinessPartDTO.phoneNumber}
+                  />
+                  <SelectingResume
+                    color="outline"
+                    name="Analyze your resume"
+                    jobId={params.id}
+                    type="analyze"
+                    receiveMatching={receiveMatching}
                   />
                 </div>
               </div>

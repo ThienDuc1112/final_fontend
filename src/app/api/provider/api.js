@@ -41,6 +41,10 @@ const getSkillsByAdmin = ({params}) => {
   return axiosClient.get("/GetSkillsByAdmin", {params: params });
 };
 
+const getLanguagesByAdmin = () => {
+  return axiosClient.get("/GetAdminLanguages");
+}
+
 export {
   getBusinessSize,
   getCareer,
@@ -52,4 +56,5 @@ export {
   getCareersWithSkills,
   getAdminCareer,
   getSkillsByAdmin,
+  getLanguagesByAdmin
 };

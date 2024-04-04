@@ -21,7 +21,7 @@ import LanguageResume from "@/components/content/languageResume";
 import { createResume } from "@/app/api/resume/api";
 import { Button } from "@/components/ui/button";
 import { SuccessNotify } from "@/components/content/successNotification";
-import { useRouter } from "next/navigation";  
+import { useRouter } from "next/navigation";
 import TokenService from "@/utils/Token.service";
 import { getCareer } from "@/app/api/provider/api";
 import { useSelector, useDispatch } from "react-redux";
@@ -279,25 +279,29 @@ export default function Create() {
         avatarUrl: avatarPath,
         description: formData.description.replace(/\n/g, ""),
         title: formData.title,
+        AdditionalSkills: "Java Spring, Ms SQL",
       },
       educations: updatedEducations,
       experiences: updatedExperiences,
       skillOfResumes: selectedSkillList,
       languageOfResumes: selectedLanguageList,
     };
-    const response = await createResume(resumeData);
-    console.log(response.data);
-
-    if (!response.data.success && response.data.success !== undefined) {
-      handleShowNoti();
-      console.log(response.data.success);
-    }
-    if (response.data.length > 0) {
-      const success = response.data.every((item) => item.success);
-      if (success) {
-        console.log("succ");
-        router.push(`resume/${response.data[0].id}`);
+    try {
+      const response = await createResume(resumeData);
+      console.log(response);
+      if (!response.data.success && response.data.success !== undefined) {
+        handleShowNoti();
+        console.log(response.data.success);
       }
+      if (response.data.length > 0) {
+        const success = response.data.every((item) => item.success);
+        if (success) {
+          console.log("succ");
+          router.push(`/resumeDetail/${response.data[0].id}`);
+        }
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 

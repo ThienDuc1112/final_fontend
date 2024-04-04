@@ -6,9 +6,14 @@ import { VscPreview } from "react-icons/vsc";
 import { HiWrenchScrewdriver } from "react-icons/hi2";
 import { IoBriefcase } from "react-icons/io5";
 import { FaLanguage } from "react-icons/fa6";
+import TokenService from "@/utils/Token.service";
 
 const Sidebar = () => {
   const pathname = usePathname();
+
+  const handleLogout = () => {
+    TokenService.removeUser();
+  }
 
   return (
     <div
@@ -91,7 +96,8 @@ const Sidebar = () => {
             <ul className="mb-6 flex flex-col gap-1.5">
               <li>
                 <Link
-                  href="/logout"
+                 onClick={() => handleLogout()}
+                  href="/auth/login"
                   className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium duration-300 ease-in-out hover:bg-slate-600 ${
                     pathname.includes("logout") && "bg-slate-600"
                   }`}

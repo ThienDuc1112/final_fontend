@@ -2,9 +2,7 @@
 import "@/styles/global.css";
 import React, { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useDispatch } from "react-redux";
-import { setCredentials } from "@/Context/features/auth/authSlice";
-import { loginA } from "@/Context/features/auth/authApiSlice";
+import { loginA, getUserInfo } from "@/Context/features/auth/authApiSlice";
 import TokenService from "@/utils/Token.service";
 import Image from "next/image";
 import MyButton from "@/components/myButton";
@@ -21,8 +19,6 @@ const Login = () => {
   const [pwd, setPwd] = useState("");
   const [errMsg, setErrMsg] = useState("");
   const { push } = useRouter();
-
-  const dispatch = useDispatch();
 
   const handleChangeIcon = () => {
     if (icon === true) {
@@ -41,10 +37,10 @@ const Login = () => {
       const response = await loginA(email, pwd);
       const userData = await response.json();
       const userJwt = TokenService.getUser(userData.access_token);
-      console.log(userJwt);
+      const userProfile = await getUserInfo(userData.access_token)
       if (userData) {
         TokenService.updateLocalAccessToken(userData);
-        TokenService.updateUser(userJwt.sub, userJwt.role);
+        TokenService.updateUser(userJwt.sub, userJwt.role, userProfile.name);
         if (userJwt.role === "employer") {
           push("/business");
         } else {

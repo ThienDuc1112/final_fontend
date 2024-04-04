@@ -17,7 +17,7 @@ const Dropdown = () => {
   const handleSignOut = () => {
     TokenService.removeUser();
   };
-  const { userId, role } = TokenService.getUserProfile();
+  const { userId, role, name } = TokenService.getUserProfile();
   const { data, isLoading, error, refetch } = useGetNewMessageCountQuery({
     userId: userId,
   });
@@ -59,7 +59,6 @@ const Dropdown = () => {
     };
   }, [userId]);
 
-  console.log(userId);
   let href;
   if (role === "employer") {
     href = "/business/notifications";
@@ -94,7 +93,7 @@ const Dropdown = () => {
       <div className="dropdown-container">
         <div className="p-3 rounded-lg hover:bg-gray-200 flex items-center gap-3 rotate-icon">
           <FaCircleUser size={22} />
-          <span>Nguyen Duc Thien</span>
+          <span>{name?.split("@")[0]}</span>
           <AiOutlineDown size={22} className="my-icon" />
         </div>
         <div className="dropdown-list z-30 w-[240px] shadow-lg">
