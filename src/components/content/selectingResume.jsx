@@ -81,14 +81,13 @@ export default function SelectingResume({
   useEffect(() => {
     if (matchingData) {
       console.log(matchingData);
-      //receiveMatching(response.data);
-      console.log("success");
-      handleClose();
+      receiveMatching(matchingData);
     }
   }, [matchingData]);
 
   const handleAnalyze = async (resumeId) => {
     setResumeId(resumeId);
+    handleClose();
   };
   const handleClose = () => {
     setIsOpen(false);

@@ -99,7 +99,7 @@ const ListJob = () => {
                 expirationDate={job.expirationDate}
                 minSalary={job.salaryMin}
                 maxSalary={job.salaryMax}
-                businessId={job.businessid}
+                businessId={job.businessId}
                 logoUrl={job.logoUrl}
               />
             ))}

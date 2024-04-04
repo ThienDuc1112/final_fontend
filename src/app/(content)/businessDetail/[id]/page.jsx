@@ -14,7 +14,7 @@ import HelpFunctions from "@/utils/functions";
 import Gallergy from "@/components/content/gallergy";
 import { getBusinessDetailById } from "@/app/api/business/api";
 import { getJobByBusiness } from "@/app/api/job/api";
-import JobCard from "@/components/content/jobCard";
+import JobCard from "@/components/content/jobFullCard";
 import LetterBox from "@/components/content/letterBox";
 
 export default function Job({ params }) {
@@ -233,7 +233,6 @@ export default function Job({ params }) {
                   <div className="flex flex-wrap mt-5">
                     {jobs.map((job, index) => (
                       <JobCard
-                        className="xl:w-1/3"
                         id={job.id}
                         key={index}
                         companyName={job.fullName}
@@ -245,7 +244,7 @@ export default function Job({ params }) {
                         expirationDate={job.expirationDate}
                         minSalary={job.salaryMin}
                         maxSalary={job.salaryMax}
-                        businessId={job.businessid}
+                        businessId={job.businessId}
                         logoUrl={job.logoUrl}
                       />
                     ))}

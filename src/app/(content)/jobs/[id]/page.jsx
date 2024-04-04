@@ -11,10 +11,16 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import SelectingResume from "@/components/content/selectingResume";
 import { getJobDetail } from "@/app/api/job/api";
+import CircleProgress from "@/components/content/circleProgress";
+import { IoCheckmarkCircle, IoCloseCircle } from "react-icons/io5";
 
 export default function Job({ params }) {
   const [career2, setCareer2] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [progress, setProgress] = useState(0);
+  const [matchingItems, setMatchingItems] = useState([]);
+  const [show, setShow] = useState(false);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -65,7 +71,11 @@ export default function Job({ params }) {
       requirements.shift();
     }
     const requiredSkill = `Must have knowledge and skills about ${career2.requiredSkills}.`;
+    const requiredLanguage = `${career2.languageRequirementLevel} in ${career2.languageRequirementName} is required for this position.`;
+    const requiredEducation = `Must have a ${career2.educationLevelMin} in ${career2.careerName} or relevant fields.`;
     requirements.push(requiredSkill);
+    requirements.push(requiredLanguage);
+    requirements.push(requiredEducation);
   }
 
   let responsibilities = null;
@@ -90,7 +100,16 @@ export default function Job({ params }) {
   const handleConfirm = (success, message) => {
     notify(success, message);
   };
-  const receiveMatching = () => {};
+  const receiveMatching = (data) => {
+    setMatchingItems([]);
+    setShow(true);
+    setProgress(data.score);
+    data.matchingItems.forEach((item, index) => {
+      setTimeout(() => {
+        setMatchingItems((prevItems) => [...prevItems, item]);
+      }, (index + 1) * 400);
+    });
+  };
 
   return (
     <section className="section-box mt-[10px] mb-5">
@@ -101,7 +120,7 @@ export default function Job({ params }) {
       ) : (
         <div>
           <section className="section-box mt-[10px] mb-5">
-            <div className="max-w-[1470px] mx-auto sm:px-4">
+            <div className="max-w-[1600px] mx-auto sm:px-4">
               <div className="py-5 flex items-center justify-center">
                 <Image
                   src="/images/jobc3.png"
@@ -140,7 +159,7 @@ export default function Job({ params }) {
             </div>
           </section>
           <section className="section-box mt-[50px]">
-            <div className="max-w-[1380px] mx-auto">
+            <div className="max-w-[1500px] mx-auto">
               <div className="flex flex-wrap">
                 <div class="lg:w-8/12 md:w-full sm:w-full w-full">
                   <div className="job-overview">
@@ -246,6 +265,53 @@ export default function Job({ params }) {
                     type="analyze"
                     receiveMatching={receiveMatching}
                   />
+                  {show && (
+                    <div className="px-1 mt-5 grid justify-items-center">
+                      <CircleProgress
+                        progress={progress}
+                        size={180}
+                        strokeWidth={18}
+                        circleColor="#e6e6e6"
+                        progressColor="#2563eb"
+                      />
+                      <div className="grid justify-items-center mt-3 text-blue-600 font-semibold">
+                        Matching Percentage
+                      </div>
+                      <div className="px-6 w-full">
+                        <div className="pb-3 w-full border-b-2"></div>
+                      </div>
+                      <div className="mt-3">
+                        <div>
+                          {matchingItems.length > 0 &&
+                            matchingItems.map((item, index) => (
+                              <div
+                                className="flex gap-1 items-center"
+                                key={index}
+                              >
+                                {item.isMatch === true ? (
+                                  <IoCheckmarkCircle
+                                    color="#34d399"
+                                    size={17}
+                                  />
+                                ) : (
+                                  <IoCloseCircle color="#ef4444" size={17} />
+                                )}
+                                <p
+                                  className={`text-sm font-medium ${
+                                    item.isMatch === true
+                                      ? "text-gray-500"
+                                      : "text-gray-500"
+                                  }`}
+                                >
+                                  {" "}
+                                  {item.name}
+                                </p>
+                              </div>
+                            ))}
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

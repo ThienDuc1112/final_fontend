@@ -18,7 +18,6 @@ const JobCard = ({
   expirationDate,
   minSalary,
   maxSalary,
-  className,
   businessId,
   logoUrl,
 }) => {
@@ -30,43 +29,50 @@ const JobCard = ({
   const path = "https://fcfqw1pzmmyfx1ve.public.blob.vercel-storage.com";
   return (
     <>
-      <div className={`mt-1 ${className} lg:w-1/3 md:w-1/2 sm:w-full w-full`}>
-        <div className="card-grid-2 hover-up">
-          <div className="card-grid-2-image-left">
-            <span className="flash"></span>
-            <div className="image-box">
-              <Image
-                src={
-                  logoUrl !== null && logoUrl !== ""
-                    ? `${path}/${logoUrl}`
-                    : "/images/job.png"
-                }
-                width={100}
-                height={60}
-                alt="logo"
-                className="rounded-xl max-w-full"
-              />
+      <div className={`mt-1 w-full`}>
+        <div className="card-list hover-up">
+          <div className="flex justify-between">
+            <div className="card-grid-2-image-left">
+              <div className="image-box">
+                <Image
+                  src={
+                    logoUrl !== null && logoUrl !== ""
+                      ? `${path}/${logoUrl}`
+                      : "/images/job.png"
+                  }
+                  width={100}
+                  height={60}
+                  alt="logo"
+                  className="rounded-xl max-w-full"
+                />
+              </div>
+              <div className="right-info">
+                <a
+                  href={`/businessDetail/${businessId}`}
+                  className="company-title"
+                >
+                  {companyName.length > 80
+                    ? `${companyName.substring(0, 80)}...`
+                    : companyName}
+                </a>
+                <div className="mt-1 flex card-location items-center items-baseline gap-1">
+                  <MdLocationOn width={20} height={20} />
+                  <p>{location}</p>
+                </div>
+              </div>
             </div>
-            <div className="right-info">
-              <a
-                href={`/businessDetail/${businessId}`}
-                className="company-title"
-              >
-                {companyName.length > 20
-                  ? `${companyName.substring(0, 17)}...`
-                  : companyName}
-              </a>
-              <div className="mt-1 flex card-location items-center items-baseline gap-1">
-                <MdLocationOn width={20} height={20} />
-                <p>
-                  {location.length > 4
-                    ? location.split(" ").slice(0, 4).join(" ") + "..."
-                    : location}
-                </p>
+            <div className="mt-4">
+              <div className="flex flex-wrap items-center gap-1 mr-9">
+                {skills.slice(0, 4).map((skill, index) => (
+                  <div key={index} className="btn-tags-sm">
+                    {skill}
+                  </div>
+                ))}
+                <span className="flash"></span>
               </div>
             </div>
           </div>
-          <div className="card-block-info">
+          <div className="card-block-info px-4">
             <h4>
               <Link className="title" href={`/jobs/${id}`}>
                 {title}
@@ -84,19 +90,11 @@ const JobCard = ({
                 <p>{type}</p>
               </div>
             </div>
-            <div className="mt-2">
-              <div className="xl:w-4/5 md:w-3/5 flex flex-wrap items-center gap-1">
-                {skills.slice(0, 4).map((skill, index) => (
-                  <div key={index} className="btn-tags-sm">
-                    {skill}
-                  </div>
-                ))}
-              </div>
-            </div>
+
             <p className="text-sm mt-3 color-text-paragraph">
-              {description.split(" ").slice(0, 18).join(" ")}...
+              {description.split(" ").slice(0, 40).join(" ")}...
             </p>
-            <div className="mt-5 mx-2 flex flex-wrap items-center justify-between">
+            <div className="mt-5 mx-2 flex flex-wrap items-center justify-between pb-3">
               <div className="xl:W-2/5 md:2/5 flex items-center gap-1 text-right">
                 <span className="card-text-price">
                   ${minSalary} - ${maxSalary}

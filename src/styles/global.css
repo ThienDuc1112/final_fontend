@@ -345,6 +345,15 @@ img {
   height: 390px;
 }
 
+.card-list {
+  border-radius: 8px;
+  border: 1px solid #e0e6f7;
+  overflow: hidden;
+  margin-bottom: 24px;
+  position: relative;
+  background: #F8FAFF;
+}
+
 .image-box{
   min-width: 52px;
   padding-right: 15px;
@@ -489,6 +498,14 @@ img {
   position: absolute;
   top: 15px;
   right: 15px;
+  height: 25px;
+  width: 25px;
+  background: url(/images/flash.svg) no-repeat 0 0;
+}
+.flash {
+  position: absolute;
+  top: 20px;
+  right: 8px;
   height: 25px;
   width: 25px;
   background: url(/images/flash.svg) no-repeat 0 0;
@@ -1703,6 +1720,20 @@ business profile */
 .area-bot {
   justify-self: start;
 }
+.circle-progress {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.circle-progress-text {
+  position: absolute;
+  font-size: 24px;
+  font-weight: bold;
+  color: #2563eb;
+}
+
 
 
 
