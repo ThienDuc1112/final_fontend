@@ -6,6 +6,7 @@ import { AiOutlineDown } from "react-icons/ai";
 import { TbReportSearch } from "react-icons/tb";
 import { FaRegFileLines } from "react-icons/fa6";
 import { PiSignOutBold } from "react-icons/pi";
+import { BsBookmarkCheck } from "react-icons/bs";
 import TokenService from "@/utils/Token.service";
 import { useGetNewMessageCountQuery } from "@/Context/features/message/messageApiSlice";
 import { useRouter } from "next/navigation";
@@ -111,6 +112,14 @@ const Dropdown = () => {
                 <FaRegFileLines size={22} className="change-icon" />
               </div>
               <span className="change-text">Manage Resumes</span>
+            </div>
+          </a>
+          <a className="hover-item" href="/whistlist">
+            <div className="px-2 py-3 flex items-center justify-start gap-2">
+              <div className="p-1 bg-gray-200 rounded-sm change-item">
+                <BsBookmarkCheck size={22} className="change-icon" />
+              </div>
+              <span className="change-text">Saved Jobs</span>
             </div>
           </a>
           <a className="hover-item" href="/auth/login" onClick={handleSignOut}>

@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import InforComponent from "@/components/content/inforComponent";
 import CompanyInfo from "@/components/content/companyInfo";
 import { Button } from "@/components/ui/button";
@@ -13,14 +13,19 @@ import SelectingResume from "@/components/content/selectingResume";
 import { getJobDetail } from "@/app/api/job/api";
 import CircleProgress from "@/components/content/circleProgress";
 import { IoCheckmarkCircle, IoCloseCircle } from "react-icons/io5";
+import { useCreateFavoriteJobMutation } from "@/Context/features/favoriteJob/favoriteJobApiSlice";
+import TokenService from "@/utils/Token.service";
 
 export default function Job({ params }) {
+  const router = useRouter();
+  const { userId, role } = TokenService.getUserProfile();
   const [career2, setCareer2] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [progress, setProgress] = useState(0);
   const [matchingItems, setMatchingItems] = useState([]);
   const [show, setShow] = useState(false);
-
+  const [SaveJob, { isLoading: isSavingLoading, data }] =
+    useCreateFavoriteJobMutation();
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -100,6 +105,7 @@ export default function Job({ params }) {
   const handleConfirm = (success, message) => {
     notify(success, message);
   };
+
   const receiveMatching = (data) => {
     setMatchingItems([]);
     setShow(true);
@@ -109,6 +115,27 @@ export default function Job({ params }) {
         setMatchingItems((prevItems) => [...prevItems, item]);
       }, (index + 1) * 400);
     });
+  };
+
+  const handleSaveJob = async () => {
+    try {
+      if (userId !== undefined && userId !== null) {
+        const object = {
+          candidateId: userId,
+          jobId: params.id,
+        };
+        const response = await SaveJob(object);
+        if (response.data.message === "success") {
+          notify(true, "Adding job to your whistlist successfully");
+        } else {
+          notify(false, "You're already added to your whistlist");
+        }
+      } else {
+        router.push("/auth/login");
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -150,7 +177,13 @@ export default function Job({ params }) {
                     businessUserId={career2.getBusinessPartDTO.businessUserId}
                     type="apply"
                   />
-                  <Button variant="outline" size="xl">
+                  <Button
+                    variant="outline"
+                    size="xl"
+                    onClick={() => {
+                      handleSaveJob();
+                    }}
+                  >
                     Save Job
                   </Button>
                 </div>

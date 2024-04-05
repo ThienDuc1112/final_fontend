@@ -37,6 +37,10 @@ const getLocalRefreshToken = () => {
 const updateLocalAccessToken = (token) => {
   try {
     Cookies.set("accessToken", token.access_token);
+    const decodedToken = jwtDecode(token.access_token);
+    const expirationTimestamp = decodedToken.exp * 1000; 
+    const expirationDate = new Date(expirationTimestamp);
+    Cookies.set("expirationDate",expirationDate)
 
     if (token.refresh_token) {
       Cookies.set("refreshToken", token.refresh_token);
@@ -50,7 +54,7 @@ const updateLocalAccessToken = (token) => {
 };
 const updateUser = (userId, role, name) => {
   try {
-    Cookies.set("role", role);
+    Cookies.set("role", role, );
     Cookies.set("userId", userId);
     Cookies.set("count", 0);
     Cookies.set("name", name);
@@ -111,12 +115,9 @@ const isAccessExpired = async () => {
     }
 
     const decodedToken = jwtDecode(accessToken);
-    const expirationTimestamp = decodedToken.exp * 1000; // Convert to milliseconds
+    const expirationTimestamp = decodedToken.exp * 1000; 
     const expirationDate = new Date(expirationTimestamp);
     const currentTime = new Date();
-
-    console.log("Expiration date (local):", expirationDate.toLocaleString());
-    console.log("Is expired:", currentTime > expirationDate);
 
     return currentTime > expirationDate;
   } catch (error) {

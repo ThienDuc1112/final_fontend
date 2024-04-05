@@ -39,6 +39,12 @@ function convertToDayMonthYear(dat) {
     return `${hours}:${minutes} - ${day}/${month}/${year}`;
   }
 
-  const HelpFunctions = {convertToDayMonthYear,formatTimeAndDate};
+  function getDay(dat){
+    const date = new Date(dat);
+    const day = date.getDay();
+    return day;
+  }
+
+  const HelpFunctions = {convertToDayMonthYear,formatTimeAndDate, getDay};
 
   export default HelpFunctions;
