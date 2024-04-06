@@ -176,6 +176,7 @@ export default function Job({ params }) {
                     jobId={params.id}
                     businessUserId={career2.getBusinessPartDTO.businessUserId}
                     type="apply"
+                    businessId = {career2.getBusinessPartDTO.id}
                   />
                   <Button
                     variant="outline"

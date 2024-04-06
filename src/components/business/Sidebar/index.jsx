@@ -3,7 +3,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
+import TokenService from "@/utils/Token.service";
 import { MdLogout } from "react-icons/md";
 import { IoBusiness, IoNotifications } from "react-icons/io5";
 import { MdAddToPhotos } from "react-icons/md";
@@ -22,6 +22,9 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
   const [sidebarExpanded, setSidebarExpanded] = useState(
     storedSidebarExpanded === null ? false : storedSidebarExpanded === "true"
   );
+  const handleSignOut = () => {
+    TokenService.removeUser();
+  };
 
   // close on click outside
   useEffect(() => {
@@ -203,15 +206,15 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
 
             <ul className="mb-6 flex flex-col gap-1.5">
               <li>
-                <Link
-                  href="/logout"
+                <a
+                   href="/auth/login" onClick={handleSignOut}
                   className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium duration-300 ease-in-out hover:bg-blue-600 ${
                     pathname.includes("logout") && "bg-blue-600"
                   }`}
                 >
                   <MdLogout size={18} style={{ transform: "rotate(180deg)" }} />
                   Logout
-                </Link>
+                </a>
               </li>
             </ul>
           </div>

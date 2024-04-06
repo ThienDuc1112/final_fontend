@@ -136,7 +136,22 @@ export default function ApplicationList({ appId, item, onClick }) {
                   </div>
                 </Link>
               </div>
-            ) : null}
+            ) : (
+              <div className="flex items-center gap-3">
+              <Link
+                href={`/resumeDetail/${item?.resumeId}`}
+                className="px-2 rounded-xl font-small mt-[60px] bg-gray-100"
+                target="_blank"
+              >
+                <div className="flex items-center gap-2">
+                  <span className="text-gray-800 underline text-sm">
+                    View Resume
+                  </span>
+                  <FaArrowUpRightFromSquare color="#4b5563" />
+                </div>
+              </Link>
+            </div>
+            )}
           </div>
         </div>
       </div>

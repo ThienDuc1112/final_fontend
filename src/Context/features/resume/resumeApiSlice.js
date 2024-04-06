@@ -13,7 +13,14 @@ export const resumeApiSlice = apiSlice.injectEndpoints({
         url: `/GetResume/${userId}`,
       }),
     }),
+    hideResume: builder.mutation({
+      query: (resume) => ({
+        url: `/HideResume`,
+        method: 'PUT',
+        body: resume
+      }),
+    }),
   }),
 });
 
-export const { useGetResumeInfoQuery,useGetAllResumeInfoQuery} = resumeApiSlice;
+export const { useGetResumeInfoQuery,useGetAllResumeInfoQuery, useHideResumeMutation} = resumeApiSlice;

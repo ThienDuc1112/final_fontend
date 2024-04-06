@@ -15,7 +15,6 @@ export default function Whistlist() {
   const [Delete, {data:data2}] = useDeleteFavoriteJobMutation();
   const router = useRouter();
   const [isHovered, setIsHovered] = useState(false);
-  console.log(data);
 
   const handleMouseEnter = () => {
     setIsHovered(true);

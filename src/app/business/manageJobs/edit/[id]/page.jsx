@@ -340,7 +340,9 @@ export default function Edit({ params }) {
   return (
     <DefaultLayout>
       {loading || isLoading ? (
-        <div>loading</div>
+        <div className="flex justify-center items-center flex-grow mt-[300px] ml-[600px] mb-[500px]">
+        <div className="spinner"></div>
+      </div>
       ) : (
         <div className="relative max-w-[1600px] mt-10 mx-10">
           <div className="mx-5">

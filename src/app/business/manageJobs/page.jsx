@@ -1,8 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
 import DefaultLayout from "@/components/business/Layouts/DefaultLayout";
-import { FaRegEye } from "react-icons/fa";
-import MyIconDialog from "@/components/MyIconDialog";
+import { MdModeEdit } from "react-icons/md";
+import { IoEyeSharp } from "react-icons/io5";
 import MyPagination from "@/components/myPagination";
 import { getJobManagement } from "@/app/api/job/api";
 import { useSearchParams } from "next/navigation";
@@ -27,9 +27,8 @@ export default function ManageJob() {
     const fetchData = async () => {
       try {
         let response = await getJobManagement(queryParams);
-        setDataList(response.data);
-        console.log(response.data);
-        setTotalPages(Math.ceil(response.data.length / 8));
+        setDataList(response.data.jobs);
+        setTotalPages(Math.ceil(response.data.totalJob / 8));
       } catch (error) {
         console.log("Error", error);
       } finally {
@@ -98,12 +97,18 @@ export default function ManageJob() {
                     </div>
                     <div className="col-span-1 flex items-center pl-10">
                       <button
-                        className="hover:text-blue-600 p-2 rounded-full bg-blue-100 mr-4"
-                        onClick={() => router.push(`manageJobs/edit/${job.id}`)}
+                        className="hover:text-white text-blue-600 p-2 rounded-full bg-blue-100 mr-4"
+                        onClick={() => router.push(`manageJobs/edit/${job?.id}`)}
                       >
-                        <FaRegEye />
+                        <MdModeEdit />
                       </button>
-                      <MyIconDialog />
+                      <button className="hover:text-white text-emerald-600 p-2 rounded-full bg-emerald-100" 
+                    onClick={() => {
+                      router.push(`/jobs/${job?.id}`)
+                    }}
+                    >
+                      <IoEyeSharp />
+                    </button>
                     </div>
                   </div>
                   <hr className="mt-6" />

@@ -25,6 +25,7 @@ export default function SelectingResume({
   businessUserId,
   type,
   receiveMatching,
+  businessId
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [resumeId, setResumeId] = useState(null);
@@ -68,6 +69,7 @@ export default function SelectingResume({
         jobId: jobId,
         resumeId: resumeId,
         businessUserId: businessUserId,
+        businessId: businessId
       };
       const response = await createApplication(app);
       console.log(response);

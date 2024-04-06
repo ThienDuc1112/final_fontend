@@ -1,98 +1,23 @@
+'use client'
+import {useState, useEffect} from 'react';
 import Image from "next/image";
 import JobCard from "@/components/content/jobCard";
-
-let jobs = [
-  {
-    companyName: "ABC Company",
-    location: "New York, United Of State",
-    title: "Software Engineer",
-    type: "Full-time",
-    skills: ["C#", "Java", ".NET", "API"],
-    expirationDate: "2024-11-30",
-    minSalary: 22,
-    maxSalary: 45,
-    description: "Job description for Software Engineer at ABC Company.",
-  },
-  {
-    companyName: "XYZ Corporation",
-    location: "New York, United Of State",
-    title: "Web Developer",
-    type: "Part-time",
-    skills: ["HTML", "CSS", "JavaScript"],
-    expirationDate: "2024-11-30",
-    minSalary: 22,
-    maxSalary: 45,
-    description: "Job description for Web Developer at XYZ Corporation.",
-  },
-  {
-    companyName: "FPt Corporation",
-    location: "New York, United Of State",
-    title: "Web Developer",
-    type: "Part-time",
-    skills: ["HTML", "CSS", "JavaScript"],
-    expirationDate: "2024-11-30",
-    minSalary: 22,
-    maxSalary: 45,
-    description: "Job description for Web Developer at XYZ Corporation.",
-  },
-  {
-    companyName: "XYZ Corporation",
-    location: "New York, United Of State",
-    title: "Web Developer",
-    type: "Part-time",
-    skills: ["HTML", "CSS", "JavaScript"],
-    expirationDate: "2024-11-30",
-    minSalary: 22,
-    maxSalary: 45,
-    description: "Job description for Web Developer at XYZ Corporation.",
-  },
-  {
-    companyName: "ABC Company",
-    location: "New York, United Of State",
-    title: "Software Engineer",
-    type: "Full-time",
-    skills: ["C#", "Java", ".NET", "API"],
-    expirationDate: "2024-11-30",
-    minSalary: 22,
-    maxSalary: 45,
-    description: "Job description for Software Engineer at ABC Company.",
-  },
-  {
-    companyName: "XYZ Corporation",
-    location: "New York, United Of State",
-    title: "Web Developer",
-    type: "Part-time",
-    skills: ["HTML", "CSS", "JavaScript"],
-    expirationDate: "2024-11-30",
-    minSalary: 22,
-    maxSalary: 45,
-    description: "Job description for Web Developer at XYZ Corporation.",
-  },
-  {
-    companyName: "FPt Corporation",
-    location: "New York, United Of State",
-    title: "Web Developer",
-    type: "Part-time",
-    skills: ["HTML", "CSS", "JavaScript"],
-    expirationDate: "2024-11-30",
-    minSalary: 22,
-    maxSalary: 45,
-    description: "Job description for Web Developer at XYZ Corporation.",
-  },
-  {
-    companyName: "XYZ Corporation",
-    location: "New York, United Of State",
-    title: "Web Developer",
-    type: "Part-time",
-    skills: ["HTML", "CSS", "JavaScript"],
-    expirationDate: "2024-11-30",
-    minSalary: 22,
-    maxSalary: 45,
-    description: "Job description for Web Developer at XYZ Corporation.",
-  },
-];
+import { getNewJob } from "@/app/api/job/api";
 
 const JobBanner = () => {
+const [jobs, setJobs] = useState([]);
+useEffect(()=>{
+  const fetchData = async () => {
+    try{
+      let response = await getNewJob();
+      setJobs(response.data);
+    }catch(error){
+      console.log(error);
+    }
+  }
+  fetchData();
+},[])
+
   return (
     <section class="inline-block w-full overflow-visible mt-10">
       <div className="animate__animated animate__fadeIn mt-10">
@@ -180,19 +105,22 @@ const JobBanner = () => {
           </div>
           <div className="mt-12 mx-[7%]">
             <div className="flex flex-wrap">
-              {jobs.map((job, index) => (
+              {jobs?.map((job, index) => (
                 <JobCard
-                className= "xl:w-1/4"
-                  key={index}
-                  companyName={job.companyName}
-                  location={job.location}
-                  title={job.title}
-                  type={job.type}
-                  skills={job.skills}
-                  description={job.description}
-                  expirationDate={job.expirationDate}
-                  minSalary={job.minSalary}
-                  maxSalary={job.maxSalary}
+                id={job.id}
+                className="xl:w-1/4"
+                key={index}
+                companyName={job.fullName}
+                location={job.address}
+                title={job.title}
+                type={job.jobType}
+                skills={job.skills}
+                description={job.description}
+                expirationDate={job.expirationDate}
+                minSalary={job.salaryMin}
+                maxSalary={job.salaryMax}
+                businessId={job.businessId}
+                logoUrl={job.logoUrl}
                 />
               ))}
             </div>

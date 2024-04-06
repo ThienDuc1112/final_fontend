@@ -21,4 +21,8 @@ const getJobByBusiness = (id) => {
   return axiosClient.get(`/GetJobsByBusiness/${id}`)
 }
 
-export  {getJobDetail, getJobManagement, getListJob, getJobApp,getJobByBusiness}
+const getNewJob = () => {
+  return axiosClient.get("/GetNewJobs");
+}
+
+export  {getJobDetail, getJobManagement, getListJob, getJobApp,getJobByBusiness, getNewJob}

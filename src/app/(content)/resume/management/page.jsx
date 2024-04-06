@@ -2,7 +2,7 @@
 import { FaRegEye } from "react-icons/fa";
 import MyIconDialog from "@/components/MyIconDialog";
 import { useRouter } from "next/navigation";
-import { useGetAllResumeInfoQuery } from "@/Context/features/resume/resumeApiSlice";
+import { useGetAllResumeInfoQuery,useHideResumeMutation } from "@/Context/features/resume/resumeApiSlice";
 import { Button } from "@/components/ui/button";
 import TokenService from "@/utils/Token.service";
 
@@ -14,7 +14,9 @@ export default function Management() {
     isError: isError2,
     isLoading: isLoading2,
     error: error2,
+    refetch
   } = useGetAllResumeInfoQuery({userId: userId});
+  const [hideResume,{data}] = useHideResumeMutation();
   const router = useRouter();
   console.log(resumeData);
 
@@ -25,6 +27,19 @@ export default function Management() {
     const year = date.getFullYear().toString();
 
     return `${day}/${month}/${year}`;
+  }
+
+  const handleDelete = async (id) => {
+    try{
+        var resume = {
+          id: id,
+          isPublic: false,
+        }
+        await hideResume(resume);
+        refetch();
+    }catch(error){
+      console.log(error);
+    }
   }
   return (
     <section className="section-box mt-[10px] relative">
@@ -76,7 +91,7 @@ export default function Management() {
                           <tr key={key}>
                             <td className="border-b border-[#eee]px-4 py-5 ">
                               <p className="text-black text-lg flex pl-4 justify-start">
-                                {key + 1}
+                                {item.id}
                               </p>
                             </td>
                             <td className="border-b border-[#eee] px-4 py-5 pl-9 xl:pl-11">
@@ -99,7 +114,7 @@ export default function Management() {
                                 >
                                   <FaRegEye />
                                 </button>
-                                <MyIconDialog />
+                                <MyIconDialog handleConfirm={() => {handleDelete(item.id)}}/>
                               </div>
                             </td>
                           </tr>

@@ -10,20 +10,16 @@ export async function middleware(request) {
     (!userId ||  Date.now() > isAccessExpired) &&
     protectedRoutes.some((route) => request.nextUrl.pathname.startsWith(route));
   const requiresBusinessRole =
-    (!userId || Date.now() > isAccessExpired) &&
-    request.nextUrl.pathname.startsWith("/business") &&
-    role !== "employer";
+    request.nextUrl.pathname.startsWith("/business") && (!userId ||  Date.now() > isAccessExpired || role !== "employer");
   const requiresAdminRole =
-    (!userId || Date.now() > isAccessExpired) &&
-    request.nextUrl.pathname.startsWith("/admin") &&
-    role !== "admin";
+    request.nextUrl.pathname.startsWith("/admin") && (!userId ||  Date.now() > isAccessExpired || role !== "admin");
 
     if (shouldAuthenticate) {
       const response = NextResponse.redirect(new URL("/auth/login", request.url));
       return response;
     }
     if (requiresBusinessRole || requiresAdminRole) {
-      const response = NextResponse.redirect(new URL("/content", request.url));
+      const response = NextResponse.redirect(new URL("/notFound", request.url));
       return response;
     }
 

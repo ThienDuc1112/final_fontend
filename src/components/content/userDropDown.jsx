@@ -12,11 +12,18 @@ import { useGetNewMessageCountQuery } from "@/Context/features/message/messageAp
 import { useRouter } from "next/navigation";
 import SignalRService from "@/utils/signalrService";
 import CustomTooltip from "@/components/content/toolTip";
+import { googleLogout } from "@react-oauth/google";
 
 const Dropdown = () => {
   const router = useRouter();
+
   const handleSignOut = () => {
-    TokenService.removeUser();
+    try {
+      googleLogout();
+      TokenService.removeUser();
+    } catch (error) {
+      console.error("Error during logout:", error);
+    }
   };
   const { userId, role, name } = TokenService.getUserProfile();
   const { data, isLoading, error, refetch } = useGetNewMessageCountQuery({
@@ -95,42 +102,50 @@ const Dropdown = () => {
         <div className="p-3 rounded-lg hover:bg-gray-200 flex items-center gap-3 rotate-icon">
           <FaCircleUser size={22} />
           <span>{name?.split("@")[0]}</span>
-          <AiOutlineDown size={22} className="my-icon" />
+          {role !== "employer" && (
+            <AiOutlineDown size={22} className="my-icon" />
+          )}
         </div>
-        <div className="dropdown-list z-30 w-[240px] shadow-lg">
-          <a className="hover-item" href="/applications">
-            <div className="px-2 py-3 flex items-center justify-start gap-2">
-              <div className="p-1 bg-gray-200 rounded-sm change-item">
-                <TbReportSearch size={22} className="change-icon" />
+        {role !== "employer" && (
+          <div className="dropdown-list z-30 w-[240px] shadow-lg">
+            <a className="hover-item" href="/applications">
+              <div className="px-2 py-3 flex items-center justify-start gap-2">
+                <div className="p-1 bg-gray-200 rounded-sm change-item">
+                  <TbReportSearch size={22} className="change-icon" />
+                </div>
+                <span className="change-text">Manage Applications</span>
               </div>
-              <span className="change-text">Manage Applications</span>
-            </div>
-          </a>
-          <a className="hover-item" href="/resume/management">
-            <div className="px-2 py-3 flex items-center justify-start gap-2">
-              <div className="p-1 bg-gray-200 rounded-sm change-item">
-                <FaRegFileLines size={22} className="change-icon" />
+            </a>
+            <a className="hover-item" href="/resume/management">
+              <div className="px-2 py-3 flex items-center justify-start gap-2">
+                <div className="p-1 bg-gray-200 rounded-sm change-item">
+                  <FaRegFileLines size={22} className="change-icon" />
+                </div>
+                <span className="change-text">Manage Resumes</span>
               </div>
-              <span className="change-text">Manage Resumes</span>
-            </div>
-          </a>
-          <a className="hover-item" href="/whistlist">
-            <div className="px-2 py-3 flex items-center justify-start gap-2">
-              <div className="p-1 bg-gray-200 rounded-sm change-item">
-                <BsBookmarkCheck size={22} className="change-icon" />
+            </a>
+            <a className="hover-item" href="/whistlist">
+              <div className="px-2 py-3 flex items-center justify-start gap-2">
+                <div className="p-1 bg-gray-200 rounded-sm change-item">
+                  <BsBookmarkCheck size={22} className="change-icon" />
+                </div>
+                <span className="change-text">Saved Jobs</span>
               </div>
-              <span className="change-text">Saved Jobs</span>
-            </div>
-          </a>
-          <a className="hover-item" href="/auth/login" onClick={handleSignOut}>
-            <div className="px-2 py-3 flex items-center justify-start gap-2">
-              <div className="p-1 bg-gray-200 rounded-sm change-item">
-                <PiSignOutBold size={22} className="change-icon" />
+            </a>
+            <a
+              className="hover-item"
+              href="/auth/login"
+              onClick={handleSignOut}
+            >
+              <div className="px-2 py-3 flex items-center justify-start gap-2">
+                <div className="p-1 bg-gray-200 rounded-sm change-item">
+                  <PiSignOutBold size={22} className="change-icon" />
+                </div>
+                <span className="change-text">Sign Out</span>
               </div>
-              <span className="change-text">Sign Out</span>
-            </div>
-          </a>
-        </div>
+            </a>
+          </div>
+        )}
       </div>
     </div>
   );

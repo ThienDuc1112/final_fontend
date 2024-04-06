@@ -16,8 +16,13 @@ export const jobApiSlice = apiSlice.injectEndpoints({
         method: "PUT",
         body: job,
       })
+    }),
+    getJobDashboard: builder.query({
+      query: ({businessId}) => ({
+        url: `GetDashboardJob/${businessId}`,
+      })
     })
   }),
 });
 
-export const { useCreateJobMutation, useUpdateJobMutation } = jobApiSlice;
+export const { useCreateJobMutation, useUpdateJobMutation, useGetJobDashboardQuery } = jobApiSlice;

@@ -1,52 +1,10 @@
 import { MdModeEdit } from "react-icons/md";
-import MyIconDialog from "@/components/MyIconDialog";
+import { IoEyeSharp } from "react-icons/io5";
+import HelpFunctions from "@/utils/functions";
+import { useRouter } from "next/navigation";
 
-export default function Table({title}) {
-  function convertToDayMonthYear(date) {
-    const day = date.getDate().toString().padStart(2, "0");
-    const month = (date.getMonth() + 1).toString().padStart(2, "0");
-    const year = date.getFullYear().toString();
-
-    return `${day}/${month}/${year}`;
-  }
-  const data = [
-    {
-      id: 1,
-      title: "Job Title 1",
-      expirationDate: new Date("2024-03-15T12:00:00"),
-      status: "Open",
-      numberRecruitment: 5,
-    },
-    {
-      id: 2,
-      title: "Job Title 2",
-      expirationDate: new Date("2024-01-20T15:30:00"),
-      status: "Closed",
-      numberRecruitment: 3,
-    },
-    {
-      id: 3,
-      title: "Job Title 3",
-      expirationDate: new Date("2024-03-10T09:45:00"),
-      status: "Open",
-      numberRecruitment: 2,
-    },
-    {
-      id: 4,
-      title: "Job Title 2",
-      expirationDate: new Date("2024-03-20T15:30:00"),
-      status: "Closed",
-      numberRecruitment: 3,
-    },
-    {
-      id: 5,
-      title: "Job Title 3",
-      expirationDate: new Date("2024-03-10T09:45:00"),
-      status: "Open",
-      numberRecruitment: 2,
-    },
-  ];
-
+export default function Table({ title, data }) {
+  const router = useRouter();
   const currentDate = new Date();
 
   return (
@@ -74,48 +32,62 @@ export default function Table({title}) {
             </tr>
           </thead>
           <tbody>
-            {data.map((packageItem, key) => (
+            {data?.map((packageItem, key) => (
               <tr key={key}>
                 <td className="border-b border-[#eee] px-4 py-5 pl-9 xl:pl-11">
-                  <h5 className="font-medium text-black text-lg">
-                    {packageItem.title}
+                  <h5 className="font-medium text-black text-base font-semibold">
+                    {packageItem?.title}
                   </h5>
                 </td>
                 <td className="border-b border-[#eee] px-4 py-5">
                   <p
                     className={`text-lg flex justify-center ${
-                      packageItem.expirationDate > currentDate
+                      HelpFunctions.convertToDayMonthYear(
+                        packageItem.expirationDate
+                      ) > currentDate
                         ? "text-blue-600"
                         : "text-red-600"
                     }`}
                   >
-                    {convertToDayMonthYear(packageItem.expirationDate)}
+                    {HelpFunctions.convertToDayMonthYear(
+                      packageItem.expirationDate
+                    )}
                   </p>
                 </td>
                 <td className="border-b border-[#eee]px-4 py-5 ">
                   <p className="text-black text-lg flex justify-center">
-                    {packageItem.numberRecruitment}
+                    {packageItem?.numberRecruitment}
                   </p>
                 </td>
                 <td className="border-b border-[#eee] px-4 py-5 ">
                   <p
                     className={`inline-flex rounded-full bg-opacity-10 px-3 py-1 text-sm font-medium ${
-                      packageItem.status === "Open"
+                      packageItem?.status === "Open"
                         ? "bg-emerald-200 text-emerald-600"
-                        : packageItem.status === "Closed"
+                        : packageItem?.status === "Closed"
                         ? "bg-red-200 text-red-600"
                         : "bg-blue-200 text-blue-600"
                     }`}
                   >
-                    {packageItem.status}
+                    {packageItem?.status}
                   </p>
                 </td>
                 <td className="border-b border-[#eee] px-4 py-5">
                   <div className="flex items-center space-x-3.5">
-                    <button className="hover:text-blue-600 p-2 rounded-full bg-blue-100">
+                    <button className="hover:text-white text-blue-600 p-2 rounded-full bg-blue-100" 
+                    onClick={() => {
+                      router.push(`/business/manageJobs/edit/${packageItem?.id}`)
+                    }}
+                    >
                       <MdModeEdit />
                     </button>
-                    <MyIconDialog />
+                    <button className="hover:text-white text-emerald-600 p-2 rounded-full bg-emerald-100" 
+                    onClick={() => {
+                      router.push(`/jobs/${packageItem?.id}`)
+                    }}
+                    >
+                      <IoEyeSharp />
+                    </button>
                   </div>
                 </td>
               </tr>
