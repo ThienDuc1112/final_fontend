@@ -14,7 +14,6 @@ const Header = () => {
   useEffect(() => {
     const checkTokenExpiration = async () => {
       const isExpired = await TokenService.isAccessExpired();
-      console.log(isExpired);
       setExpired(isExpired);
     };
     setIsClient(true);
@@ -75,7 +74,7 @@ const Header = () => {
                 </li>
                 <li className="float-left p-2.5 md:p-5">
                   <Link
-                    href="/"
+                    href="/chat"
                     className={`font-normal leading-normal block text-lg ${
                       pathName === "/assistant"
                         ? "text-blue-600"

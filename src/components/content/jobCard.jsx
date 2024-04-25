@@ -86,7 +86,7 @@ const JobCard = ({
             </div>
             <div className="mt-2">
               <div className="xl:w-4/5 md:w-3/5 flex flex-wrap items-center gap-1">
-                {skills.slice(0, 4).map((skill, index) => (
+                {skills.slice(0, 3).map((skill, index) => (
                   <div key={index} className="btn-tags-sm">
                     {skill}
                   </div>

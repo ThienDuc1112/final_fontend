@@ -24,25 +24,15 @@ export default function Chat() {
       if (!response.ok || !response.body) {
         return;
       }
-
       const reader = response.body.getReader();
-      const decoder = new TextDecoder("utf-8");
-
-      let streamedText = "";
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) {
-          break;
-        }
-        const decoded = decoder.decode(value);
-        streamedText += decoded;
-      }
-
-      setText((prevText) => prevText + streamedText);
-      setMessage((prevMessage) => [...prevMessage, streamedText]);
+      const result = await reader.read();
+      const decodedResult = new TextDecoder().decode(result.value);
+      const data = JSON.parse(decodedResult); 
+    const message = data.message; 
+    setText(message);
+    setMessage((prevMessage) => [...prevMessage, message]);
     } catch (error) {
-      console.error(error);
+      console.log(error);
     }
   };
   return (
