@@ -5,7 +5,7 @@ const JobSeeker = () => {
   return (
     <div className="flex flex-grow flex-col px-16">
       <p className="text-2xl text-white font-medium mb-10">
-        As a job seeker you'll get access to:
+        As a job seeker you&apos;ll get access to:
       </p>
       <ul className="space-y-4">
         <li className="text-blue-50 flex items-center gap-3">
