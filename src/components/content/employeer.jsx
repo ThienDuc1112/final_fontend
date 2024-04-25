@@ -14,7 +14,7 @@ const Employer = () => {
         </li>
         <li className="text-blue-50 flex items-center gap-3">
         <AiOutlineCheck className="text-green"/>
-          50k+ job seekers
+          More than 50k job seekers
         </li>
         <li className="text-blue-50 flex items-center gap-3">
         <AiOutlineCheck className="text-green"/>
