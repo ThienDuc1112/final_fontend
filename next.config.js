@@ -1,3 +1,6 @@
+import path from 'path';
+
+const __dirname = new URL('.', import.meta.url).pathname;
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     images: {
@@ -12,7 +15,14 @@ const nextConfig = {
     },
     experimental: {
       esmExternals: false,
-    }
+    },
+    webpack: (config) => {
+      config.resolve.alias = {
+       ...config.resolve.alias,
+      '@': path.resolve(__dirname, './'),
+       };
+      return config;
+      },
   };
   
   module.exports = nextConfig;
