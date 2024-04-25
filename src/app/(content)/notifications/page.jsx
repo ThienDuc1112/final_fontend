@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import MyPagination from "@/components/myPagination";
-import MyIconDialog from "@/components/myIconDialog";
+import MyIconDialog from "@/components/MyIconDialog";
 import { useSearchParams } from "next/navigation";
 import TokenService from "@/utils/Token.service";
 import Link from "next/link";
