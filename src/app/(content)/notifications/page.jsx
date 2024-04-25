@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import MyPagination from "@/components/myPagination";
-import MyIconDialog from "@/components/MyIconDialog";
+import MyIconDialog from "@/components/myIconDialog";
 import { useSearchParams } from "next/navigation";
 import TokenService from "@/utils/Token.service";
 import Link from "next/link";
@@ -114,7 +114,7 @@ export default function Notification() {
             <h2>Notifications</h2>
             <p className="text-base font-normal">
               {" "}
-              Get new notifications and stay informed{" "}
+              Get your new notifications and stay informed{" "}
             </p>
             <div className="mt-10 py-5 px-5 bg-white border rounded-sm shadow-md xl:min-w-[1300px]">
               <div className="bg-blue-100 px-2 py-6 font-medium rounded-md">
