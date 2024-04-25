@@ -5,7 +5,7 @@ const Employer = () => {
   return (
     <div className="flex flex-grow flex-col px-16">
       <p className="text-2xl text-white font-medium mb-10">
-        As an employeer you{'"'} get access to:
+        As an employeer you&quot; get access to:
       </p>
       <ul className="space-y-4">
         <li className="text-blue-50 flex items-center gap-3">
@@ -22,7 +22,7 @@ const Employer = () => {
         </li>
         <li className="text-blue-50 flex items-center gap-3">
         <AiOutlineCheck className="text-green"/>
-          Create your FREE company account
+          Create your free company account
         </li>
       </ul>
     </div>
