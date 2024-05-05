@@ -21,6 +21,7 @@ import { useSearchParams } from "next/navigation";
 
 const ListJob = () => {
   const [jobData, setJobData] = useState([]);
+  const [totalPages, setTotalPages] = useState(1);
   const searchParams = useSearchParams();
   const params = new URLSearchParams(searchParams);
   const query = useSelector(selectQuery);
@@ -51,8 +52,9 @@ const ListJob = () => {
     const fetchData = async () => {
       try {
         let response = await getListJob(queryParams);
-        setJobData(response.data);
-        console.log(queryParams);
+        setTotalPages(Math.ceil(response.data.total/6));
+        setJobData(response.data.getJobDTOs);
+    
       } catch (error) {
         console.log("Error", error);
       }
@@ -107,7 +109,7 @@ const ListJob = () => {
         </div>
       </div>
       <div className="pagination mt-5 mb-10">
-        <MyPagination totalPages={3} />
+        <MyPagination totalPages={totalPages} />
       </div>
     </div>
   );

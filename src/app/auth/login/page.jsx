@@ -36,6 +36,7 @@ const Login = () => {
     try {
       const response = await loginA(email, pwd);
       const userData = await response.json();
+      console.log(userData);
       const userJwt = TokenService.getUser(userData.access_token);
       const userProfile = await getUserInfo(userData.access_token)
       if (userData) {
@@ -50,6 +51,7 @@ const Login = () => {
         console.log("not");
       }
     } catch (err) {
+      console.log(err);
       setEmail("");
       setPwd("");
       if (err.originalStatus === 400) {
@@ -57,7 +59,7 @@ const Login = () => {
       } else if (err.originalStatus === 401) {
         setErrMsg("Unauthorized");
       } else {
-        setErrMsg("Login Failed");
+        setErrMsg("Wrong email or password");
       }
     }
   };

@@ -1,8 +1,12 @@
 "use client";
-import { apiSlice } from "../../api";
+
+const apiLink =
+  process.env.NEXT_PUBLIC_NODE_ENV === "production"
+    ? process.env.NEXT_PUBLIC_BACKEND_PROD
+    : process.env.NEXT_PUBLIC_BACKEND_DEV;
 
 export const loginA = async (user, pwd) => {
-  const response = await fetch("https://localhost:5007/connect/token", {
+  const response = await fetch(`${apiLink}/connect/token`, {
     method: "POST",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
@@ -21,7 +25,7 @@ export const loginA = async (user, pwd) => {
 };
 
 export const requestFreshToken = async (refreshToken) => {
-  const response = await fetch("https://localhost:5007/connect/token", {
+  const response = await fetch(`${apiLink}/connect/token`, {
     method: "POST",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
@@ -38,7 +42,7 @@ export const requestFreshToken = async (refreshToken) => {
 };
 
 export const loginByGoogle = async (token) => {
-  const response = await fetch("https://localhost:5007/connect/token", {
+  const response = await fetch(`${apiLink}/connect/token`, {
     method: "POST",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
@@ -57,7 +61,7 @@ export const loginByGoogle = async (token) => {
 };
 
 export const getUserInfo = async (accessToken) => {
-  const url = 'https://localhost:5011/userinfo';
+  const url = `${apiLink}/userinfo`;
 
   const response = await fetch(url, {
     method: 'GET',

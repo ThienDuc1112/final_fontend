@@ -69,7 +69,7 @@ const JobCard = ({
           <div className="card-block-info">
             <h4>
               <Link className="title" href={`/jobs/${id}`}>
-                {title}
+                {title.length > 45 ? title.slice(0,45) + "..." : title}
               </Link>
             </h4>
             <div className="flex justify-start items-center gap-3">

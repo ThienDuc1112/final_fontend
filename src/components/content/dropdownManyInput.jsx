@@ -17,6 +17,7 @@ const DropdownManyInput = ({ MyLabel, DataList, onDataSelect }) => {
       (selectedItem) => selectedItem.id !== item.id
     );
     setSelectedItems(updatedItems);
+    onDataSelect(updatedItems);
   };
 
   const remainingItems = DataList.filter(

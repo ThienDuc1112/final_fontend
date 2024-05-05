@@ -20,9 +20,7 @@ const PageBanner = () => {
                   Design Resume Tool
                 </h3>
                 <p className="font-sm color-text-paragraph-2">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Aliquam laoreet rutrum quam, id faucibus erat interdum a.
-                  Curabitur eget tortor a nulla interdum semper.
+                Design your own resume with information relating to work experience, education, skills, and other relevant information and download it as a PDF document .
                 </p>
                 <div className="mt-4">
                   <a href="/" className="btn-arrow-right">
@@ -44,7 +42,7 @@ const PageBanner = () => {
               </div>
               <div className="text-info">
                 <h3 className="text-black text-xl font-bold">
-                  Job Tool Service
+                  Chat Bot Service
                 </h3>
                 <p className="font-sm color-text-paragraph-2">
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit.

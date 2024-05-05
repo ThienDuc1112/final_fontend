@@ -4,7 +4,6 @@ import jwtDecode from "jwt-decode";
 const getLocalAccessToken = () => {
   try {
     const accessToken = Cookies.get("accessToken");
-    //console.log(jwtDecode(accessToken));
     return accessToken;
   } catch (error) {
     return null;
@@ -80,6 +79,14 @@ const getBusinessId = () => {
     console.log("Error");
   }
 };
+const getAccess = () => {
+  try {
+    const access = Cookies.get("access");
+    return access;
+  } catch (error) {
+    console.log("Error");
+  }
+};
 const getUserProfile = () => {
   let user = {
     userId: Cookies.get("userId"),
@@ -94,6 +101,7 @@ const removeUser = () => {
     const token = Cookies.get("accessToken");
     if (token) {
       Cookies.remove("accessToken", { path: "/" });
+      Cookies.remove("refreshToken", { path: "/" });
       Cookies.remove("role", { path: "/" });
       Cookies.remove("userId", { path: "/" });
     }
@@ -111,18 +119,17 @@ const isAccessExpired = async () => {
   try {
     const accessToken = Cookies.get("accessToken");
     if (!accessToken) {
-      return true; // No access token means "expired"
+      return true; 
     }
 
     const decodedToken = jwtDecode(accessToken);
     const expirationTimestamp = decodedToken.exp * 1000; 
     const expirationDate = new Date(expirationTimestamp);
     const currentTime = new Date();
-
     return currentTime > expirationDate;
   } catch (error) {
     console.error("Error checking token expiration:", error);
-    return true; // Assume expired on error
+    return true; 
   }
 };
 
@@ -137,7 +144,8 @@ const TokenService = {
   updateUser,
   getUserProfile,
   getBusinessId,
-  setBusinessId
+  setBusinessId,
+  getAccess
 };
 
 export default TokenService;

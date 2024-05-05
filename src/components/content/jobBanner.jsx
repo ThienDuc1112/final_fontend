@@ -59,7 +59,7 @@ useEffect(()=>{
                 <li>
                   <a href="/jobs">
                     <Image
-                      src="/images/Finance.svg"
+                      src="/images/finance.svg"
                       width={20}
                       height={20}
                       alt="logo"

@@ -7,7 +7,7 @@ class SignalRService {
 
   startConnection = () => {
     this.connection = new HubConnectionBuilder()
-      .withUrl('https://localhost:7000/notificationHub') 
+      .withUrl('http://localhost:8009/notificationHub') 
       .withAutomaticReconnect()
       .build();
 

@@ -69,7 +69,7 @@ export default function Applications() {
                   </tr>
                 </thead>
                 <tbody>
-                  {data.map((item, index) => (
+                  {data?.map((item, index) => (
                     <tr
                       key={index}
                       className={`text-left border-b-2 border-gray-200 ${

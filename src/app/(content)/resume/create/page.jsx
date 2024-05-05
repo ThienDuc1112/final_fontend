@@ -24,6 +24,8 @@ import { SuccessNotify } from "@/components/content/successNotification";
 import { useRouter } from "next/navigation";
 import TokenService from "@/utils/Token.service";
 import { getCareer } from "@/app/api/provider/api";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { useSelector, useDispatch } from "react-redux";
 import {
   selectSelectedSkillList,
@@ -144,11 +146,22 @@ export default function Create() {
     return emailRegex.test(email);
   }
 
-  const handleShowNoti = () => {
-    setShowToast(true);
-    setTimeout(() => {
-      setShowToast(false);
-    }, 3000);
+  const notify = (success, notifyMess) => {
+    const toastOptions = {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    };
+
+    if (success) {
+      toast.success(notifyMess, toastOptions);
+    } else {
+      toast.error(notifyMess, toastOptions);
+    }
   };
 
   const validateData = () => {
@@ -207,11 +220,13 @@ export default function Create() {
     }
 
     if (formData.dateOfBirth === null) {
-      setDateOfBirthError(true);
+      setDateOfBirthError("Date of Birth is required");
       isValid = false;
-    } else {
-      setDateOfBirthError(false);
+    } else if(formData.dateOfBirth > new Date()){
+      setDateOfBirthError("Date of Birth must be in the past");
+      isValid = false;
     }
+    
 
     if (formData.status.trim() === "") {
       setStatusError(true);
@@ -279,7 +294,7 @@ export default function Create() {
         avatarUrl: avatarPath,
         description: formData.description.replace(/\n/g, ""),
         title: formData.title,
-        AdditionalSkills: "Java Spring, Ms SQL",
+        additionalSkills: additonalSkill,
       },
       educations: updatedEducations,
       experiences: updatedExperiences,
@@ -289,17 +304,14 @@ export default function Create() {
     try {
       const response = await createResume(resumeData);
       console.log(response);
-      if (!response.data.success && response.data.success !== undefined) {
-        handleShowNoti();
-        console.log(response.data.success);
+      if(response.data.length > 0){
+        notify(true, "you created a resume successfully");
+        // router.push(`/resumeDetail/${response.data[0].id}`);
       }
-      if (response.data.length > 0) {
-        const success = response.data.every((item) => item.success);
-        if (success) {
-          console.log("succ");
-          router.push(`/resumeDetail/${response.data[0].id}`);
-        }
+      if (!response.data.success || response.data.success !== undefined) {
+        notify(false, response.data.errors[0])
       }
+      
     } catch (error) {
       console.log(error);
     }
@@ -723,13 +735,13 @@ export default function Create() {
                                 },
                               }}
                               onChange={(e) =>
-                                setFormData({ ...formData, dateOfBirth: e.$d })
+                                setFormData({ ...formData, dateOfBirth: dayjs(e.$d) })
                               }
                             />
                           </LocalizationProvider>
                           {dateOfBirthError && (
                             <span className=" text-red-500 text-sm">
-                              Date of birth is required
+                              {dateOfBirthError}
                             </span>
                           )}
                         </div>
@@ -852,6 +864,7 @@ export default function Create() {
           </div>
         </div>
       </div>
+      <ToastContainer />
     </section>
   );
 }

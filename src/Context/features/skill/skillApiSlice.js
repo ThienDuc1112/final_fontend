@@ -17,7 +17,13 @@ export const skillApiSlice = apiSlice.injectEndpoints({
         body: skill,
       }),
     }),
+    triggerLanguage: builder.mutation({
+      query: (id) => ({
+        url: `/EnableLanguage/${id}`,
+        method: "PUT",
+      }),
+    }),
   }),
 });
 
-export const {useTriggerSkillMutation, useCreateSkillMutation} = skillApiSlice;
+export const {useTriggerSkillMutation, useCreateSkillMutation, useTriggerLanguageMutation} = skillApiSlice;

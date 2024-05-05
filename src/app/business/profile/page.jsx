@@ -272,7 +272,7 @@ export default function Profile() {
                     </Button>
                     <input
                       type="file"
-                      accept=".png,.jpg"
+                      accept=".png,.jpg,.webp"
                       onChange={handleLogoChange}
                       style={{ display: "none" }}
                       ref={fileInputRef}

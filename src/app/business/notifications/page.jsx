@@ -24,7 +24,7 @@ export default function Notification() {
     userId: userId,
     page: currentPage,
   });
-
+console.log(data);
   const [updateMessage] = useUpdateMessageMutation();
   const [deleteMessage] = useDeleteMessageMutation();
   const [totalPages, setTotalPages] = useState(null);
@@ -127,7 +127,7 @@ export default function Notification() {
                   <div key={index} className="px-2 py-7 font-medium rounded-md">
                     <div className="grid grid-cols-12 gap-4 text-blue-500 text-start pb-3">
                       <div className="col-span-9 pl-2">
-                        <Link href={`/applications/2`}>
+                        <Link href={`/business/manageApplications/detail/${item.applicationId}`}>
                           <div className="flex justify-start items-center gap-3 hover:bg-gray-100 rounded">
                             <div className="p-3 rounded-full bg-blue-100/50">
                               <MdMailOutline size={20} color="#2563eb" />

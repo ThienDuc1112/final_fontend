@@ -63,6 +63,7 @@ export default function SelectingResume({
   };
 
   const handleSubmit = async (resumeId) => {
+    handleClose();
     try {
       var app = {
         candidateId: userId,
@@ -74,7 +75,6 @@ export default function SelectingResume({
       const response = await createApplication(app);
       console.log(response);
       handleConfirm(response.data.success, response.data.message);
-      handleClose();
     } catch (error) {
       console.log(error);
     }

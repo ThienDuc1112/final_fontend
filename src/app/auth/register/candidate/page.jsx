@@ -13,12 +13,12 @@ import { IoMdArrowBack } from "react-icons/io";
 import Flag from "react-country-flag";
 import phoneList from "@/utils/phoneDatabase";
 import PhoneSelection from "@/components/content/phoneSelection";
-import { SuccessNotify } from "@/components/content/successNotification";
 import { registerCandidate as registerCandidateApi } from "@/app/api/auth/api";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Candidate = () => {
   const [showSuccess, setShowSuccess] = useState(false);
-  const [mess, setMess] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [icon, setIcon] = useState(true);
   const [type, setType] = useState("password");
@@ -47,7 +47,7 @@ const Candidate = () => {
   }
 
   function isValidPhoneNumber(phoneNumber) {
-    const phoneRegex = /^\d{10,11}$/;
+    const phoneRegex = /^\d{9,10}$/;
     return phoneRegex.test(phoneNumber);
   }
 
@@ -72,17 +72,28 @@ const Candidate = () => {
   const handleChangeShow = () => {
     setShow(true);
   };
-  const handleShowNoti = () => {
-    setShowSuccess(true);
-    setTimeout(() => {
-      setShowSuccess(false);
-    }, 3000);
-  };
 
   const handleSetPhoneCountry = (countryCode, countryFlag) => {
     setShow(false);
     setPhoneCountry(countryCode);
     setFlag(countryFlag);
+  };
+  const notify = (success, notifyMess) => {
+    const toastOptions = {
+      position: "top-right",
+      autoClose: 13000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    };
+
+    if (success) {
+      toast.success(notifyMess, toastOptions);
+    } else {
+      toast.error(notifyMess, toastOptions);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -144,7 +155,7 @@ const Candidate = () => {
           setEmailError(response.data.message);
           console.log(response.data.message);
         }else{
-          handleShowNoti();
+          notify(true, "You created an account successfully");
         }        
       } catch (error) {
         console.error(error.response.data);
@@ -270,6 +281,7 @@ const Candidate = () => {
                     value={phone}
                     onChange={handlePhoneInput}
                     placeholder="0000000000"
+                    maxLength={10}
                   />
                 </div>
                 {phoneError && <p className="text-red-500">{phoneError}</p>}
@@ -325,11 +337,7 @@ const Candidate = () => {
           </div>
         </section>
       )}
-      {showSuccess && (
-        <div className="animate-slide-up absolute z-10 bottom-0 right-0 p-7">
-          <SuccessNotify message="You registered an account successfully" variant="success" icon="success"/>
-        </div>
-      )}
+       <ToastContainer />
     </div>
   );
 };

@@ -9,25 +9,6 @@ const apiLink =
     ? process.env.NEXT_PUBLIC_BACKEND_PROD
     : process.env.NEXT_PUBLIC_BACKEND_DEV;
 
-const basQuery = fetchBaseQuery({
-  baseUrl: apiLink,
-  credentials: "include",
-  prepareHeaders: (headers, { getState }) => {
-    const token = getState()?.auth?.token;
-    const refreshToken = getState()?.auth.refreshToken;
-    console.log(token);
-    const tokenExpired = TokenService.isAccessExpired();
-    if (token) {
-      if (!tokenExpired) {
-        headers.set("authorization", `Bearer ${token.accessToken}`);
-      } else {
-        headers.set("authorization", `Bearer ${token.accessToken}`);
-        headers.set("x-refresh", `${refreshToken}`);
-      }
-    }
-    return headers;
-  },
-});
 const baseQuery = fetchBaseQuery({
   baseUrl: apiLink,
   credentials: "include",

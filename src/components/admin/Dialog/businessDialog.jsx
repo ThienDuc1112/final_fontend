@@ -75,7 +75,6 @@ export default function BusinessDialog({ id }) {
                                 </td>
                                 <td className="min-w-[600px] px-4 py-4 border border-gray-600">
                                   {data?.areaDTOs
-                                    .slice(1)
                                     .map((area) => area.careerName)
                                     .join(", ")}
                                 </td>

@@ -53,6 +53,12 @@ export const applicationApiSlice = apiSlice.injectEndpoints({
         url: `/GetDashboardApplications/${businessId}`,
       }),
     }),
+    getCandidateList: builder.query({
+      query: ({ jobId }) => ({
+        url: `/GetInterviewCandidate`,
+        params: { jobId },
+      }),
+    }),
   }),
 });
 
@@ -64,5 +70,6 @@ export const {
   useUpdateMeetingMutation,
   useCreateApplicationMutation,
   useGetMatchingQuery,
-  useGetDashboardApplicationsQuery
+  useGetDashboardApplicationsQuery, 
+  useGetCandidateListQuery,
 } = applicationApiSlice;

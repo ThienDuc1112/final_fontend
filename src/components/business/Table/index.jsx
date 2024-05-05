@@ -45,8 +45,8 @@ export default function Table({ title, data }) {
                       HelpFunctions.convertToDayMonthYear(
                         packageItem.expirationDate
                       ) > currentDate
-                        ? "text-blue-600"
-                        : "text-red-600"
+                        ? "text-red-600"
+                        : "text-blue-600"
                     }`}
                   >
                     {HelpFunctions.convertToDayMonthYear(

@@ -33,7 +33,7 @@ export default function Job({ params }) {
         setData(response.data);
         setJobs(jobResponse.data);
         setImages(response.data.mediaDTOs);
-        console.log(jobResponse.data);
+        console.log(response.data);
         if (response.data === undefined || response.data === null) {
           router.push("/content");
         }

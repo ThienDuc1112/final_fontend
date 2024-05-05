@@ -9,7 +9,6 @@ import { Button } from "@/components/ui/button";
 import { IoEyeOutline } from "react-icons/io5";
 import { FaRegEyeSlash } from "react-icons/fa";
 import { IoMdArrowBack } from "react-icons/io";
-import { SuccessNotify } from "@/components/content/successNotification";
 import Flag from "react-country-flag";
 import phoneList from "@/utils/phoneDatabase";
 import DropdownInput from "@/components/content/dropdownInput";
@@ -18,10 +17,11 @@ import PhoneSelection from "@/components/content/phoneSelection";
 import { registerEmployer as registerEmployerApi } from "@/app/api/auth/api";
 import { getBusinessSize, getCareer } from "@/app/api/provider/api";
 import { createBusiness } from "@/app/api/business/api";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Candidate = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
   const [icon, setIcon] = useState(true);
   const [type, setType] = useState("password");
   const [email, setEmail] = useState("");
@@ -84,13 +84,6 @@ const Candidate = () => {
     };
     fetchData();
   }, []);
-
-  const handleShowNoti = () => {
-    setShowSuccess(true);
-    setTimeout(() => {
-      setShowSuccess(false);
-    }, 3000);
-  };
 
   function isValidEmail(email) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -267,6 +260,23 @@ const Candidate = () => {
       return <>{companyDetail()}</>;
     }
   };
+  const notify = (success, notifyMess) => {
+    const toastOptions = {
+      position: "top-right",
+      autoClose: 13000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    };
+
+    if (success) {
+      toast.success(notifyMess, toastOptions);
+    } else {
+      toast.error(notifyMess, toastOptions);
+    }
+  };
 
   const register = async () => {
     const userData = {
@@ -277,7 +287,7 @@ const Candidate = () => {
     };
     try {
       const response = await registerEmployerApi(userData);
-
+      console.log(response.data);
       if (response.data.statusCode === 0) {
         setSection(1);
         setEmailError(response.data.message);
@@ -300,7 +310,9 @@ const Candidate = () => {
         const businessResponse = await createBusiness(businessData);
         console.log(businessResponse.data[0]);
         if (businessResponse.data[0].success === true) {
-          handleShowNoti();
+          notify(true, "You created an account successfully");
+        } else {
+          notify(false, "Please check your login information again");
         }
       }
     } catch {
@@ -353,7 +365,6 @@ const Candidate = () => {
       const lcb = licenseBack.url.split("/").pop();
       setLicenseFontData(lcf);
       setLicenseBackData(lcb);
-      console.log(licenseBackData);
     } catch {
       console.log(error);
     }
@@ -402,11 +413,13 @@ const Candidate = () => {
     setAddress(event.target.value);
   };
   const handleSelectArea = (dataList) => {
+    setAreas([])
     dataList.forEach((element) => {
       const area = { careerId: element.id, businessName: 0 };
       setAreas((prevAreas) => [...prevAreas, area]);
     });
   };
+ console.log(areas)
 
   const personalDetail = () => {
     return (
@@ -469,7 +482,8 @@ const Candidate = () => {
                 id="phone"
                 value={phone}
                 onChange={handlePhoneInput}
-                placeholder="0000000000"
+                placeholder="000000000"
+                maxLength={10}
               />
             </div>
             {phoneError && <p className="text-red-500">{phoneError}</p>}
@@ -719,7 +733,9 @@ const Candidate = () => {
                   1
                 </div>
               </div>
-              <p className={`${section === 1 ? "text-white" : "text-gray-300"}`}>
+              <p
+                className={`${section === 1 ? "text-white" : "text-gray-300"}`}
+              >
                 Personal Details
               </p>
             </div>
@@ -737,7 +753,11 @@ const Candidate = () => {
                   2
                 </div>
               </div>
-              <p className={`${section === 2 ? "text-white" : "text-gray-300"}`}>Company Details</p>
+              <p
+                className={`${section === 2 ? "text-white" : "text-gray-300"}`}
+              >
+                Company Details
+              </p>
             </div>
             <div className="absolute bg-white w-0.5 h-full left-5">
               <div className="bg-white transition-all duration-200"></div>
@@ -777,15 +797,7 @@ const Candidate = () => {
           </div>
         </section>
       )}
-      {showSuccess && (
-        <div className="animate-slide-up absolute z-10 top-0 right-0 p-7">
-          <SuccessNotify
-            message="You registered an account successfully"
-            variant="success"
-            icon="success"
-          />
-        </div>
-      )}
+      <ToastContainer />
     </div>
   );
 };

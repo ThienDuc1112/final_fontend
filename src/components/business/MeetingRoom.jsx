@@ -23,7 +23,8 @@ import {
   setTrigger,
   setNotify,
   setMeetingUrl,
-  setStatus
+  setStatus,
+  setInterviewSchedule,
 } from "@/Context/features/interview/interviewDetailSlice";
 import { useGetMeetingRoomQuery } from "@/Context/features/interview/interviewApiSlice";
 import { format } from "date-fns";
@@ -31,7 +32,7 @@ import { format } from "date-fns";
 export default function MeetingRoom({ open, setOpen }) {
   const [updateMeeting, { isLoading: isLoading2, error: error2, success }] =
     useUpdateMeetingMutation();
-    const [updateApplication, { isLoading:loading2, error:err, success:suc }] =
+  const [updateApplication, { isLoading: loading2, error: err, success: suc }] =
     useUpdateApplicationMutation();
   useUpdateApplicationMutation();
   const dispatch = useDispatch();
@@ -39,7 +40,7 @@ export default function MeetingRoom({ open, setOpen }) {
   const applicationId = useSelector(selectApplicationId);
   const meetingUrl = useSelector(selectMeetingUrl);
   const scheduleInterview = useSelector(selectInterviewSchedule);
-  const status= useSelector(selectStatus);
+  const status = useSelector(selectStatus);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [check, setCheck] = useState(false);
 
@@ -75,17 +76,22 @@ export default function MeetingRoom({ open, setOpen }) {
 
   useEffect(() => {
     const updateApp = async () => {
-      if (meetingUrl !== null && scheduleInterview !== null && status==="Shortlisted") {
+      if (
+        meetingUrl !== null &&
+        scheduleInterview !== null &&
+        status === "Shortlisted"
+      ) {
         const app = {
           id: applicationId,
           status: "Interviewing",
         };
         const response = await updateApplication(app);
-        dispatch(setStatus("Interviewing"))
+        dispatch(setStatus("Interviewing"));
       }
-    }
+    };
     updateApp();
-  },[scheduleInterview,meetingUrl])
+   
+  }, [scheduleInterview, meetingUrl]);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent>
@@ -102,16 +108,11 @@ export default function MeetingRoom({ open, setOpen }) {
                   timeFormat="HH:mm"
                   timeIntervals={15}
                   dateFormat="dd/MM/yyyy HH:mm"
+                  utcOffset={7 * 60}
                 />
                 <div className="absolute top-2 right-2">
                   <FaRegCalendarCheck size={24} color="#0284c7" />
                 </div>
-              </div>
-
-              <div className="mt-2 mr-7">
-                <span className="text-red-500 font-semibold">
-                  Note: The selected time zone will be UTC + 0{" "}
-                </span>
               </div>
             </div>
           </DialogDescription>

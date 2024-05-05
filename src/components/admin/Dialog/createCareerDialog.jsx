@@ -43,17 +43,18 @@ export default function BusinessDialog({ notify, trigger }) {
   };
 
   const handleSubmit = async () => {
-    setIsOpen(false);
+    
     try {
       let isValid = validateData();
       if (isValid) {
+        setIsOpen(false);
         await updateCareer(career);
-        notify(true, "Update successfully");
+        notify(true, "Create successfully");
         trigger("refresh");
       }
     } catch (error) {
       console.log(error);
-      notify(false, "Update failed");
+      notify(false, "Create failed");
     }
   };
 

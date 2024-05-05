@@ -12,6 +12,8 @@ import {
   selectStatus,
   setStatus,
   selectApplicationId,
+  selectInterviewSchedule,
+  selectMeetingUrl,
   selectTrigger,
   setTrigger,
   setNotify,
@@ -21,6 +23,8 @@ const MyCommand = () => {
   const [updateApplication, { isLoading: loading2, error: err, success: suc }] =
     useUpdateApplicationMutation();
   const dispatch = useDispatch();
+  const schedule = useSelector(selectInterviewSchedule);
+  const meetingUrl = useSelector(selectMeetingUrl);
   const applicationId = useSelector(selectApplicationId);
   const status = useSelector(selectStatus);
   const trigger = useSelector(selectTrigger);
@@ -86,12 +90,12 @@ const MyCommand = () => {
             <div
               onClick={() => {
                 setShow(!show);
-                if (status === "Shortlisted") {
+                if (status === "Shortlisted" && meetingUrl === null) {
                   setIsOpen(true);
                 }
               }}
               className={`py-2 px-1 transition-all rounded-md duration-300 hover:bg-gray-100 cursor-pointer flex items-center gap-3 ${
-                status === "Shortlisted" ? "" : "opacity-50 cursor-not-allowed"
+                status === "Shortlisted" && meetingUrl === null ? "" : "opacity-50 cursor-not-allowed"
               }`}
             >
               <MdAddToQueue color="#4b5563" size={24} />
@@ -102,12 +106,12 @@ const MyCommand = () => {
             <div
               onClick={() => {
                 setShow(!show);
-                if (status === "Shortlisted") {
+                if (status === "Shortlisted" && schedule === null) {
                   setIsOpen2(true);
                 }
               }}
               className={`py-2 px-1 transition-all rounded-md duration-300 hover:bg-gray-100 cursor-pointer flex items-center gap-3 ${
-                status === "Shortlisted" ? "" : "opacity-50 cursor-not-allowed"
+                status === "Shortlisted" && schedule === null ? "" : "opacity-50 cursor-not-allowed"
               }`}
             >
               <FaRegCalendarCheck color="#4b5563" size={24} />
@@ -121,10 +125,10 @@ const MyCommand = () => {
                 }
               }}
               className={`py-2 px-1 transition-all rounded-md duration-300 hover:bg-gray-100 cursor-pointer flex items-center gap-3 ${
-                status === "Interviewing" ? "" : "opacity-50 cursor-not-allowed"
+                status === "Interviewing"  ? "" : "opacity-50 cursor-not-allowed"
               }`}
             >
-              <AiOutlineCloseCircle color="#4b5563" size={24} />
+              <FaRegCircleCheck color="#4b5563" size={24} /> 
               <p className="text-gray-600 font-semibold">
                 Notifying of Passing Interview
               </p>
@@ -140,7 +144,7 @@ const MyCommand = () => {
                 status === "Interviewing" ? "" : "opacity-50 cursor-not-allowed"
               }`}
             >
-              <FaRegCircleCheck color="#4b5563" size={24} />
+              <AiOutlineCloseCircle color="#4b5563" size={24} />
               <p className="text-gray-600 font-semibold">
                 Notifying of Failed Interview
               </p>

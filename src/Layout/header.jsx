@@ -61,15 +61,15 @@ const Header = () => {
                 </li>
                 <li className="float-left p-2.5 md:p-5">
                   <Link
-                    href="/"
+                    href="/aboutUs"
                     className={`font-normal leading-normal block text-lg ${
                       pathName == "/companies"
                         ? "text-blue-600"
                         : "text-gray-800"
                     }`}
-                    onClick={() => handleComponentClick(e, "com")}
+                    // onClick={() => handleComponentClick(e, "com")}
                   >
-                    Companies
+                    About us
                   </Link>
                 </li>
                 <li className="float-left p-2.5 md:p-5">

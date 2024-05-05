@@ -38,6 +38,19 @@ function convertToDayMonthYear(dat) {
   
     return `${hours}:${minutes} - ${day}/${month}/${year}`;
   }
+  function formatTimeByUTC(dat) {
+    const utcOffset = -new Date().getTimezoneOffset() * 60000;
+    const date = new Date(dat);
+    const formattedDate = new Date(date.getTime() + utcOffset);
+    const hours = formattedDate.getUTCHours().toString().padStart(2, '0');
+    const minutes = formattedDate.getUTCMinutes().toString().padStart(2, '0');
+    const day = formattedDate.getUTCDate().toString().padStart(2, '0');
+    const month = (formattedDate.getUTCMonth() + 1).toString().padStart(2, '0');
+    const year = formattedDate.getUTCFullYear().toString();
+  
+    return `${hours}:${minutes} - ${day}/${month}/${year}`;
+  }
+  
 
   function getDay(dat){
     const date = new Date(dat);
@@ -45,6 +58,6 @@ function convertToDayMonthYear(dat) {
     return day;
   }
 
-  const HelpFunctions = {convertToDayMonthYear,formatTimeAndDate, getDay};
+  const HelpFunctions = {convertToDayMonthYear,formatTimeAndDate, getDay, formatTimeByUTC};
 
   export default HelpFunctions;

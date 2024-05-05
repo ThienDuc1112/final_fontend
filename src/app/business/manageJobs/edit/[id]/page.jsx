@@ -12,6 +12,8 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { useUpdateJobMutation } from "@/Context/features/job/jobApiSlice";
 import {
   getCareer,
@@ -298,11 +300,22 @@ export default function Edit({ params }) {
     return isValid;
   };
 
-  const handleShowNoti = () => {
-    setShowSuccess(true);
-    setTimeout(() => {
-      setShowSuccess(false);
-    }, 5000);
+  const notify = (success, notifyMess) => {
+    const toastOptions = {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    };
+
+    if (success) {
+      toast.success(notifyMess, toastOptions);
+    } else {
+      toast.error(notifyMess, toastOptions);
+    }
   };
 
   const handleSubmit = async () => {
@@ -333,7 +346,7 @@ export default function Edit({ params }) {
       };
       const response = await updateJob(jobData);
       if (response.data.success) {
-        handleShowNoti();
+       notify(true, "update the job successfully")
       }
     }
   };
@@ -346,10 +359,10 @@ export default function Edit({ params }) {
       ) : (
         <div className="relative max-w-[1600px] mt-10 mx-10">
           <div className="mx-5">
-            <h2>Business Profile</h2>
+            <h2>Edit Job</h2>
             <p className="text-base font-normal">
               {" "}
-              Create a job and find your candidates now
+              Edit the job to find suitable candidates
             </p>
             <div className="mt-10 py-6 px-5 bg-white border rounded-sm shadow-md xl:min-w-[1300px]">
               <h3>Enter Information</h3>
@@ -566,7 +579,7 @@ export default function Edit({ params }) {
                             helperText: "MM/DD/YYYY",
                           },
                         }}
-                        onChange={(e) => setExpirationDate(e.$d)}
+                        onChange={(e) => setExpirationDate(dayjs(e.$d))}
                       />
                     </LocalizationProvider>
                     {expirationDateError && (
@@ -694,7 +707,7 @@ export default function Edit({ params }) {
               {/* //////////////////////////////// */}
               <div className="mt-3 flex justify-end items-center gap-[50px] w-full">
                 <Button size="xl" variant="blue" onClick={handleSubmit}>
-                  Create
+                  Update
                 </Button>
               </div>
             </div>
@@ -713,6 +726,7 @@ export default function Edit({ params }) {
           />
         </div>
       )}
+        <ToastContainer />
     </DefaultLayout>
   );
 }

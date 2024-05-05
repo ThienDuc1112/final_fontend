@@ -20,17 +20,19 @@ export default function Chat() {
       const response = await fetch(
         `https://localhost:5011/Chat/${userRequest}`
       );
-      console.log(response);
       if (!response.ok || !response.body) {
-        return;
+        const message = "You have to wait 60s for the next request";
+        setText(message);
+        setMessage((prevMessage) => [...prevMessage, message]);
+      } else {
+        const reader = response.body.getReader();
+        const result = await reader.read();
+        const decodedResult = new TextDecoder().decode(result.value);
+        const data = JSON.parse(decodedResult);
+        const message = data.message;
+        setText(message);
+        setMessage((prevMessage) => [...prevMessage, message]);
       }
-      const reader = response.body.getReader();
-      const result = await reader.read();
-      const decodedResult = new TextDecoder().decode(result.value);
-      const data = JSON.parse(decodedResult); 
-    const message = data.message; 
-    setText(message);
-    setMessage((prevMessage) => [...prevMessage, message]);
     } catch (error) {
       console.log(error);
     }

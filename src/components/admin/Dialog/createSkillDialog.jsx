@@ -58,10 +58,11 @@ export default function CreateSkillDialog({ notify, trigger }) {
   };
 
   const handleSubmit = async () => {
-    setIsOpen(false);
+    
     try {
       let isValid = validateData();
       if (isValid) {
+        setIsOpen(false);
         await createSkill(skill);
         notify(true, "Create skill successfully");
         trigger("refresh");

@@ -49,6 +49,8 @@ export default function Detail({ params }) {
       dispatch(setInterviewSchedule(interviewData[0].interviewTime));
     }
   }
+  console.log(schedule);
+  console.log(HelpFunctions.formatTimeByUTC(schedule));
 
   const notify = () => {
     toast.success(notifyMess, {
@@ -61,7 +63,6 @@ export default function Detail({ params }) {
       progress: undefined,
     });
   };
-  console.log(data);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -92,6 +93,13 @@ export default function Detail({ params }) {
       notify();
     }
   }, [notifyMess]);
+
+  useEffect(() => {
+    return () => {
+      dispatch(setMeetingUrl(null));
+      dispatch(setInterviewSchedule(null));
+    };
+  },[dispatch])
 
   const url = "https://fcfqw1pzmmyfx1ve.public.blob.vercel-storage.com/";
   let avatarPath = "/images/mya.jpg";
@@ -210,7 +218,7 @@ export default function Detail({ params }) {
                           </span>
                         ) : (
                           <div className="text-blue-600 text-sm">
-                            {HelpFunctions.formatTimeAndDate(schedule)}(UTC+0)
+                            {HelpFunctions.formatTimeByUTC(schedule)}
                           </div>
                         )}
                       </div>

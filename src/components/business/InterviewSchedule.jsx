@@ -24,6 +24,7 @@ import {
   setNotify,
   setInterviewSchedule,
   setStatus,
+  setMeetingUrl, 
 } from "@/Context/features/interview/interviewDetailSlice";
 import { format } from "date-fns";
 
@@ -43,18 +44,16 @@ export default function InterviewSchedule({ open, setOpen }) {
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
-  const formattedDateTime = format(selectedDate, "yyyy-MM-dd HH:mm");
-
   const handleSubmit = async () => {
     dispatch(setTrigger(!trigger));
     dispatch(setNotify("Interviewing schedule is created succesfully"));
     setOpen(false);
-    dispatch(setInterviewSchedule(formattedDateTime));
+    dispatch(setInterviewSchedule(selectedDate));
     const schedule = {
       appliedJobId: applicationId,
       interviewTime: selectedDate,
     };
-    await addInterview(schedule);
+     await addInterview(schedule);
   };
 
   useEffect(() => {
@@ -70,6 +69,7 @@ export default function InterviewSchedule({ open, setOpen }) {
       }
     }
     updateApp();
+   
   },[scheduleInterview,meetingUrl])
 
   return (
@@ -88,17 +88,12 @@ export default function InterviewSchedule({ open, setOpen }) {
                   timeFormat="HH:mm"
                   timeIntervals={15}
                   dateFormat="dd/MM/yyyy HH:mm"
+                  
                 />
                 <div className="absolute top-2 right-2">
                   <FaRegCalendarCheck size={24} color="#0284c7" />
                 </div>
-              </div>
-
-              <div className="mt-2 mr-7">
-                <span className="text-red-500 font-semibold">
-                  Note: The selected time zone will be UTC + 0{" "}
-                </span>
-              </div>
+              </div>             
             </div>
           </DialogDescription>
         </DialogHeader>

@@ -41,6 +41,10 @@ export default function Dashboard() {
     }
   };
 
+  useEffect(() =>{
+    refetch();
+  },[businessId])
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -53,6 +57,7 @@ export default function Dashboard() {
     };
     fetchData();
   }, []);
+  console.log(applicationData)
   return (
     <div className="relative max-w-[1600px] mt-10 mx-10">
       {isJobLoading || isNotiLoading || isAppLoading ? (
@@ -75,7 +80,7 @@ export default function Dashboard() {
                     <h4
                       className={`text-title-md self-between font-bold text-blue-600 text-3xl pb-3 pl-4`}
                     >
-                      {jobData?.totalJob}
+                      {jobData?.totalJob !== undefined ? jobData?.totalJob : 0}
                     </h4>
                     <span className="text-md font-medium">Total Job</span>
                   </div>
@@ -95,7 +100,7 @@ export default function Dashboard() {
                     <h4
                       className={`text-title-md self-between font-bold text-red-600 text-3xl pb-3 pl-4`}
                     >
-                      {applicationData?.applicationCount}
+                      {applicationData?.applicationCount !== undefined ? applicationData?.applicationCount : 0}
                     </h4>
                     <span className="text-md font-medium">Applications</span>
                   </div>
@@ -115,7 +120,7 @@ export default function Dashboard() {
                     <h4
                       className={`text-title-md self-between font-bold text-violet-600 text-3xl pb-3 pl-4`}
                     >
-                      {applicationData?.interviewCount}
+                      {applicationData?.interviewCount !== undefined ? applicationData?.interviewCount : 0}
                     </h4>
                     <span className="text-md font-medium">Interviews</span>
                   </div>
@@ -135,7 +140,7 @@ export default function Dashboard() {
                     <h4
                       className={`text-title-md self-between font-bold text-emerald-600 text-3xl pb-3 pl-4`}
                     >
-                      {notificationData?.totalMessage}
+                      {notificationData?.totalMessage != null ? notificationData?.totalMessage: 0}
                     </h4>
                     <span className="text-md font-medium">Notifications</span>
                   </div>

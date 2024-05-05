@@ -10,7 +10,7 @@ export default function ResumeComponent({ resumeData }) {
   }
   const descriptions = resumeData?.description
     .trim()
-    .split("• ")
+    .split("•")
     .filter((element) => element !== "");
   console.log(resumeData);
   let avatar =

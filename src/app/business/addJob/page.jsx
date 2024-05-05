@@ -3,13 +3,15 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { SuccessNotify } from "@/components/content/successNotification";
 import DropdownInput from "@/components/content/dropdownInput";
 import DropdownInputLanguage from "./dropdownLanguage";
 import MyTextArea from "@/components/myTextArea";
 import DefaultLayout from "@/components/business/Layouts/DefaultLayout";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs from "dayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import {
   getCareer,
@@ -27,6 +29,7 @@ export default function AddJob() {
     useCreateJobMutation();
 
   const businessId = TokenService.getBusinessId();
+  const access = TokenService.getAccess();
   const [careerId, setCareerId] = useState(null);
   const [title, setTitle] = useState("");
   const [numberRecruitment, setNumberRecruitment] = useState(null);
@@ -66,7 +69,6 @@ export default function AddJob() {
   const [responsibilitiesError, setResponsibilitiesError] = useState("");
   const [statusError, setStatusError] = useState("");
 
-  const [showSuccess, setShowSuccess] = useState(false);
   const [careerLevelData, setCareerLevelData] = useState([]);
   const [educationLevelData, setEducationLevelData] = useState([]);
   const [experienceYearData, setExperienceYearData] = useState([]);
@@ -85,6 +87,24 @@ export default function AddJob() {
     { id: 2, name: "Open" },
     { id: 3, name: "Closed" },
   ];
+
+  const notify = (success, notifyMess) => {
+    const toastOptions = {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    };
+
+    if (success) {
+      toast.success(notifyMess, toastOptions);
+    } else {
+      toast.error(notifyMess, toastOptions);
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -252,386 +272,424 @@ export default function AddJob() {
   };
 
   const handleSubmit = async () => {
-    let isValid = checkValidData();
-    if (isValid) {
-      const jobData = {
-        careerId: careerId,
-        businessId: businessId,
-        title: title,
-        numberRecruitment: numberRecruitment,
-        expirationDate: expirationDate,
-        educationLevelMin: educationLevelMin,
-        yearExpMin: yearExpMin,
-        genderRequirement: genderRequirement,
-        languageRequirementId: languageRequirementId,
-        address: address,
-        jobType: jobType,
-        careerLevel: careerLevel,
-        salaryMin: salaryMin,
-        salaryMax: salaryMax,
-        description: description,
-        welfare: welfare,
-        requirement: requirement,
-        requiredSkills: requiredSkills,
-        responsibilities: responsibilities,
-        status: status,
-      };
-      const response = await addJob(jobData);
-      console.log(response);
-      if (response.data.success) {
-        setShowSuccess(true);
+    try {
+      if (access === "Accepted") {
+        let isValid = checkValidData();
+        if (isValid) {
+          const jobData = {
+            careerId: careerId,
+            businessId: businessId,
+            title: title,
+            numberRecruitment: numberRecruitment,
+            expirationDate: expirationDate,
+            educationLevelMin: educationLevelMin,
+            yearExpMin: yearExpMin,
+            genderRequirement: genderRequirement,
+            languageRequirementId: languageRequirementId,
+            address: address,
+            jobType: jobType,
+            careerLevel: careerLevel,
+            salaryMin: salaryMin,
+            salaryMax: salaryMax,
+            description: description,
+            welfare: welfare,
+            requirement: requirement,
+            requiredSkills: requiredSkills,
+            responsibilities: responsibilities,
+            status: status,
+          };
+          const response = await addJob(jobData);
+          if (response.data.success) {
+            notify(true, "You create a new job successfully");
+            setCareerId(null);
+            setTitle("");
+            setNumberRecruitment(null);
+            setEducationLevelMin("");
+            setYearExpMin("");
+            setGenderRequirement("");
+            setLanguageRequirementId(null);
+            setAddress(null);
+            setJobType("");
+            setCareerLevel("");
+            setSalaryMin(null);
+            setSalaryMax(null);
+            setDescription("");
+            setWelfare("");
+            setRequirement("");
+            setRequiredSkills(null);
+            setResponsibilities("");
+            setStatus("");
+            setExpirationDate(dayjs(new Date()));
+          }
+        }
+      }else{
+        notify(false, "Your account hasn't been accepted by admin");
       }
+    } catch (error) {
+      console.error("Error adding job:", error);
     }
   };
   return (
     <DefaultLayout>
-      <div className="relative max-w-[1600px] mt-10 mx-10">
-        <div className="mx-5">
-          <h2>Business Profile</h2>
-          <p className="text-base font-normal">
-            {" "}
-            Create a job and find your candidates now
-          </p>
-          <div className="mt-10 py-6 px-5 bg-white border rounded-sm shadow-md xl:min-w-[1300px]">
-            <h3>Enter Information</h3>
-            <div className="mt-3 flex items-center w-full">
-              <div className="flex flex-col mb-1 min-w-[950px]">
-                <div className="ant-form-item-label pt-3">
-                  <Label className="ant-form-item-required"> Job title</Label>
+      {isLoading ? (
+        <div className="flex justify-center items-center flex-grow mt-[300px] ml-[600px] mb-[500px]">
+          <div className="spinner"></div>
+        </div>
+      ) : (
+        <>
+          <div className="relative max-w-[1600px] mt-10 mx-10">
+            <div className="mx-5">
+              <h2>Creating New Job</h2>
+              <p className="text-base font-normal">
+                {" "}
+                Create a job and find your candidates now
+              </p>
+              <div className="mt-10 py-6 px-5 bg-white border rounded-sm shadow-md xl:min-w-[1300px]">
+                <h3>Enter Information</h3>
+                <div className="mt-3 flex items-center w-full">
+                  <div className="flex flex-col mb-1 min-w-[950px]">
+                    <div className="ant-form-item-label pt-3">
+                      <Label className="ant-form-item-required">
+                        {" "}
+                        Job title
+                      </Label>
+                    </div>
+                    <div className="w-full">
+                      <Input
+                        type="text"
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                        required
+                        maxLength={100}
+                        className="border-gray-700 bg-blue-100/25"
+                      />
+                      {titleError && (
+                        <span className=" text-red-500 text-sm">
+                          {titleError}
+                        </span>
+                      )}
+                    </div>
+                  </div>
                 </div>
-                <div className="w-full">
-                  <Input
-                    type="text"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    required
-                    maxLength={100}
-                    className="border-gray-700 bg-blue-100/25"
-                  />
-                  {titleError && (
-                    <span className=" text-red-500 text-sm">{titleError}</span>
-                  )}
-                </div>
-              </div>
-            </div>
-            {/* //////////////////////////////// */}
-            <div className="mt-3 flex items-center gap-[50px] w-full">
-              <div className="flex flex-col min-w-[400px]">
-                <DropdownInput
-                  MyLabel="Type of Career"
-                  DataList={careerData}
-                  onDataSelect={(name, id) => setCareerId(id)}
-                  required={true}
-                />
-                {careerIdError && (
-                  <span className=" text-red-500 text-sm">{careerIdError}</span>
-                )}
-              </div>
-              <div className="flex flex-col min-w-[400px]">
-                <DropdownInput
-                  MyLabel="Type of Job"
-                  DataList={jobTypeData}
-                  onDataSelect={(name, id) => setJobType(name)}
-                  required={true}
-                />
-                {jobTypeError && (
-                  <span className=" text-red-500 text-sm">{jobTypeError}</span>
-                )}
-              </div>
-              <div className="flex flex-col min-w-[400px]">
-                <DropdownInput
-                  MyLabel="Level of Education"
-                  DataList={educationLevelData}
-                  onDataSelect={(name, id) => setEducationLevelMin(name)}
-                  required={true}
-                />
-                {educationLevelMinError && (
-                  <span className=" text-red-500 text-sm">
-                    {educationLevelMinError}
-                  </span>
-                )}
-              </div>
-            </div>
-            {/* //////////////////////////////// */}
-            <div className="mt-3 flex items-center gap-[50px] w-full">
-              <div className="flex flex-col min-w-[400px]">
-                <DropdownInput
-                  MyLabel="Years of Experience"
-                  DataList={experienceYearData}
-                  onDataSelect={(name, id) => setYearExpMin(name)}
-                  required={true}
-                />
-                {yearExpMinError && (
-                  <span className=" text-red-500 text-sm">
-                    {yearExpMinError}
-                  </span>
-                )}
-              </div>
-              <div className="flex flex-col min-w-[400px]">
-                <DropdownInput
-                  MyLabel="Level of Career"
-                  DataList={careerLevelData}
-                  onDataSelect={(name, id) => setCareerLevel(name)}
-                  required={true}
-                />
-                {careerLevelError && (
-                  <span className=" text-red-500 text-sm">
-                    {careerLevelError}
-                  </span>
-                )}
-              </div>
-              <div className="flex flex-col min-w-[400px]">
-                <DropdownInput
-                  MyLabel="Gender Requirement"
-                  DataList={genderData}
-                  onDataSelect={(name, id) => setGenderRequirement(name)}
-                  required={true}
-                />
-                {genderRequirementError && (
-                  <span className=" text-red-500 text-sm">
-                    {genderRequirementError}
-                  </span>
-                )}
-              </div>
-            </div>
-            {/* //////////////////////////////// */}
-            <div className="mt-3 flex items-center gap-[50px] w-full">
-              <div className="flex flex-col mb-6 min-w-[400px]">
-                <div className="ant-form-item-label pt-3">
-                  <Label className="ant-form-item-required">
-                    Min Salary {"(dollar/hour)"}
-                  </Label>
-                </div>
-                <div className="w-full">
-                  <Input
-                    type="text"
-                    value={salaryMin}
-                    onChange={(e) => setSalaryMin(e.target.value)}
-                    maxLength={5}
-                    className="border-gray-700 bg-blue-100/25"
-                  />
-                  {salaryMinError && (
-                    <span className=" text-red-500 text-sm">
-                      {salaryMinError}
-                    </span>
-                  )}
-                </div>
-              </div>
-
-              <div className="flex flex-col mb-6 min-w-[400px]">
-                <div className="ant-form-item-label pt-3">
-                  <Label className="ant-form-item-required">
-                    Max Salary {"(dollar/hour)"}
-                  </Label>
-                </div>
-                <div className="w-full">
-                  <Input
-                    type="text"
-                    value={salaryMax}
-                    onChange={(e) => setSalaryMax(e.target.value)}
-                    maxLength={5}
-                    className="border-gray-700 bg-blue-100/25"
-                  />
-                  {salaryMaxError && (
-                    <span className=" text-red-500 text-sm">
-                      {salaryMaxError}
-                    </span>
-                  )}
-                </div>
-              </div>
-
-              <div className="flex flex-col mb-6 min-w-[400px]">
-                <div className="ant-form-item-label pt-3">
-                  <Label className="ant-form-item-required">
-                    Number of Recruitment
-                  </Label>
-                </div>
-                <div className="w-full">
-                  <Input
-                    type="text"
-                    value={numberRecruitment}
-                    onChange={(e) => setNumberRecruitment(e.target.value)}
-                    maxLength={5}
-                    className="border-gray-700 bg-blue-100/25"
-                  />
-                  {numberRecruitmentError && (
-                    <span className=" text-red-500 text-sm">
-                      {numberRecruitmentError}
-                    </span>
-                  )}
-                </div>
-              </div>
-            </div>
-            {/* //////////////////////////////// */}
-            <div className="mt-3 flex items-center gap-[50px] w-full">
-              <div className="min-w-[400px]">
-                <DropdownInputLanguage
-                  MyLabel="Language Requirement"
-                  DataList={languageData}
-                  onDataSelect={(name, id) => setLanguageRequirementId(id)}
-                  required={true}
-                />
-                {languageRequirementIdError && (
-                  <span className=" text-red-500 text-sm">
-                    {languageRequirementIdError}
-                  </span>
-                )}
-              </div>
-
-              <div className="flex flex-col mb-4 min-w-[400px]">
-                <div className="ant-form-item-label mt-5">
-                  <Label className="ant-form-item-required">
-                    Expiration Date
-                  </Label>
-                </div>
-                <div className="w-full flex flex-col  ">
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DatePicker
-                      label="Select Date"
-                      value={expirationDate}
-                      slotProps={{
-                        textField: {
-                          helperText: "MM/DD/YYYY",
-                        },
-                      }}
-                      onChange={(e) => setExpirationDate(e.$d)}
+                {/* //////////////////////////////// */}
+                <div className="mt-3 flex items-center gap-[50px] w-full">
+                  <div className="flex flex-col min-w-[400px]">
+                    <DropdownInput
+                      MyLabel="Type of Career"
+                      DataList={careerData}
+                      onDataSelect={(name, id) => setCareerId(id)}
+                      required={true}
                     />
-                  </LocalizationProvider>
-                  {expirationDateError && (
-                    <span className=" text-red-500 text-sm">
-                      {expirationDateError}
-                    </span>
-                  )}
+                    {careerIdError && (
+                      <span className=" text-red-500 text-sm">
+                        {careerIdError}
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex flex-col min-w-[400px]">
+                    <DropdownInput
+                      MyLabel="Type of Job"
+                      DataList={jobTypeData}
+                      onDataSelect={(name, id) => setJobType(name)}
+                      required={true}
+                    />
+                    {jobTypeError && (
+                      <span className=" text-red-500 text-sm">
+                        {jobTypeError}
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex flex-col min-w-[400px]">
+                    <DropdownInput
+                      MyLabel="Level of Education"
+                      DataList={educationLevelData}
+                      onDataSelect={(name, id) => setEducationLevelMin(name)}
+                      required={true}
+                    />
+                    {educationLevelMinError && (
+                      <span className=" text-red-500 text-sm">
+                        {educationLevelMinError}
+                      </span>
+                    )}
+                  </div>
+                </div>
+                {/* //////////////////////////////// */}
+                <div className="mt-3 flex items-center gap-[50px] w-full">
+                  <div className="flex flex-col min-w-[400px]">
+                    <DropdownInput
+                      MyLabel="Years of Experience"
+                      DataList={experienceYearData}
+                      onDataSelect={(name, id) => setYearExpMin(name)}
+                      required={true}
+                    />
+                    {yearExpMinError && (
+                      <span className=" text-red-500 text-sm">
+                        {yearExpMinError}
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex flex-col min-w-[400px]">
+                    <DropdownInput
+                      MyLabel="Level of Career"
+                      DataList={careerLevelData}
+                      onDataSelect={(name, id) => setCareerLevel(name)}
+                      required={true}
+                    />
+                    {careerLevelError && (
+                      <span className=" text-red-500 text-sm">
+                        {careerLevelError}
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex flex-col min-w-[400px]">
+                    <DropdownInput
+                      MyLabel="Gender Requirement"
+                      DataList={genderData}
+                      onDataSelect={(name, id) => setGenderRequirement(name)}
+                      required={true}
+                    />
+                    {genderRequirementError && (
+                      <span className=" text-red-500 text-sm">
+                        {genderRequirementError}
+                      </span>
+                    )}
+                  </div>
+                </div>
+                {/* //////////////////////////////// */}
+                <div className="mt-3 flex items-center gap-[50px] w-full">
+                  <div className="flex flex-col mb-6 min-w-[400px]">
+                    <div className="ant-form-item-label pt-3">
+                      <Label className="ant-form-item-required">
+                        Min Salary {"(dollar/hour)"}
+                      </Label>
+                    </div>
+                    <div className="w-full">
+                      <Input
+                        type="text"
+                        value={salaryMin}
+                        onChange={(e) => setSalaryMin(e.target.value)}
+                        maxLength={5}
+                        className="border-gray-700 bg-blue-100/25"
+                      />
+                      {salaryMinError && (
+                        <span className=" text-red-500 text-sm">
+                          {salaryMinError}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col mb-6 min-w-[400px]">
+                    <div className="ant-form-item-label pt-3">
+                      <Label className="ant-form-item-required">
+                        Max Salary {"(dollar/hour)"}
+                      </Label>
+                    </div>
+                    <div className="w-full">
+                      <Input
+                        type="text"
+                        value={salaryMax}
+                        onChange={(e) => setSalaryMax(e.target.value)}
+                        maxLength={5}
+                        className="border-gray-700 bg-blue-100/25"
+                      />
+                      {salaryMaxError && (
+                        <span className=" text-red-500 text-sm">
+                          {salaryMaxError}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col mb-6 min-w-[400px]">
+                    <div className="ant-form-item-label pt-3">
+                      <Label className="ant-form-item-required">
+                        Number of Recruitment
+                      </Label>
+                    </div>
+                    <div className="w-full">
+                      <Input
+                        type="text"
+                        value={numberRecruitment}
+                        onChange={(e) => setNumberRecruitment(e.target.value)}
+                        maxLength={5}
+                        className="border-gray-700 bg-blue-100/25"
+                      />
+                      {numberRecruitmentError && (
+                        <span className=" text-red-500 text-sm">
+                          {numberRecruitmentError}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+                {/* //////////////////////////////// */}
+                <div className="mt-3 flex items-center gap-[50px] w-full">
+                  <div className="min-w-[400px]">
+                    <DropdownInputLanguage
+                      MyLabel="Language Requirement"
+                      DataList={languageData}
+                      onDataSelect={(name, id) => setLanguageRequirementId(id)}
+                      required={true}
+                    />
+                    {languageRequirementIdError && (
+                      <span className=" text-red-500 text-sm">
+                        {languageRequirementIdError}
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="flex flex-col mb-4 min-w-[400px]">
+                    <div className="ant-form-item-label mt-5">
+                      <Label className="ant-form-item-required">
+                        Expiration Date
+                      </Label>
+                    </div>
+                    <div className="w-full flex flex-col  ">
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DatePicker
+                          label="Select Date"
+                          value={expirationDate}
+                          slotProps={{
+                            textField: {
+                              helperText: "MM/DD/YYYY",
+                            },
+                          }}
+                          onChange={(e) => setExpirationDate(dayjs(e.$d))}
+                        />
+                      </LocalizationProvider>
+                      {expirationDateError && (
+                        <span className=" text-red-500 text-sm">
+                          {expirationDateError}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex flex-col min-w-[400px]">
+                    <DropdownInput
+                      MyLabel="Job Status"
+                      DataList={statusData}
+                      onDataSelect={(name, id) => setStatus(name)}
+                      required={true}
+                    />
+                    {statusError && (
+                      <span className=" text-red-500 text-sm">
+                        {statusError}
+                      </span>
+                    )}
+                  </div>
+                </div>
+                {/* //////////////////////////////// */}
+                <div className="flex items-center w-full gap-[50px]">
+                  <div className="flex flex-col mb-1 min-w-[700px]">
+                    <div className="ant-form-item-label pt-3">
+                      <Label className=""> Required Skills</Label>
+                    </div>
+                    <div className="w-full">
+                      <Input
+                        type="text"
+                        value={requiredSkills}
+                        placeHolder="e.g. C#, Asp.net, Javascript, NestJs"
+                        onChange={(e) => setRequiredSkills(e.target.value)}
+                        maxLength={100}
+                        className="border-gray-700 bg-blue-100/25"
+                      />
+                    </div>
+                  </div>
+                  <div className="flex flex-col mb-1 min-w-[400px]">
+                    <div className="ant-form-item-label pt-3">
+                      <Label className="">Work Address</Label>
+                    </div>
+                    <div className="w-full">
+                      <Input
+                        type="text"
+                        value={address}
+                        onChange={(e) => setAddress(e.target.value)}
+                        maxLength={60}
+                        className="border-gray-700 bg-blue-100/25"
+                      />
+                    </div>
+                  </div>
+                </div>
+                {/* //////////////////////////////// */}
+                <div className="mt-1 flex items-center gap-[50px] w-full">
+                  <div className="flex flex-col mb-2">
+                    <div className="ant-form-item-label pt-3">
+                      <Label className="ant-form-item-required">
+                        Job Description
+                      </Label>
+                    </div>
+                    <div className="w-full">
+                      <textarea
+                        type="text"
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                        className="border-gray-600 rounded-lg border min-w-[600px] min-h-[200px] p-3"
+                      />
+                    </div>
+                    {descriptionError && (
+                      <span className=" text-red-500 text-sm">
+                        {descriptionError}
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex flex-col mb-2">
+                    <div className="ant-form-item-label pt-3">
+                      <Label className="ant-form-item-required">
+                        Responsibilities
+                      </Label>
+                    </div>
+                    <MyTextArea
+                      onTextChange={(value) => setResponsibilities(value)}
+                    />
+                    {responsibilitiesError && (
+                      <span className=" text-red-500 text-sm">
+                        {responsibilitiesError}
+                      </span>
+                    )}
+                  </div>
+                </div>
+                {/* //////////////////////////////// */}
+                <div className="mt-1 flex items-center gap-[50px] w-full">
+                  <div className="flex flex-col mb-2">
+                    <div className="ant-form-item-label pt-3">
+                      <Label className="ant-form-item-required">
+                        Job Requirements
+                      </Label>
+                    </div>
+                    <MyTextArea
+                      onTextChange={(value) => setRequirement(value)}
+                    />
+                    {requirementError && (
+                      <span className=" text-red-500 text-sm">
+                        {requirementError}
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex flex-col mb-2">
+                    <div className="ant-form-item-label pt-3">
+                      <Label className="ant-form-item-required">Welfares</Label>
+                    </div>
+                    <MyTextArea onTextChange={(value) => setWelfare(value)} />
+                    {welfareError && (
+                      <span className=" text-red-500 text-sm">
+                        {welfareError}
+                      </span>
+                    )}
+                  </div>
+                </div>
+                {/* //////////////////////////////// */}
+                <div className="mt-3 flex justify-end items-center gap-[50px] w-full">
+                  <Button size="xl" variant="blue" onClick={handleSubmit}>
+                    Create
+                  </Button>
                 </div>
               </div>
-              <div className="flex flex-col min-w-[400px]">
-                <DropdownInput
-                  MyLabel="Job Status"
-                  DataList={statusData}
-                  onDataSelect={(name, id) => setStatus(name)}
-                  required={true}
-                />
-                {statusError && (
-                  <span className=" text-red-500 text-sm">{statusError}</span>
-                )}
-              </div>
-            </div>
-            {/* //////////////////////////////// */}
-            <div className="flex items-center w-full gap-[50px]">
-              <div className="flex flex-col mb-1 min-w-[700px]">
-                <div className="ant-form-item-label pt-3">
-                  <Label className=""> Required Skills</Label>
-                </div>
-                <div className="w-full">
-                  <Input
-                    type="text"
-                    value={requiredSkills}
-                    placeHolder="e.g. C#, Asp.net, Javascript, NestJs"
-                    onChange={(e) => setRequiredSkills(e.target.value)}
-                    maxLength={100}
-                    className="border-gray-700 bg-blue-100/25"
-                  />
-                </div>
-              </div>
-              <div className="flex flex-col mb-1 min-w-[400px]">
-                <div className="ant-form-item-label pt-3">
-                  <Label className="">Work Address</Label>
-                </div>
-                <div className="w-full">
-                  <Input
-                    type="text"
-                    value={address}
-                    onChange={(e) => setAddress(e.target.value)}
-                    maxLength={60}
-                    className="border-gray-700 bg-blue-100/25"
-                  />
-                </div>
-              </div>
-            </div>
-            {/* //////////////////////////////// */}
-            <div className="mt-1 flex items-center gap-[50px] w-full">
-              <div className="flex flex-col mb-2">
-                <div className="ant-form-item-label pt-3">
-                  <Label className="ant-form-item-required">
-                    Job Description
-                  </Label>
-                </div>
-                <div className="w-full">
-                  <textarea
-                    type="text"
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    className="border-gray-600 rounded-lg border min-w-[600px] min-h-[200px] p-3"
-                  />
-                </div>
-                {descriptionError && (
-                  <span className=" text-red-500 text-sm">
-                    {descriptionError}
-                  </span>
-                )}
-              </div>
-              <div className="flex flex-col mb-2">
-                <div className="ant-form-item-label pt-3">
-                  <Label className="ant-form-item-required">
-                    Responsibilities
-                  </Label>
-                </div>
-                <MyTextArea
-                  onTextChange={(value) => setResponsibilities(value)}
-                />
-                {responsibilitiesError && (
-                  <span className=" text-red-500 text-sm">
-                    {responsibilitiesError}
-                  </span>
-                )}
-              </div>
-            </div>
-            {/* //////////////////////////////// */}
-            <div className="mt-1 flex items-center gap-[50px] w-full">
-              <div className="flex flex-col mb-2">
-                <div className="ant-form-item-label pt-3">
-                  <Label className="ant-form-item-required">
-                    Job Requirements
-                  </Label>
-                </div>
-                <MyTextArea onTextChange={(value) => setRequirement(value)} />
-                {requirementError && (
-                  <span className=" text-red-500 text-sm">
-                    {requirementError}
-                  </span>
-                )}
-              </div>
-              <div className="flex flex-col mb-2">
-                <div className="ant-form-item-label pt-3">
-                  <Label className="ant-form-item-required">Welfares</Label>
-                </div>
-                <MyTextArea onTextChange={(value) => setWelfare(value)} />
-                {welfareError && (
-                  <span className=" text-red-500 text-sm">{welfareError}</span>
-                )}
-              </div>
-            </div>
-            {/* //////////////////////////////// */}
-            <div className="mt-3 flex justify-end items-center gap-[50px] w-full">
-              <Button size="xl" variant="blue" onClick={handleSubmit}>
-                Create
-              </Button>
             </div>
           </div>
-        </div>
-      </div>
-      {showSuccess && (
-        <div
-          className="animate-slide-up fixed z-30 top-20 right-0 p-7"
-          style={{ position: "fixed" }}
-        >
-          <SuccessNotify
-            message="You created a new job successfully"
-            variant="success"
-            icon="success"
-          />
-        </div>
+        </>
       )}
+      <ToastContainer />
     </DefaultLayout>
   );
 }

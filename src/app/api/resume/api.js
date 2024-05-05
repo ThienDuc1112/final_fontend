@@ -1,7 +1,12 @@
 import axios from 'axios';
 
+const apiLink =
+  process.env.NEXT_PUBLIC_NODE_ENV === "production"
+    ? process.env.NEXT_PUBLIC_BACKEND_PROD
+    : process.env.NEXT_PUBLIC_BACKEND_DEV;
+
 const axiosClient = axios.create({
-    baseURL: "https://localhost:5011/", 
+    baseURL: apiLink, 
   });
 
 const createResume = (resumeData) => {

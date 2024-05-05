@@ -35,8 +35,7 @@ const handleLogin = async (token) => {
 
   return (
     <div className="btn-social mt-6 mb-5">
-      <Image src="/images/google.jpg" width={40} height={40} alt="google" />
-      <span className="hidden md:block">{name} with google</span>
+     
       <GoogleOAuthProvider clientId = "25722280879-r97hgd7ff9n76u59n7rrimh39ctmrutj.apps.googleusercontent.com">
       <GoogleLogin
         onSuccess={(credentialResponse) => {
@@ -44,6 +43,10 @@ const handleLogin = async (token) => {
            handleLogin(credentialResponse.credential);
         }}
         onError={() => {console.log("errrrrr")}}
+        theme="filled_blue"
+        className="min-w-full"
+        size="large"
+        auto_select="false"
       />
       </GoogleOAuthProvider>
     </div>

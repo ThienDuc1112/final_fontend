@@ -102,7 +102,7 @@ const Dropdown = () => {
         <div className="p-3 rounded-lg hover:bg-gray-200 flex items-center gap-3 rotate-icon">
           <FaCircleUser size={22} />
           <span>{name?.split("@")[0]}</span>
-          {role !== "employer" && (
+          {role !== "admin" && (
             <AiOutlineDown size={22} className="my-icon" />
           )}
         </div>
@@ -142,6 +142,18 @@ const Dropdown = () => {
                   <PiSignOutBold size={22} className="change-icon" />
                 </div>
                 <span className="change-text">Sign Out</span>
+              </div>
+            </a>
+          </div>
+        )}
+        {role === "employer" && (
+          <div className="dropdown-list z-30 w-[240px] shadow-lg">
+            <a className="hover-item" href="/business/dashboard">
+              <div className="px-2 py-3 flex items-center justify-start gap-2">
+                <div className="p-1 bg-gray-200 rounded-sm change-item">
+                  <TbReportSearch size={22} className="change-icon" />
+                </div>
+                <span className="change-text">Manage Business</span>
               </div>
             </a>
           </div>
