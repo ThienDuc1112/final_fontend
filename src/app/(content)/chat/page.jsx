@@ -18,7 +18,7 @@ export default function Chat() {
     try {
       setText("");
       const response = await fetch(
-        `https://localhost:5011/Chat/${userRequest}`
+        `http://localhost:8011/Chat/${userRequest}`
       );
       if (!response.ok || !response.body) {
         const message = "You have to wait 60s for the next request";
