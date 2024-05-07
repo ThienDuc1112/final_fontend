@@ -39,7 +39,6 @@ const handleLogin = async (token) => {
       <GoogleOAuthProvider clientId = "25722280879-r97hgd7ff9n76u59n7rrimh39ctmrutj.apps.googleusercontent.com">
       <GoogleLogin
         onSuccess={(credentialResponse) => {
-          console.log(credentialResponse);
            handleLogin(credentialResponse.credential);
         }}
         onError={() => {console.log("errrrrr")}}
