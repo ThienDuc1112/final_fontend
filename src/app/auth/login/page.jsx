@@ -36,7 +36,6 @@ const Login = () => {
     try {
       const response = await loginA(email, pwd);
       const userData = await response.json();
-      console.log(userData);
       const userJwt = TokenService.getUser(userData.access_token);
       const userProfile = await getUserInfo(userData.access_token);
       if (userData) {
