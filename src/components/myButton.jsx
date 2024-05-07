@@ -13,9 +13,9 @@ const handleLogin = async (token) => {
   try {
     const response = await loginByGoogle(token);
     const userData =await response.json();
+    console.log(userData);
     const userJwt = TokenService.getUser(userData.access_token);
     const userProfile = await getUserInfo(userData.access_token)
-    console.log(userProfile);
     if (userData) {
       TokenService.updateLocalAccessToken(userData);
       TokenService.updateUser(userJwt.sub, userJwt.role, userProfile.name);
