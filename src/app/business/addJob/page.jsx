@@ -465,7 +465,7 @@ export default function AddJob() {
                     </div>
                     <div className="w-full">
                       <Input
-                        type="text"
+                        type="number"
                         value={salaryMin}
                         onChange={(e) => setSalaryMin(e.target.value)}
                         maxLength={5}
@@ -487,7 +487,7 @@ export default function AddJob() {
                     </div>
                     <div className="w-full">
                       <Input
-                        type="text"
+                        type="number"
                         value={salaryMax}
                         onChange={(e) => setSalaryMax(e.target.value)}
                         maxLength={5}

@@ -23,7 +23,7 @@ const PageBanner = () => {
                 Design your own resume with information relating to work experience, education, skills, and other relevant information and download it as a PDF document .
                 </p>
                 <div className="mt-4">
-                  <a href="/" className="btn-arrow-right">
+                  <a href="/resume/create" className="btn-arrow-right">
                     Find Out More
                   </a>
                 </div>
@@ -50,7 +50,7 @@ const PageBanner = () => {
                   Curabitur eget tortor a nulla interdum semper.
                 </p>
                 <div className="mt-4">
-                  <a href="/" className="btn-arrow-right">
+                  <a href="/chat" className="btn-arrow-right">
                     Find Out More
                   </a>
                 </div>

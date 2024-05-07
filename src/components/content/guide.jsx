@@ -1,6 +1,11 @@
+'use client';
 import { Button } from "@/components/ui/button";
-
+import { useRouter } from "next/navigation";
 const Guide = () => {
+  const router = useRouter();
+  const handleClick = () => {
+    router.push("/resume/create");
+  }
   return (
     <section className="section-box mt-16 mb-10">
       <div className="max-w-[1350px] mx-auto">
@@ -47,7 +52,7 @@ const Guide = () => {
           </div>
         </div>
         <div className="mt-12 text-center">
-          <Button variant="blue" size="lg">
+          <Button variant="blue" size="lg" onClick={handleClick}>
             Get Started
           </Button>
         </div>

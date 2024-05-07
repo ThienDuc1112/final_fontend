@@ -38,17 +38,17 @@ const Login = () => {
       const userData = await response.json();
       console.log(userData);
       const userJwt = TokenService.getUser(userData.access_token);
-      const userProfile = await getUserInfo(userData.access_token)
+      const userProfile = await getUserInfo(userData.access_token);
       if (userData) {
         TokenService.updateLocalAccessToken(userData);
         TokenService.updateUser(userJwt.sub, userJwt.role, userProfile.name);
         if (userJwt.role === "employer") {
           push("/business");
+        } else if (userJwt.role === "admin") {
+          push("/admin");
         } else {
           push("/Home");
         }
-      } else {
-        console.log("not");
       }
     } catch (err) {
       console.log(err);

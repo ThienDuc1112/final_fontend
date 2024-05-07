@@ -42,7 +42,7 @@ export const requestFreshToken = async (refreshToken) => {
 };
 
 export const loginByGoogle = async (token) => {
-  const response = await fetch(`${apiLink}/connect/token`, {
+  const response = await fetch(`http://localhost:8010/connect/token`, {
     method: "POST",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",

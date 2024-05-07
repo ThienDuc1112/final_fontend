@@ -22,6 +22,7 @@ import { useSearchParams } from "next/navigation";
 const ListJob = () => {
   const [jobData, setJobData] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
+  const [total, setTotal] = useState(0);
   const searchParams = useSearchParams();
   const params = new URLSearchParams(searchParams);
   const query = useSelector(selectQuery);
@@ -52,9 +53,9 @@ const ListJob = () => {
     const fetchData = async () => {
       try {
         let response = await getListJob(queryParams);
-        setTotalPages(Math.ceil(response.data.total/6));
+        setTotalPages(Math.ceil(response.data.total/12));
         setJobData(response.data.getJobDTOs);
-    
+        setTotal(response.data.total);
       } catch (error) {
         console.log("Error", error);
       }
@@ -80,9 +81,9 @@ const ListJob = () => {
           <div className="row">
             <span className="text-small inline-block mt-1 ">
               Showing &nbsp;
-              <strong>1-20 &nbsp;</strong>
+              <strong>1-12 &nbsp;</strong>
               of &nbsp;
-              <strong>888 &nbsp;</strong>
+              <strong>{total} &nbsp;</strong>
               jobs
             </span>
           </div>
