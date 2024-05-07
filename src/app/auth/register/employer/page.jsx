@@ -91,7 +91,7 @@ const Candidate = () => {
   }
 
   function isValidPhoneNumber(phoneNumber) {
-    const phoneRegex = /^\d{9}$/;
+    const phoneRegex = /^\d{9,10}$/;
     return phoneRegex.test(phoneNumber);
   }
 
