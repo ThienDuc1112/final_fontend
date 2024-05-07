@@ -42,7 +42,6 @@ const handleLogin = async (token) => {
         }}
         onError={() => {console.log("errrrrr")}}
         theme="filled_blue"
-        className="min-w-full"
         size="large"
       />
       </GoogleOAuthProvider>

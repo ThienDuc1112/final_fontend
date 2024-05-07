@@ -61,7 +61,7 @@ export const loginByGoogle = async (token) => {
 };
 
 export const getUserInfo = async (accessToken) => {
-  const url = `${apiLink}/userinfo`;
+  const url = `http://localhost:8010/userinfo`;
 
   const response = await fetch(url, {
     method: 'GET',
